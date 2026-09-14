@@ -20,32 +20,50 @@ export async function POST(req: NextRequest) {
     const body = (await req.json()) as ChatRequestBody;
     const { messages, prompt } = body;
 
-    let contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+    const rawList: Array<{ role: 'user' | 'model'; text: string }> = [];
 
     if (Array.isArray(messages) && messages.length > 0) {
-      contents = messages
-        .filter((msg) => msg.content && msg.content.trim().length > 0)
-        .map((msg) => ({
-          role: msg.role === 'assistant' || msg.role === 'model' ? 'model' : 'user',
-          parts: [{ text: msg.content.trim() }],
-        }));
+      for (const msg of messages) {
+        const text = msg.content?.trim();
+        if (!text) continue;
+        const role = msg.role === 'assistant' || msg.role === 'model' ? 'model' : 'user';
+        rawList.push({ role, text });
+      }
     } else if (typeof prompt === 'string' && prompt.trim().length > 0) {
-      contents = [
-        {
-          role: 'user',
-          parts: [{ text: prompt.trim() }],
-        },
-      ];
+      rawList.push({ role: 'user', text: prompt.trim() });
     }
 
-    if (contents.length === 0) {
+    if (rawList.length === 0) {
       return NextResponse.json(
         { error: '[BLAD_STRUKTURY]: Pusty sygnał wejściowy. Brak zawartości do przetworzenia.' },
         { status: 400 }
       );
     }
 
-    // Wybór modelu: zdefiniowany w środowisku lub najnowszy aktywny flash
+    // Pomijamy początkowe komunikaty 'model' (np. logi bootowania terminala UI),
+    // aby historia konwersacji w Gemini zawsze zaczynała się od roli 'user'
+    let startIndex = 0;
+    while (startIndex < rawList.length && rawList[startIndex].role === 'model') {
+      startIndex++;
+    }
+
+    const filtered = startIndex < rawList.length ? rawList.slice(startIndex) : [rawList[rawList.length - 1]];
+
+    // Łączenie kolejnych wiadomości o tej samej roli w jedną turę (wymóg multi-turn Gemini API)
+    const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+    for (const item of filtered) {
+      const last = contents[contents.length - 1];
+      if (last && last.role === item.role) {
+        last.parts[0].text += `\n${item.text}`;
+      } else {
+        contents.push({
+          role: item.role,
+          parts: [{ text: item.text }],
+        });
+      }
+    }
+
+    // Wybór modelu: zdefiniowany w środowisku lub domyślny aktywny flash
     const primaryModel = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
     const fallbackModel = 'gemini-3.5-flash';
 
@@ -60,7 +78,7 @@ export async function POST(req: NextRequest) {
         },
       });
     } catch (primaryError: unknown) {
-      // Jeśli wybrany model jest niedostępny lub obciążony, przełącz na model rezerwowy
+      // Jeśli wybrany model jest niedostępny lub przeciążony, fallback do alternatywnego flasha
       if (primaryModel !== fallbackModel) {
         try {
           responseStream = await ai.models.generateContentStream({

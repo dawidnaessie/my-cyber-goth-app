@@ -144,9 +144,14 @@ export default function TerminalChatPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const errText =
-          errorData.error || `Zakłócenie magistrali sieciowej (Kod HTTP: ${response.status})`;
+        let errText = '';
+        try {
+          const errorData = await response.json();
+          errText = errorData.error || `Zakłócenie magistrali sieciowej (Kod HTTP: ${response.status})`;
+        } catch {
+          const rawText = await response.text().catch(() => '');
+          errText = rawText || `Zakłócenie magistrali sieciowej (Kod HTTP: ${response.status})`;
+        }
         throw new Error(errText);
       }
 
