@@ -18,6 +18,20 @@ module.exports = {
           violet: '#9d00ff',
           dim: '#4b5563',
           muted: '#1e293b'
+        },
+        gothic: {
+          bg: '#070707',
+          panel: '#0d0b09',
+          surface: '#13100e',
+          bone: '#cfc4b2',
+          parchment: '#bfae95',
+          blood: '#781414',
+          crimson: '#9e1c1c',
+          rust: '#8c6136',
+          patina: '#3c5249',
+          amber: '#b58b45',
+          dim: '#544c42',
+          border: 'rgba(140, 97, 54, 0.3)'
         }
       },
       fontFamily: {

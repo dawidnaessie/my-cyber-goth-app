@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ai } from '@/lib/ai';
-import { SCHIZO_SYSTEM_PROMPT } from '@/lib/prompts';
+import { SYSTEM_PROMPT } from '@/lib/prompts';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     if (rawList.length === 0) {
       return NextResponse.json(
-        { error: '[BLAD_STRUKTURY]: Pusty sygnał wejściowy. Brak zawartości do przetworzenia.' },
+        { error: '[BŁĄD_WEKTORA_WEJŚCIA]: Pusty bufor. Brak danych wejściowych do dekompozycji.' },
         { status: 400 }
       );
     }
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
         model: primaryModel,
         contents,
         config: {
-          systemInstruction: SCHIZO_SYSTEM_PROMPT,
+          systemInstruction: SYSTEM_PROMPT,
           temperature: 0.85,
         },
       });
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
             model: fallbackModel,
             contents,
             config: {
-              systemInstruction: SCHIZO_SYSTEM_PROMPT,
+              systemInstruction: SYSTEM_PROMPT,
               temperature: 0.85,
             },
           });
@@ -112,9 +112,9 @@ export async function POST(req: NextRequest) {
           const errorMessage =
             streamError instanceof Error
               ? streamError.message
-              : 'Nieznane zakłócenie strumienia przesyłu';
+              : 'Nieznane zakłócenie rurociągu obliczeniowego';
           controller.enqueue(
-            encoder.encode(`\n\n[ZAKLOCENIE_TRANSMISJI]: ${errorMessage}\n`)
+            encoder.encode(`\n\n[PRZERWANIE_RUROCIĄGU]: ${errorMessage}\n`)
           );
           controller.error(streamError);
         } finally {
@@ -138,8 +138,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: isApiKeyError
-          ? '[BRAK_KLUCZA_SYS]: Skonfiguruj GEMINI_API_KEY w pliku .env'
-          : `[BLAD_WĘZŁA_ANOMALII]: ${errorDetails}`,
+          ? '[BRAK_KLUCZA_API]: Skonfiguruj GEMINI_API_KEY w pliku .env'
+          : `[AWARIA_INFERENCJI]: ${errorDetails}`,
       },
       { status: isApiKeyError ? 401 : 500 }
     );

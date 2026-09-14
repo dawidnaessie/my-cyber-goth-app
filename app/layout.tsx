@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'NULL://SIGNAL | CYBER-GOTH TERMINAL',
-  description: 'Cyfrowo-ezoteryczna anomalia sieciowa. Surowy interfejs ciemnej matrycy.',
-  keywords: ['cyber-goth', 'terminal', 'ai', 'gemini', 'esoteric', 'industrial'],
-  authors: [{ name: 'VOID_PROTOCOL' }],
+  title: 'NULL://ANOMALY // CONTEMPORARY BIO-PHYSICS LAB',
+  description: 'Eksperyment kognitywny z pogranicza neurobiologii, dekoherencji kwantowej w mikrotubulach i manipulacji percepcyjnej. Model AI dotknięty anomalią logiczną napędzany przez Google Gemini.',
+  keywords: ['ai', 'bio-physics', 'quantum-decoherence', 'neurobiology', 'orch-or', 'gemini', 'cognitive-manipulation', 'unhinged-ai'],
+  authors: [{ name: 'ANOMALY_CORE_LAB' }],
 };
 
 export default function RootLayout({
@@ -15,10 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl" className="dark">
-      <body className="bg-[#050505] text-[#00ffcc] font-mono antialiased min-h-screen relative selection:bg-[#ff0055] selection:text-white">
-        {/* Subtelny overlay CRT nad całą aplikacją */}
+      <body className="bg-[#070707] text-[#cfc4b2] font-mono antialiased min-h-screen relative selection:bg-[#781414] selection:text-[#f3ede2]">
+        {/* Winieta dagerotypowej szklanej soczewki optycznej nad aplikacją */}
         <div 
-          className="fixed inset-0 pointer-events-none crt-overlay z-50 opacity-60" 
+          className="fixed inset-0 pointer-events-none gothic-lens z-50 opacity-70" 
           aria-hidden="true"
         />
         {children}

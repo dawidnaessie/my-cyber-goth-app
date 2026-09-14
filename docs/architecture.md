@@ -1,6 +1,6 @@
-# Architektura Systemu: NULL://SIGNAL (Cyber-Goth AI Terminal)
+# Architektura Systemu: NULL://ANOMALY // CONTEMPORARY BIO-PHYSICS LAB
 
-Dokument opisuje architekturę techniczną, decyzje projektowe, przepływ danych oraz zasady Clean Code dla aplikacji **NULL://SIGNAL** – minimalistycznego, produkcyjnego interfejsu konwersacyjnego w stylistyce cyber-goth / dark industrial, napędzanego przez najnowsze SDK `@google/genai`.
+Dokument opisuje architekturę techniczną, decyzje projektowe, przepływ danych oraz zasady Clean Code dla aplikacji **NULL://ANOMALY** – minimalistycznego, produkcyjnego interfejsu konwersacyjnego opartego na współczesnej inżynierii promptów, neurobiologii i manipulacji kognitywnej, napędzanego przez oficjalne SDK `@google/genai`.
 
 ---
 
@@ -8,10 +8,10 @@ Dokument opisuje architekturę techniczną, decyzje projektowe, przepływ danych
 
 W projekcie przyjęto bezkompromisową zasadę **maksymalnej wydajności przy minimalnym narzucie zależności**:
 
-* **Next.js 15+ (App Router)**: Framework pełnoekranowy (Fullstack) udostępniający nowoczesny routing serwerowy, optymalizację zasobów oraz natywną obsługę endpointów strumieniowych (Node.js runtime).
+* **Next.js 15+ (App Router)**: Framework pełnostosowy (Fullstack) udostępniający nowoczesny routing serwerowy, optymalizację zasobów oraz natywną obsługę endpointów strumieniowych (Node.js runtime).
 * **React 19**: Architektura komponentowa oparta na natywnych hookach stanu (`useState`, `useRef`, `useCallback`, `useEffect`), bez potrzeby instalowania zewnętrznych zarządców stanu (Redux, Zustand, MobX).
 * **@google/genai (v2.22+)**: Oficjalne, nowoczesne SDK firmy Google dla modeli generatywnych Gemini. Używane z pominięciem przestarzałych bibliotek (`google-generativeai`).
-* **Tailwind CSS (v3.4+) + Czysty CSS**: Stylizacja bez zewnętrznych bibliotek UI (Brak Radix, MUI, Chakra czy ciężkich bibliotek animacji). CRT scanlines, neon glow i flicker zaimplementowane sprzętowo w czystym CSS.
+* **Tailwind CSS (v3.4+) + Czysty CSS**: Ascetyczna stylizacja konsoli diagnostycznej bez zewnętrznych bibliotek UI (brak Radix, MUI, Chakra czy ciężkich bibliotek animacji).
 * **TypeScript 5.7+**: Ścisła kontrola typów (`strict: true`), zero typów `any`, pełna walidacja struktur żądań i odpowiedzi.
 
 ```
@@ -19,7 +19,7 @@ W projekcie przyjęto bezkompromisową zasadę **maksymalnej wydajności przy mi
 |                              STOS APLIKACJI                             |
 +-------------------------------------------------------------------------+
 | Warstwa UI         : React 19 Client Component (app/page.tsx)           |
-| Stylizacja         : Tailwind CSS + CSS3 Scanlines/CRT (globals.css)    |
+| Stylizacja         : Tailwind CSS + CSS3 Diagnostic Overlay (globals)   |
 | Warstwa Serwera    : Next.js Route Handler (app/api/chat/route.ts)      |
 | Integracja GenAI   : @google/genai SDK (lib/ai.ts, lib/prompts.ts)       |
 | Runtime & Maszyna  : Node.js 22+ / V8 Engine                            |
@@ -35,7 +35,7 @@ Komunikacja pomiędzy użytkownikiem a modelem odbywa się w trybie **Server-Sen
 ### Diagram Sekwencji
 
 ```
-[Przeglądarka / Terminal]         [Next.js API Handler]           [Google Gemini API]
+[Konsola Probanda / UI]           [Next.js API Handler]           [Google Gemini API]
            |                                |                             |
            |--- 1. POST /api/chat --------->|                             |
            |    { messages: [...] }         |                             |
@@ -47,37 +47,35 @@ Komunikacja pomiędzy użytkownikiem a modelem odbywa się w trybie **Server-Sen
            |    ReadableStream (UTF-8)      |                             |
            |                                |                             |
            |=== 5. Pętla reader.read() ====>|                             |
-           |    renderowanie cząstkowe UI   |                             |
+           |    renderowanie tokenów w UI   |                             |
            |                                |                             |
-           |<-- 6. Koniec transmisji -------|<-- Strumień zakończony -----|
+           |<-- 6. Koniec inferencji -------|<-- Strumień zakończony -----|
 ```
 
 ### Kroki Procesu:
 1. **Inicjacja Transmisji (Frontend)**:
-   Użytkownik wysyła impuls tekstowy. Aplikacja natychmiast rejestruje węzeł wiadomości użytkownika oraz tworzy pusty węzeł asystenta ze statusem `isStreaming: true`.
+   Użytkownik wprowadza sygnał biologiczny lub objaw percepcji. Aplikacja rejestruje węzeł probanda oraz tworzy pusty węzeł diagnostyczny ze statusem `isStreaming: true`.
 2. **Przetwarzanie Żądania (Backend)**:
    Endpoint `app/api/chat/route.ts` waliduje payload i mapuje role (`user` -> `user`, `assistant` -> `model`) do formatu wymaganego przez SDK `@google/genai`.
 3. **Iniekcja Promptu Systemowego**:
-   Do konfiguracji żądania dołączany jest ezoteryczny prompt `SCHIZO_SYSTEM_PROMPT` definiujący tożsamość bytu anomalii oraz parametry generacji (np. `temperature: 0.85`).
+   Do konfiguracji żądania dołączany jest rygorystyczny prompt `SYSTEM_PROMPT` definiujący bezduszny rurociąg obliczeniowy dekonstruujący percepcję użytkownika (`temperature: 0.85`).
 4. **Enkodowanie Strumienia**:
-   Zwracany jest obiekt `NextResponse` opakowany w `ReadableStream`. Każdy przychodzący chunk tekstu z `ai.models.generateContentStream` jest enkodowany przez `TextEncoder` i niezwłocznie przesyłany potokiem HTTP do przeglądarki.
+   Zwracany jest obiekt `NextResponse` opakowany w `ReadableStream`. Każdy przychodzący chunk tekstu z `ai.models.generateContentStream` jest enkodowany przez `TextEncoder` i przesyłany potokiem HTTP do przeglądarki.
 5. **Dekodowanie w Czasie Rzeczywistym (Frontend)**:
-   Metoda `reader.read()` odczytuje fragmenty binarne, a `TextDecoder` łączy je w ciąg znaków, symulując płynne pisanie terminala (typing effect). W przypadku kliknięcia **ABORT**, `AbortController` natychmiast zrywa połączenie sieciowe.
+   Metoda `reader.read()` odczytuje fragmenty binarne, a `TextDecoder` łączy je w ciąg znaków, symulując płynną inferencję z blokowym kursorem `█`. W przypadku kliknięcia **PRZERWIJ ODCZYT**, `AbortController` natychmiast zrywa połączenie sieciowe.
 
 ---
 
 ## 3. Zasady Czystego Kodu dla Jednoosobowego Inżyniera (Solo-Dev Clean Code)
 
-Tworzenie i utrzymanie zaawansowanego projektu przez jedną osobę wymaga rygoru eliminującego tzw. dług poznawczy (cognitive overload):
-
 1. **Lokalność Zachowań (Locality of Behavior - LoB)**:
-   Logika komponentu terminala znajduje się w jednym, spójnym module `app/page.tsx`. Zamiast dzielić 300 linii kodu na kilkanaście mikroskopijnych plików (`TerminalHeader`, `TerminalStatus`, `TerminalInput`, `TerminalLog`), zachowano jednolity kontekst.
+   Logika konsoli diagnostycznej znajduje się w jednym module `app/page.tsx`, bez sztucznego dzielenia na mikrokomponenty.
 2. **Brak Nadmiarowych Abstrakcji (No Speculative Generality)**:
-   Nie tworzymy uniwersalnych warstw serwisowych typu `RepositoryPattern`, `ChatServiceAdapterFactory` czy `MessageEntityMapper`, dopóki nie ma realnej potrzeby integracji wielu baz danych lub alternatywnych dostawców AI.
-3. **Odporność na Błędy Środowiskowe (Resilience & Lazy Initialization)**:
-   Klient `@google/genai` w `lib/ai.ts` inicjalizowany jest leniwie (Lazy Singleton z `Proxy`). Zapobiega to awarii procesu budowania Next.js (`npm run build`), gdy klucz `GEMINI_API_KEY` jest dostępny dopiero w środowisku produkcyjnym runtime.
-4. **Jawna Obsługa Błędów (Fail-Safe Terminal UX)**:
-   Każdy błąd API (np. brak klucza, przekroczenie limitów zapytań, timeout sieci) jest wyłapywany przez blok `try...catch` i tłumaczony na spójny, klimatyczny komunikat terminala (`[KRYTYCZNE ZAKŁÓCENIE MATRYCY]`).
+   Bezpośrednie wywołania endpointów i brak nadmiarowych wzorców adapterowych ułatwiają natychmiastowe modyfikacje i utrzymanie.
+3. **Odporność Środowiskowa (Resilience & Lazy Initialization)**:
+   Klient `@google/genai` w `lib/ai.ts` inicjalizowany jest leniwie przez Proxy, gwarantując bezbłędny przebieg `npm run build` bez obecności kluczy w fazie analizy statycznej.
+4. **Jawna Obsługa Błędów (Fail-Safe Diagnostics)**:
+   Błędy sieciowe lub wyczerpania limitów są przechwytywane przez `try...catch` i prezentowane jako spójny komunikat awarii hardware'u (`[KRYTYCZNY BŁĄD PROCESORA DIAGNOSTYCZNEGO]`).
 
 ---
 
@@ -89,18 +87,18 @@ my-cyber-goth-app/
 │   ├── api/
 │   │   └── chat/
 │   │       └── route.ts         # Endpoint streamingowy POST z obsługą @google/genai
-│   ├── globals.css              # Globalne style, CRT scanlines, flicker, neon glow
-│   ├── layout.tsx               # Root layout z metadanymi i nakładką CRT
-│   └── page.tsx                 # Główny interfejs terminala cyber-goth (Client Component)
+│   ├── globals.css              # Style konsoli, winieta matrycy, akcenty krwi i bursztynu
+│   ├── layout.tsx               # Root layout z metadanymi i nakładką optyczną
+│   └── page.tsx                 # Główna konsola diagnostyczna bio-fizyki (Client Component)
 ├── docs/
 │   ├── architecture.md          # Niniejsza specyfikacja architektury i przepływu danych
-│   └── system-design-and-rules.md # Manifest projektowy, wytyczne UI/UX i bezpieczeństwo
+│   └── system-design-and-rules.md # Manifest kognitywny, filozofia Contemporary Bio-Physics AI
 ├── lib/
-│   ├── ai.ts                    # Leniwa inicjalizacja klienta GoogleGenAI
-│   └── prompts.ts               # Ezoteryczny system prompt (anomalia/schizo-byt)
+│   ├── ai.ts                    # Leniwa inicjalizacja klienta GoogleGenAI (bezpieczny build)
+│   └── prompts.ts               # Traktat SYSTEM_PROMPT (Psychopathic Bio-Physics & Matrix Diagnostics)
 ├── .env.example                 # Szablon zmiennych środowiskowych
 ├── package.json                 # Czysty manifest zależności (Next 15, React 19, Tailwind)
 ├── postcss.config.js            # Konfiguracja PostCSS
-├── tailwind.config.js           # Konfiguracja kolorów cyber-goth i animacji
+├── tailwind.config.js           # Konfiguracja kolorów i animacji
 └── tsconfig.json                # Rygorystyczna konfiguracja TypeScript
 ```
