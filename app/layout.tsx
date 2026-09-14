@@ -15,12 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl" className="dark">
-      <body className="bg-[#070707] text-[#cfc4b2] font-mono antialiased min-h-screen relative selection:bg-[#781414] selection:text-[#f3ede2]">
-        {/* Winieta dagerotypowej szklanej soczewki optycznej nad aplikacją */}
-        <div 
-          className="fixed inset-0 pointer-events-none gothic-lens z-50 opacity-70" 
-          aria-hidden="true"
-        />
+      <body className="bg-[#070707] text-[#e0e0e0] font-mono antialiased min-h-screen relative selection:bg-[#781414] selection:text-[#f3ede2]">
         {children}
       </body>
     </html>

@@ -4,93 +4,133 @@
 
 @layer base {
   :root {
-    --color-bone: #cfc4b2;
-    --color-parchment: #bfae95;
-    --color-blood: #781414;
-    --color-crimson: #9e1c1c;
-    --color-amber: #b58b45;
-    --color-rust: #8c6136;
-    --color-crypt: #070707;
+    --color-clean-bg: #090a0f;
+    --color-clean-panel: #0f111a;
+    --color-clean-border: rgba(255, 255, 255, 0.1);
+    --color-clean-cyan: #00f0ff;
+    --color-clean-emerald: #10b981;
+    --color-clean-text: #f4f4f5;
+    --color-clean-dim: #71717a;
+
+    --color-anomaly-bg: #050404;
+    --color-anomaly-panel: #0d0909;
+    --color-anomaly-border: rgba(158, 28, 28, 0.45);
+    --color-anomaly-blood: #781414;
+    --color-anomaly-crimson: #9e1c1c;
+    --color-anomaly-red: #ff1a1a;
+    --color-anomaly-amber: #b58b45;
+    --color-anomaly-text: #cfc4b2;
   }
 
   body {
-    @apply bg-[#070707] text-[#cfc4b2] font-mono selection:bg-[#781414] selection:text-[#f3ede2] min-h-screen overflow-x-hidden;
+    @apply font-mono antialiased min-h-screen overflow-x-hidden transition-colors duration-500;
   }
 
-  /* Stylizowany scrollbar prosektorium / manuskryptu */
+  /* Stylizowany scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: #070707;
-    border-left: 1px solid rgba(140, 97, 54, 0.15);
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(140, 97, 54, 0.35);
-    border-radius: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #781414;
+    background: rgba(255, 255, 255, 0.4);
   }
 }
 
-/* Winieta XIX-wiecznej szklanej kliszy i dagerotypu */
-.gothic-lens,
-.crt-overlay {
+/* =========================================================================
+   TRYB: CLEAN AI (OPTYKA: WŁ) - Sterylny, nowoczesny, minimalistyczny
+   ========================================================================= */
+
+.clean-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.45), 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+.clean-glow-emerald {
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.45), 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.clean-border-glow {
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.06), inset 0 0 20px rgba(255, 255, 255, 0.02);
+}
+
+/* =========================================================================
+   TRYB: ANALOG HORROR / ANOMALY (OPTYKA: WYŁ) - CRT, scanlines, noise, glitch
+   ========================================================================= */
+
+/* Nakładka linii skanowania kineskopu CRT */
+.analog-scanlines {
   background: 
-    radial-gradient(circle at center, transparent 55%, rgba(4, 4, 4, 0.88) 100%),
-    linear-gradient(rgba(18, 14, 11, 0) 50%, rgba(3, 2, 2, 0.3) 50%),
-    linear-gradient(90deg, rgba(120, 20, 20, 0.015), rgba(181, 139, 69, 0.01), rgba(60, 82, 73, 0.015));
-  background-size: 100% 100%, 100% 4px, 4px 100%;
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.55) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.035), rgba(0, 255, 0, 0.015), rgba(0, 0, 255, 0.035));
+  background-size: 100% 3px, 6px 100%;
 }
 
-/* Migotanie płomienia palnika alchemicznego / lampy gazowej */
-@keyframes gaslight-flicker {
-  0% { opacity: 0.985; }
-  25% { opacity: 1; }
-  50% { opacity: 0.97; }
-  75% { opacity: 0.995; }
-  85% { opacity: 0.96; }
-  100% { opacity: 0.985; }
+/* Winieta optyczna zniekształconego kineskopu */
+.analog-vignette {
+  background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.7) 75%, rgba(10, 0, 0, 0.95) 100%);
 }
 
-.gothic-flicker,
-.crt-flicker {
-  animation: gaslight-flicker 0.22s infinite;
+/* Proceduralny szum / film grain */
+.analog-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
 }
 
-/* Kursor terminala sekcyjnego */
-@keyframes occult-cursor {
+/* Jitter i mikromigotanie kineskopu */
+@keyframes crt-jitter {
+  0% { opacity: 0.97; transform: translate(0, 0); }
+  15% { opacity: 0.94; transform: translate(-0.6px, 0.4px); }
+  30% { opacity: 1; transform: translate(0.4px, -0.4px); }
+  45% { opacity: 0.95; transform: translate(-0.4px, -0.6px); }
+  60% { opacity: 0.99; transform: translate(0.6px, 0.4px); }
+  75% { opacity: 0.92; transform: translate(-0.8px, 0); }
+  90% { opacity: 0.98; transform: translate(0.8px, -0.4px); }
+  100% { opacity: 0.97; transform: translate(0, 0); }
+}
+
+.analog-flicker {
+  animation: crt-jitter 0.16s infinite;
+}
+
+/* Glitch tekstu / aberracja chromatyczna */
+@keyframes chromatic-shift {
+  0%, 100% {
+    text-shadow: -1.5px 0 0 rgba(255, 26, 26, 0.75), 1.5px 0 0 rgba(0, 240, 255, 0.65);
+  }
+  50% {
+    text-shadow: 1.5px 0 0 rgba(255, 26, 26, 0.75), -1.5px 0 0 rgba(0, 240, 255, 0.65);
+  }
+}
+
+.anomaly-chromatic {
+  animation: chromatic-shift 2.2s infinite ease-in-out alternate;
+}
+
+/* Krwawy blask anomalii somatycznej */
+.anomaly-glow-blood {
+  text-shadow: 0 0 8px rgba(255, 26, 26, 0.8), 0 0 18px rgba(158, 28, 28, 0.5), 0 0 30px rgba(120, 20, 20, 0.4);
+}
+
+.anomaly-glow-amber {
+  text-shadow: 0 0 8px rgba(181, 139, 69, 0.7), 0 0 20px rgba(181, 139, 69, 0.3);
+}
+
+.anomaly-border-blood {
+  border-color: rgba(158, 28, 28, 0.65);
+  box-shadow: inset 0 0 18px rgba(120, 20, 20, 0.25), 0 0 20px rgba(120, 20, 20, 0.3);
+}
+
+/* Animacja kursora terminala */
+@keyframes terminal-cursor {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
 
 .animate-cursor {
-  animation: occult-cursor 1s infinite;
-}
-
-/* Akcenty światła woskowej świecy i starego mosiądzu */
-.occult-glow-amber,
-.cyber-glow {
-  text-shadow: 0 0 8px rgba(181, 139, 69, 0.65), 0 0 18px rgba(181, 139, 69, 0.22);
-}
-
-/* Akcenty zakrzepłej krwi */
-.occult-glow-blood,
-.cyber-glow-crimson {
-  text-shadow: 0 0 8px rgba(158, 28, 28, 0.75), 0 0 20px rgba(120, 20, 20, 0.35);
-}
-
-/* Obramowania anatomiczne i alchemiczne */
-.occult-border,
-.cyber-border {
-  border: 1px solid rgba(140, 97, 54, 0.32);
-  box-shadow: inset 0 0 14px rgba(140, 97, 54, 0.04), 0 0 16px rgba(0, 0, 0, 0.7);
-}
-
-.occult-border-blood,
-.cyber-border-crimson {
-  border: 1px solid rgba(120, 20, 20, 0.45);
-  box-shadow: inset 0 0 14px rgba(120, 20, 20, 0.08), 0 0 18px rgba(120, 20, 20, 0.15);
+  animation: terminal-cursor 0.9s infinite;
 }

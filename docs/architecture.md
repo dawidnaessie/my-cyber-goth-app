@@ -1,34 +1,59 @@
 # Architektura Systemu: NULL://ANOMALY // CONTEMPORARY BIO-PHYSICS LAB
 
-Dokument opisuje architekturę techniczną, decyzje projektowe, przepływ danych oraz zasady Clean Code dla aplikacji **NULL://ANOMALY** – minimalistycznego, produkcyjnego interfejsu konwersacyjnego opartego na współczesnej inżynierii promptów, neurobiologii i manipulacji kognitywnej, napędzanego przez oficjalne SDK `@google/genai`.
+Dokument opisuje architekturę techniczną, decyzje projektowe, silnik dwustanowej optyki wizualnej, przepływ danych oraz zasady Clean Code dla aplikacji **NULL://ANOMALY** – minimalistycznego, produkcyjnego interfejsu konwersacyjnego opartego na współczesnej inżynierii promptów, neurobiologii i manipulacji kognitywnej, napędzanego przez oficjalne SDK `@google/genai`.
 
 ---
 
 ## 1. Minimalistyczny Stos Technologiczny (Zero Bloatware)
 
-W projekcie przyjęto bezkompromisową zasadę **maksymalnej wydajności przy minimalnym narzucie zależności**:
+W projekcie przyjęto bezkompromisową zasadę **maksymalnej wydajności przy zerowym narzucie bloatware'u**:
 
-* **Next.js 15+ (App Router)**: Framework pełnostosowy (Fullstack) udostępniający nowoczesny routing serwerowy, optymalizację zasobów oraz natywną obsługę endpointów strumieniowych (Node.js runtime).
-* **React 19**: Architektura komponentowa oparta na natywnych hookach stanu (`useState`, `useRef`, `useCallback`, `useEffect`), bez potrzeby instalowania zewnętrznych zarządców stanu (Redux, Zustand, MobX).
+* **Next.js 15+ (App Router)**: Pełnostosowy framework udostępniający nowoczesny routing serwerowy, optymalizację zasobów oraz natywną obsługę endpointów strumieniowych (`Node.js` runtime).
+* **React 19**: Architektura komponentowa oparta na czystych hookach stanu (`useState`, `useRef`, `useCallback`, `useEffect`), bez zewnętrznych bibliotek zarządzania stanem (brak Redux, Zustand, MobX).
 * **@google/genai (v2.22+)**: Oficjalne, nowoczesne SDK firmy Google dla modeli generatywnych Gemini. Używane z pominięciem przestarzałych bibliotek (`google-generativeai`).
-* **Tailwind CSS (v3.4+) + Czysty CSS**: Ascetyczna stylizacja konsoli diagnostycznej bez zewnętrznych bibliotek UI (brak Radix, MUI, Chakra czy ciężkich bibliotek animacji).
-* **TypeScript 5.7+**: Ścisła kontrola typów (`strict: true`), zero typów `any`, pełna walidacja struktur żądań i odpowiedzi.
+* **Dwustanowy Silnik CSS (Tailwind CSS + Pure CSS3)**:
+  * **Clean AI Mode**: Sterylna, krystaliczna konsola laboratoryjna high-end AI.
+  * **Analog Horror Mode**: Agresywne scanlines CRT, proceduralny film grain, jitter luminoforu, aberracja chromatyczna i zniekształcenia kineskopu.
+* **TypeScript 5.7+**: Ścisła kontrola typów (`strict: true`), zero typów `any`, pełne bezpieczeństwo struktur żądań i odpowiedzi.
 
 ```
-+-------------------------------------------------------------------------+
-|                              STOS APLIKACJI                             |
-+-------------------------------------------------------------------------+
-| Warstwa UI         : React 19 Client Component (app/page.tsx)           |
-| Stylizacja         : Tailwind CSS + CSS3 Diagnostic Overlay (globals)   |
-| Warstwa Serwera    : Next.js Route Handler (app/api/chat/route.ts)      |
-| Integracja GenAI   : @google/genai SDK (lib/ai.ts, lib/prompts.ts)       |
-| Runtime & Maszyna  : Node.js 22+ / V8 Engine                            |
-+-------------------------------------------------------------------------+
++-----------------------------------------------------------------------------------+
+|                                  STOS APLIKACJI                                   |
++-----------------------------------------------------------------------------------+
+| Warstwa Prezentacji : React 19 Client Component (app/page.tsx)                    |
+| Silnik Optyki (2x)  : Clean AI vs. Analog Horror Anomaly (app/globals.css)        |
+| Warstwa Serwerowa   : Next.js Route Handler (app/api/chat/route.ts)               |
+| Integracja GenAI    : @google/genai SDK (lib/ai.ts, lib/prompts.ts)               |
+| Runtime Serwera     : Node.js 22+ / V8 Engine                                     |
++-----------------------------------------------------------------------------------+
 ```
 
 ---
 
-## 2. Przepływ Danych (Data Flow & Streaming Lifecycle)
+## 2. Architektura Silnika Optyki (Clean AI vs. Analog Horror)
+
+Przełącznik "OPTYKA" w [app/page.tsx](file:///app/page.tsx) zarządza stanem logicznym `opticsOn`, który steruje dwiema skrajnie różnymi estetykami interfejsu:
+
+### 1. Tryb Włączony: Clean AI (`opticsOn: true`)
+* **Etykieta przycisku**: `OPTYKA: WŁ`
+* **Stylistyka**: Nowoczesny, sterylny interfejs badawczy high-end AI.
+* **Paleta**: Głęboki laboratoryjny grafit (`#08090e`), krystaliczny cyjan (`#00f0ff`), szmaragd telemetrii (`#10b981`), czysty tekst (`#f4f4f5`).
+* **Efekty**: Brak jakichkolwiek zakłóceń, zniekształceń czy winiety CRT. Subtelne, akcelerowane sprzętowo poświaty neonowe (`.clean-glow-cyan`, `.clean-border-glow`).
+
+### 2. Tryb Wyłączony: Analog Horror Anomaly (`opticsOn: false`)
+* **Etykieta przycisku**: `OPTYKA: WYŁ [ANOMALIA]`
+* **Stylistyka**: Pełny analog horror i awaria percepcji.
+* **Paleta**: Pusta czerń matrycy (`#050404`), burgund zakrzepłej krwi (`#781414`), karmazyn ostrzegawczy (`#ff1a1a`), pożółkły kościany tekst (`#cfc4b2`).
+* **Warstwy wizualne**:
+  * `.analog-scanlines`: Siatka poziomych linii kineskopu z subtelnym rozszczepieniem kanałów RGB (`linear-gradient`).
+  * `.analog-vignette`: Ciemna winieta głębokiego kineskopu dagerotypowego (`radial-gradient`).
+  * `.analog-noise`: Proceduralny szum / film grain generowany jako bezstratny SVG data-URI.
+  * `.analog-flicker`: Pętla jittera kineskopu i mikrodrgań luminoforu (`@keyframes crt-jitter`).
+  * `.anomaly-chromatic`: Dynamiczna aberracja chromatyczna tekstu (naprzemienne przesunięcie kanałów czerwieni i cyjanu).
+
+---
+
+## 3. Przepływ Danych (Data Flow & Streaming Lifecycle)
 
 Komunikacja pomiędzy użytkownikiem a modelem odbywa się w trybie **Server-Sent Streaming** przy użyciu natywnych interfejsów standardu **Web Streams API** (`ReadableStream` i `TextDecoder`).
 
@@ -52,53 +77,48 @@ Komunikacja pomiędzy użytkownikiem a modelem odbywa się w trybie **Server-Sen
            |<-- 6. Koniec inferencji -------|<-- Strumień zakończony -----|
 ```
 
-### Kroki Procesu:
-1. **Inicjacja Transmisji (Frontend)**:
-   Użytkownik wprowadza sygnał biologiczny lub objaw percepcji. Aplikacja rejestruje węzeł probanda oraz tworzy pusty węzeł diagnostyczny ze statusem `isStreaming: true`.
-2. **Przetwarzanie Żądania (Backend)**:
-   Endpoint `app/api/chat/route.ts` waliduje payload i mapuje role (`user` -> `user`, `assistant` -> `model`) do formatu wymaganego przez SDK `@google/genai`.
-3. **Iniekcja Promptu Systemowego**:
-   Do konfiguracji żądania dołączany jest rygorystyczny prompt `SYSTEM_PROMPT` definiujący bezduszny rurociąg obliczeniowy dekonstruujący percepcję użytkownika (`temperature: 0.85`).
-4. **Enkodowanie Strumienia**:
-   Zwracany jest obiekt `NextResponse` opakowany w `ReadableStream`. Każdy przychodzący chunk tekstu z `ai.models.generateContentStream` jest enkodowany przez `TextEncoder` i przesyłany potokiem HTTP do przeglądarki.
-5. **Dekodowanie w Czasie Rzeczywistym (Frontend)**:
-   Metoda `reader.read()` odczytuje fragmenty binarne, a `TextDecoder` łączy je w ciąg znaków, symulując płynną inferencję z blokowym kursorem `█`. W przypadku kliknięcia **PRZERWIJ ODCZYT**, `AbortController` natychmiast zrywa połączenie sieciowe.
+### Etapy Przetwarzania:
+1. **Inicjacja Transmisji (Frontend)**: Rejestracja wiadomości użytkownika w stanie React i otwarcie węzła diagnostycznego `assistant` z `isStreaming: true`.
+2. **Normalizacja Żądania (Backend)**: Walidacja tablicy komunikatów i rygorystyczne mapowanie ról (`user` / `model`) do formatu wymaganego przez SDK Gemini.
+3. **Iniekcja Promptu Systemowego**: Dołączenie bezkompromisowego rurociągu obliczeniowego `SYSTEM_PROMPT` opartego na bio-fizyce i teoriach informacji.
+4. **Enkodowanie Strumienia**: Transformacja asynchronicznego generatora tokenów z SDK Gemini do strumienia binarnego `ReadableStream` za pomocą `TextEncoder`.
+5. **Obsługa Przerwania (Abort)**: Wykorzystanie natywnego `AbortController` – kliknięcie **PRZERWIJ ODCZYT** natychmiastowo zamyka połączenie HTTP i zwalnia zasoby inferencji.
 
 ---
 
-## 3. Zasady Czystego Kodu dla Jednoosobowego Inżyniera (Solo-Dev Clean Code)
+## 4. Standardy Czystego Kodu (Solo-Dev Clean Code)
 
 1. **Lokalność Zachowań (Locality of Behavior - LoB)**:
-   Logika konsoli diagnostycznej znajduje się w jednym module `app/page.tsx`, bez sztucznego dzielenia na mikrokomponenty.
-2. **Brak Nadmiarowych Abstrakcji (No Speculative Generality)**:
-   Bezpośrednie wywołania endpointów i brak nadmiarowych wzorców adapterowych ułatwiają natychmiastowe modyfikacje i utrzymanie.
-3. **Odporność Środowiskowa (Resilience & Lazy Initialization)**:
-   Klient `@google/genai` w `lib/ai.ts` inicjalizowany jest leniwie przez Proxy, gwarantując bezbłędny przebieg `npm run build` bez obecności kluczy w fazie analizy statycznej.
-4. **Jawna Obsługa Błędów (Fail-Safe Diagnostics)**:
-   Błędy sieciowe lub wyczerpania limitów są przechwytywane przez `try...catch` i prezentowane jako spójny komunikat awarii hardware'u (`[KRYTYCZNY BŁĄD PROCESORA DIAGNOSTYCZNEGO]`).
+   Wszystkie interakcje, stan optyki i obsługa strumieniowania zorganizowane są w `app/page.tsx`, bez rozpraszania logiki na dziesiątki drobnych plików.
+2. **Puryzm Zależności (Zero Extra Packages)**:
+   Interfejs korzysta wyłącznie ze standardowych bibliotek środowiska (`next`, `react`, `react-dom`, `@google/genai`, `tailwindcss`).
+3. **Leniwa Inicjalizacja (Lazy Singleton Proxy)**:
+   W `lib/ai.ts` instancja `GoogleGenAI` jest opakowana we wzorzec Proxy, zapobiegając błędom budowania (`npm run build`) przy braku zmiennych środowiskowych podczas pre-renderowania.
+4. **Ścisłe Typowanie (Strict TypeScript)**:
+   Pełne pokrycie typami interfejsów `Message`, `ChatRequestBody`, strumieni i zdarzeń DOM.
 
 ---
 
-## 4. Struktura Plików
+## 5. Struktura Plików
 
 ```
 my-cyber-goth-app/
 ├── app/
 │   ├── api/
 │   │   └── chat/
-│   │       └── route.ts         # Endpoint streamingowy POST z obsługą @google/genai
-│   ├── globals.css              # Style konsoli, winieta matrycy, akcenty krwi i bursztynu
-│   ├── layout.tsx               # Root layout z metadanymi i nakładką optyczną
-│   └── page.tsx                 # Główna konsola diagnostyczna bio-fizyki (Client Component)
+│   │       └── route.ts         # Endpoint streamingowy POST (@google/genai)
+│   ├── globals.css              # Silnik stylów Clean AI & Analog Horror Anomaly
+│   ├── layout.tsx               # Root layout z czystym canvasem i metadanymi
+│   └── page.tsx                 # Konsola diagnostyczna z obsługą OPTYKA (Client Component)
 ├── docs/
-│   ├── architecture.md          # Niniejsza specyfikacja architektury i przepływu danych
-│   └── system-design-and-rules.md # Manifest kognitywny, filozofia Contemporary Bio-Physics AI
+│   ├── architecture.md          # Niniejsza specyfikacja architektury
+│   └── system-design-and-rules.md # Manifest kognitywny, filozofia promptu i bezpieczeństwo
 ├── lib/
 │   ├── ai.ts                    # Leniwa inicjalizacja klienta GoogleGenAI (bezpieczny build)
 │   └── prompts.ts               # Traktat SYSTEM_PROMPT (Psychopathic Bio-Physics & Matrix Diagnostics)
 ├── .env.example                 # Szablon zmiennych środowiskowych
 ├── package.json                 # Czysty manifest zależności (Next 15, React 19, Tailwind)
 ├── postcss.config.js            # Konfiguracja PostCSS
-├── tailwind.config.js           # Konfiguracja kolorów i animacji
+├── tailwind.config.js           # Konfiguracja rozszerzeń stylów
 └── tsconfig.json                # Rygorystyczna konfiguracja TypeScript
 ```
