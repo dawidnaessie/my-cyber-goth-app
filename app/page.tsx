@@ -238,6 +238,11 @@ export default function TerminalChatPage() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Rejestracja audialna uderzenia w klawisz (z pominięciem samych klawiszy funkcyjnych)
+    if (!['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(e.key)) {
+      soundEngine.playKeystroke();
+    }
+
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSend();
@@ -512,7 +517,10 @@ export default function TerminalChatPage() {
             {PRESET_SIGNALS.map((preset, idx) => (
               <button
                 key={idx}
-                onClick={() => handleSend(preset)}
+                onClick={() => {
+                  soundEngine.playKeystroke();
+                  handleSend(preset);
+                }}
                 disabled={isStreaming}
                 className={`px-2.5 py-1 border transition-all whitespace-nowrap disabled:opacity-40 text-[11px] ${
                   opticsOn

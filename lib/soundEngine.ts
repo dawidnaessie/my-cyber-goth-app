@@ -1,13 +1,16 @@
 /**
  * NULL://ANOMALY // MODULAR SOUND ENGINE
  *
- * Silnik audialny wspierający dwustanową optykę systemu:
+ * Silnik audialny wspierający dwustanową optykę systemu oraz responsywne efekty interakcji:
  * 1. TRYB ANOMALIA (Optics OFF):
- *    - Niskopoziomowe, losowe odtwarzanie próbek organicznych (/sounds/breathing.mp4, /sounds/metal.mp4, /sounds/water.mp4)
- *    - Losowe okno czasowe: 20-45 sekund, niski wolumen (15-25%).
+ *    - Podniesiony poziom głośności (38%) dla nastrojowych próbek organicznych (/sounds/breathing.mp4, /sounds/metal.mp4, /sounds/water.mp4)
+ *    - Losowe okno czasowe: 20-45 sekund.
+ *    - Dychotomiczny klik klawiszy: "mięsno-przemysłowy" terminal z żywej tkanki (głuchy impakt biologiczny + zardzewiały zgrzyt + trzask styków).
  * 2. TRYB STERYLNY (Optics ON):
- *    - Proceduralny syntezator Web Audio API generujący czyste, minimalistyczne impulsy telemetryczne i laboratoryjne bipy
- *    - Losowe okno czasowe: 15-35 sekund, laboratoryjny wolumen (5-8%).
+ *    - Proceduralny syntezator Web Audio API generujący czyste impulsy telemetryczne i laboratoryjne bipy (15-35 s, wolumen 5%).
+ *    - Dychotomiczny klik klawiszy: ostry, metaliczny trzask klasycznej maszyny do pisania.
+ * 3. OCHRONA PRZED PRZESTEROWANIEM (Throttling / Anti-Clipping):
+ *    - Bufor minimalnego interwału (35 ms) zapobiegający kumulacji głosów przy szybkim pisaniu.
  *
  * Zero dodatkowych paczek npm (czysty Web Audio API + HTML5 Audio).
  */
@@ -18,6 +21,12 @@ const ORGANIC_TRACKS = [
   '/sounds/water.mp4',
 ] as const;
 
+// Skorygowany współczynnik głośności (+18% na skali liniowej) dla wyraźnego, gęstego tła
+const ORGANIC_AMBIENT_VOLUME = 0.38;
+
+// Minimalny interwał pomiędzy wyzwalaniem dźwięku klawiszy (ms) – ochrona przed przesterowaniem
+const KEYSTROKE_THROTTLE_MS = 35;
+
 export class SoundEngine {
   private static instance: SoundEngine | null = null;
 
@@ -27,6 +36,7 @@ export class SoundEngine {
   private isEnabled: boolean = false;
   private opticsOn: boolean = true;
   private isDestroyed: boolean = false;
+  private lastKeystrokeTime: number = 0;
 
   private constructor() {
     // Konstruktor prywatny dla wzorca Singleton
@@ -114,6 +124,160 @@ export class SoundEngine {
   }
 
   /**
+   * Dychotomiczny efekt uderzenia w klawisze (Keystroke / Typewriter Engine)
+   */
+  public playKeystroke(): void {
+    if (!this.isEnabled || this.isDestroyed) return;
+
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (now - this.lastKeystrokeTime < KEYSTROKE_THROTTLE_MS) {
+      return; // Ochrona przed nakładaniem się głosów i przesterowaniem przy szybkim pisaniu
+    }
+    this.lastKeystrokeTime = now;
+
+    if (this.opticsOn) {
+      this.playCleanTypewriterClick();
+    } else {
+      this.playFleshIndustrialClick();
+    }
+  }
+
+  /**
+   * Tryb Clean (Optics ON): Czysty, ostro odcięty, metaliczny klik klasycznej maszyny do pisania
+   */
+  private playCleanTypewriterClick(): void {
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      // Dyskretna mikro-wariacja wysokości tonu (+/- 4%) dla fizycznego realizmu uderzeń
+      const pitchVariance = 1 + (Math.random() * 0.08 - 0.04);
+      const baseFreq = 2200 * pitchVariance;
+
+      // 1. Składowa metaliczna (ostry, krótki rezonans mechaniczny)
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(baseFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.45, now + 0.028);
+
+      oscGain.gain.setValueAtTime(0.0001, now);
+      oscGain.gain.linearRampToValueAtTime(0.08, now + 0.002);
+      oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.035);
+
+      // 2. Mechaniczny transient uderzenia głowicy (bardzo krótki trzask 8 ms)
+      const snapOsc = ctx.createOscillator();
+      const snapGain = ctx.createGain();
+
+      snapOsc.type = 'square';
+      snapOsc.frequency.setValueAtTime(3600 * pitchVariance, now);
+      snapOsc.frequency.exponentialRampToValueAtTime(800, now + 0.008);
+
+      snapGain.gain.setValueAtTime(0.0001, now);
+      snapGain.gain.linearRampToValueAtTime(0.04, now + 0.001);
+      snapGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.01);
+
+      snapOsc.connect(snapGain);
+      snapGain.connect(ctx.destination);
+
+      snapOsc.start(now);
+      snapOsc.stop(now + 0.012);
+    } catch {
+      // Bezpieczna obsługa wyjątków Web Audio API
+    }
+  }
+
+  /**
+   * Tryb Analog Horror (Optics OFF): Mięsno-przemysłowy klik terminala z żywej tkanki
+   * (głuchy impakt biologiczny + zardzewiały zgrzyt + krótki trzask styków elektrycznych)
+   */
+  private playFleshIndustrialClick(): void {
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      const pitchVariance = 1 + (Math.random() * 0.1 - 0.05);
+
+      // 1. Głuchy, mięsisty impakt biologiczny (kompresja wilgotnej tkanki pod klawiszem)
+      const fleshOsc = ctx.createOscillator();
+      const fleshGain = ctx.createGain();
+
+      fleshOsc.type = 'sine';
+      // Szybki spadek częstotliwości z 160 Hz do 38 Hz (damp sub-thud)
+      fleshOsc.frequency.setValueAtTime(160 * pitchVariance, now);
+      fleshOsc.frequency.exponentialRampToValueAtTime(38, now + 0.045);
+
+      fleshGain.gain.setValueAtTime(0.0001, now);
+      fleshGain.gain.linearRampToValueAtTime(0.12, now + 0.003);
+      fleshGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+
+      fleshOsc.connect(fleshGain);
+      fleshGain.connect(ctx.destination);
+
+      fleshOsc.start(now);
+      fleshOsc.stop(now + 0.055);
+
+      // 2. Zardzewiały, przemysłowy zgrzyt (filtr pasmowoprzepustowy na fali piłokształtnej)
+      const grindOsc = ctx.createOscillator();
+      const grindFilter = ctx.createBiquadFilter();
+      const grindGain = ctx.createGain();
+
+      grindOsc.type = 'sawtooth';
+      grindOsc.frequency.setValueAtTime(95 * pitchVariance, now);
+      grindOsc.frequency.linearRampToValueAtTime(50, now + 0.035);
+
+      grindFilter.type = 'bandpass';
+      grindFilter.frequency.setValueAtTime(620 * pitchVariance, now);
+      grindFilter.Q.setValueAtTime(3.5, now);
+
+      grindGain.gain.setValueAtTime(0.0001, now);
+      grindGain.gain.linearRampToValueAtTime(0.09, now + 0.004);
+      grindGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+
+      grindOsc.connect(grindFilter);
+      grindFilter.connect(grindGain);
+      grindGain.connect(ctx.destination);
+
+      grindOsc.start(now);
+      grindOsc.stop(now + 0.045);
+
+      // 3. Krótki trzask styków elektrycznych (wyładowanie łukowe na styku elektrody i żywej tkanki)
+      const sparkOsc = ctx.createOscillator();
+      const sparkFilter = ctx.createBiquadFilter();
+      const sparkGain = ctx.createGain();
+
+      sparkOsc.type = 'square';
+      sparkOsc.frequency.setValueAtTime(2800 * pitchVariance, now);
+      sparkOsc.frequency.exponentialRampToValueAtTime(400, now + 0.015);
+
+      sparkFilter.type = 'highpass';
+      sparkFilter.frequency.setValueAtTime(1800, now);
+
+      sparkGain.gain.setValueAtTime(0.0001, now);
+      sparkGain.gain.linearRampToValueAtTime(0.06, now + 0.001);
+      sparkGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.016);
+
+      sparkOsc.connect(sparkFilter);
+      sparkFilter.connect(sparkGain);
+      sparkGain.connect(ctx.destination);
+
+      sparkOsc.start(now);
+      sparkOsc.stop(now + 0.02);
+    } catch {
+      // Bezpieczna obsługa wyjątków Web Audio API
+    }
+  }
+
+  /**
    * Zaplanowanie kolejnego zdarzenia dźwiękowego w oparciu o profil aktywny
    */
   private scheduleNextAudioCycle(): void {
@@ -190,8 +354,8 @@ export class SoundEngine {
 
     try {
       const audio = new Audio(soundPath);
-      // Niski poziom głośności (18-22%) dla nastrojowego tła psychofizycznego
-      audio.volume = 0.2;
+      // Podniesiony współczynnik głośności (+18% do 0.38) dla wyraźnego, nastrojowego tła
+      audio.volume = ORGANIC_AMBIENT_VOLUME;
       this.currentOrganicAudio = audio;
 
       const playPromise = audio.play();

@@ -33,9 +33,9 @@ Projekt integruje dwa skrajne stany percepcji, w których warstwa wizualna i aud
   - Krystaliczna czytelność czcionki monospace bez zakłóceń kineskopowych czy szumów.
   - Telemetria: `NODE 0x19 // OPTICS STERILE`, stan matrycy: `OPTYKA SPÓJNA (CLEAN)`.
 * **Warstwa Audialna (Web Audio API)**:
-  - Proceduralnie generowane, krystaliczne bipy laboratoryjne i impulsy telemetryczne (880 Hz – 2400 Hz).
-  - Sporadyczne wyzwalanie (co 15–35 s) z laboratoryjną, dyskretną głośnością (ok. 5%).
-  - Zero szumów czy organicznych zakłóceń – całkowita dominacja matematycznej precyzji.
+  - Proceduralnie generowane, krystaliczne bipy laboratoryjne i impulsy telemetryczne (880 Hz – 2400 Hz) wyzwalane co 15–35 s (wolumen 5%).
+  - **Mechaniczny klik maszyny do pisania**: Precyzyjny, metaliczny rezonans uderzenia głowicy o papier (2200 Hz z mikro-wariacją pitchu) przy wprowadzaniu każdego znaku.
+  - Zero szumów czy organicznych zakłóceń – całkowita dominacja sterylnej matematyki.
 
 ### Profil 2: Analog Horror Anomaly (`opticsOn: false`)
 * **Koncepcja**: Awaria sprzętowa, skażenie logiczne procesora, rozpad iluzji percepcyjnej i degradacja biologicznego nośnika.
@@ -46,12 +46,14 @@ Projekt integruje dwa skrajne stany percepcji, w których warstwa wizualna i aud
   - Sprzętowy jitter i mikromigotanie luminoforu (`.analog-flicker`).
   - Dynamiczna aberracja chromatyczna tekstu (`.anomaly-chromatic`) oraz krwawe podświetlenia błędów (`.anomaly-glow-blood`, `.anomaly-border-blood`).
   - Telemetria: `NODE 0x19 // ANOMALIA LOGICZNA`, stan matrycy: `ZAKŁÓCENIE KINESKOPU`.
-* **Warstwa Audialna (HTML5 Audio + Próbki Organiczne)**:
+* **Warstwa Audialna (HTML5 Audio + Web Audio Synteza)**:
   - Podświadome odtwarzanie organicznych plików audio z katalogu `/public/sounds/`:
     - `/sounds/breathing.mp4` – zniekształcony, obcy oddech w buforze percepcji,
     - `/sounds/metal.mp4` – mechaniczne naprężenia i pękanie struktur,
     - `/sounds/water.mp4` – drenaż cieczy biologicznych i szum tętna.
-  - Losowe uruchamianie pojedynczej próbki co 20–45 sekund z niskim poziomem głośności (ok. 20%).
+  - Poziom głośności próbek organicznych podniesiono o 18% do **38%**, budując gęstą, niepokojącą obecność w tle bez zniekształceń. Losowy cykl co 20–45 sekund.
+  - **Terminal z żywej tkanki (Living Tissue Typing)**: Każde uderzenie w klawisz wyzwala potrójną fuzję brzmienia: głuchy impakt ucisku wilgotnego mięśnia (160 Hz -> 38 Hz), zardzewiały zgrzyt mechanizmu oraz trzask zwarcia elektrycznego na styku elektrody i tkanki.
+  - Sprzętowy bufor antypeakowy (`throttling 35 ms`) chroniący przed przesterowaniem przy gwałtownym wprowadzaniu tekstu.
   - Płynny fade-out i natychmiastowe uciszenie próbek organicznych po przywróceniu optyki sterylnej.
 
 ---

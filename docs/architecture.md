@@ -71,22 +71,27 @@ Silnik audio zaimplementowano w module [lib/soundEngine.ts](file:///lib/soundEng
 
 1. **Profil Sterylny (`opticsOn: true`)**:
    - Wykorzystuje natywny `AudioContext`.
-   - Generuje czyste, sterylne bipy telemetryczne symulujące aparaturę pomiarową sterylnego laboratorium.
-   - Posiada warianty pojedynczego impulsu (1760 Hz), dwutaktowego potwierdzenia telemetrycznego (1200 Hz -> 1600 Hz) oraz akordu harmonicznego (880 Hz + 1320 Hz).
-   - Obwiednia amplitudy: natychmiastowy narost (`linearRampToValueAtTime`) oraz szybkie wygaszanie wykładnicze (`exponentialRampToValueAtTime`) do poziomu zera w czasie 80–180 ms.
-   - Cykl: losowo co **15–35 sekund**.
+   - **Telemetria tła**: Generuje czyste, sterylne bipy telemetryczne symulujące aparaturę pomiarową sterylnego laboratorium. Warianty: pojedynczy impuls (1760 Hz), dwutakt telemetryczny (1200 Hz -> 1600 Hz), akord harmoniczny (880 Hz + 1320 Hz) z szybkim wygaszaniem wykładniczym. Cykl: losowo co **15–35 sekund** (wolumen 0.05).
+   - **Typewriter Keystroke Engine**: Precyzyjny, metaliczny trzask klasycznej maszyny do pisania. Rezonans trójkątny (2200 Hz z mikro-wariacją +/-4%) z natychmiastowym opadaniem w 28 ms oraz transjent uderzenia głowicy (3600 Hz square wave, 8 ms).
 
 2. **Profil Anomalii (`opticsOn: false`)**:
-   - Wykorzystuje instancję HTML5 `Audio`.
-   - Obsługuje bezpośrednie ścieżki w katalogu publicznym:
+   - Wykorzystuje instancję HTML5 `Audio` oraz syntezę procesową Web Audio API.
+   - **Skalibrowane próbki organiczne tła**:
      - `/sounds/breathing.mp4`: niepokojący oddech w tle,
      - `/sounds/metal.mp4`: naprężenia konstrukcyjne i chrzęst metalu,
      - `/sounds/water.mp4`: rezonans płynów biologicznych.
-   - Głośność ustawiona na stały niski poziom (`0.2`), aby dźwięk nie zagłuszał lektury, lecz stymulował podświadomą czujność probanda.
-   - Cykl: losowo co **20–45 sekund**.
+   - Poziom głośności został precyzyjnie podniesiony do **`0.38`** (+18% na skali liniowej), co wydobywa gęste tło audialne z zachowaniem headroomu zapobiegającego przesterowaniu. Cykl: losowo co **20–45 sekund**.
    - Przejście do stanu anomalii aktywuje syntezowany spadek częstotliwości piły (`sawtooth` 120 Hz -> 55 Hz), imitujący awarię kineskopu.
+   - **Living Tissue Terminal Keystroke Engine**: "Mięsno-przemysłowy" klik żywej tkanki. Składa się z trzech składowych:
+     1. Głuchy, mięsisty impakt biologiczny (kompresja wilgotnej tkanki pod klawiszem: sweep 160 Hz -> 38 Hz w 45 ms),
+     2. Zardzewiały zgrzyt mechaniczny (fala piłokształtna przez filtr pasmowoprzepustowy 620 Hz o wysokiej dobroci Q=3.5),
+     3. Trzask styków elektrycznych (wyładowanie łukowe: square wave przez filtr górnoprzepustowy 1800 Hz w 15 ms).
 
-3. **Zarządzanie Cyklem Życia i Odporność Przeglądarkowa**:
+3. **Ochrona przed Przesterowaniem i Kumulacją Głosów (Throttling)**:
+   - Wdrożono sprzętowy bufor czasowy (`KEYSTROKE_THROTTLE_MS = 35`).
+   - W przypadku gęstego, szybkiego pisania (maszynopisanie, key repeat), zdarzenia audio wyzwalane częściej niż co 35 ms są ignorowane na poziomie timera `performance.now()`, co eliminuje interferencję fazową, przesterowanie szyn mastera i przeciążenie procesora audio.
+
+4. **Zarządzanie Cyklem Życia i Odporność Przeglądarkowa**:
    - **Autoplay Compliance**: Inicjalizacja `AudioContext.resume()` następuje dopiero po bezpośredniej interakcji probanda z przełącznikiem `AUDIO: WŁ`.
    - **Płynna Zmiana Profilu**: Zmiana stanu przełącznika `OPTYKA` natychmiast zatrzymuje grające próbki organiczne, zeruje timery harmonogramu i inicjuje pętlę nowego profilu.
    - **Bezpieczeństwo SSR**: Wszystkie operacje na obiektach `window`, `AudioContext` i `Audio` są zabezpieczone guardem `typeof window !== 'undefined'`.

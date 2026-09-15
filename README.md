@@ -34,16 +34,20 @@ Projekt stanowi polaryzujący kontrast percepcyjny pomiędzy sterylną, krystali
 System audio reaguje na bieżący stan przełącznika **OPTYKA** w sposób całkowicie natywny (zero zewnętrznych bibliotek npm, czysty Web Audio API + HTML5 Audio):
 
 * 🫁 **Profil Anomalii (Optics OFF / Analog Horror)**:
-  - Obsługa próbek organicznych w folderze `public/sounds/`:
+  - **Próbki organiczne tła** w folderze `public/sounds/`:
     - `/sounds/breathing.mp4` – zniekształcony, mechaniczno-organiczny oddech probanda,
     - `/sounds/metal.mp4` – rezonans naprężeń konstrukcyjnych i metalicznych zgrzytów,
     - `/sounds/water.mp4` – podskórny przepływ cieczy ustrojowych i drenaż limfatyczny.
-  - **Cykl odtwarzania**: Losowe uruchamianie pojedynczej próbki w tle co **20–45 sekund** z niskim, nastrojowym wolumenem (ok. 20%), budującym podświadomy niepokój.
+  - **Skalibrowana głośność tła**: Zwiększony poziom głośności (z 20% do **38%**) gwarantujący czytelną, gęstą obecność psychofizyczną w tle bez przesterowania sygnału.
+  - **Cykl odtwarzania**: Losowe uruchamianie pojedynczej próbki w tle co **20–45 sekund**.
   - **Interferencja kineskopowa**: Dźwięk przesterowanego piłokształtnego spadku częstotliwości (55–120 Hz) przy przejściu w stan anomalii.
+  - **Mięsno-przemysłowy klik klawiatury (Living Tissue Terminal)**: Głuchy, biologiczny impakt wciśnięcia wilgotnej tkanki (160 Hz -> 38 Hz) połączony ze zgrzytem zardzewiałych styków (bandpass 620 Hz) oraz mikro-trzaskiem wyładowania elektrycznego (highpass 1800 Hz).
 * ⚡ **Profil Sterylny (Optics ON / Sterile Mode)**:
   - Minimalistyczny syntezator oparty na **Web Audio API** (`OscillatorNode` + `GainNode`).
-  - Generuje rzadkie, krystalicznie czyste bipy laboratoryjne i impulsy telemetryczne (częstotliwości 880 Hz, 1200 Hz, 1600 Hz, 1760 Hz, 2400 Hz) z gwałtownym opadaniem wykładniczym.
-  - **Cykl odtwarzania**: Dyskretne impulsy co **15–35 sekund** o laboratoryjnym natężeniu (ok. 5%).
+  - **Telemetria laboratoryjna**: Rzadkie, krystalicznie czyste bipy i impulsy harmoniczne (częstotliwości 880 Hz, 1200 Hz, 1600 Hz, 1760 Hz, 2400 Hz) wyzwalane co **15–35 sekund** (głośność 5%).
+  - **Mechaniczny klik maszyny do pisania (Typewriter Engine)**: Czysty, ostry, metaliczny trzask mechanizmu uderzeniowego (fale trójkątne 2200 Hz z subtelną losowością wysokości dźwięku +/-4% oraz mikro-transient 3600 Hz) z szybkim tłumieniem mechanicznym (30 ms).
+* 🛡️ **Ochrona przed Przesterowaniem (Anti-Clipping & Throttling)**:
+  - Bufor czasu (35 ms) chroniący przed nakładaniem się głosów i zniekształceniami bufora audio przy intensywnym, szybkim pisaniu.
 * 🎚️ **Przełącznik w Interfejsie (`[AUDIO: WŁ] / [AUDIO: WYŁ]`)**:
   - Dedykowany przycisk w nagłówku obok selektora optyki umożliwia probandowi natychmiastowe wyciszenie lub aktywację warstwy dźwiękowej.
   - Stylistyka przycisku automatycznie synchronizuje się z aktywnym schematem wizualnym (szmaragdowy neon w trybie Clean vs. krwawy alarm w trybie Anomaly).
