@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { soundEngine } from '@/lib/soundEngine';
 
 interface Message {
   id: string;
@@ -39,6 +40,7 @@ export default function TerminalChatPage() {
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [opticsOn, setOpticsOn] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(false);
   const [tissuePulse, setTissuePulse] = useState(14);
   const [entropy, setEntropy] = useState(91.4);
   const [resonanceFreq, setResonanceFreq] = useState(482);
@@ -55,6 +57,23 @@ export default function TerminalChatPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
+
+  // Synchronizacja trybu optyki z silnikiem audio
+  useEffect(() => {
+    soundEngine.setOpticsMode(opticsOn);
+  }, [opticsOn]);
+
+  // Czyszczenie zasobów audio przy odmontowaniu
+  useEffect(() => {
+    return () => {
+      soundEngine.stopAll();
+    };
+  }, []);
+
+  const handleToggleAudio = () => {
+    const nextState = soundEngine.toggleAudio();
+    setAudioEnabled(nextState);
+  };
 
   // Symulacja parametrów telemetrii bio-fizycznej i sensorycznej
   useEffect(() => {
@@ -289,6 +308,23 @@ export default function TerminalChatPage() {
             </div>
 
             <div className="flex items-center gap-2 text-xs">
+              {/* PRZEŁĄCZNIK AUDIO */}
+              <button
+                onClick={handleToggleAudio}
+                className={`px-3 py-1.5 border transition-all text-xs font-bold tracking-wider ${
+                  audioEnabled
+                    ? opticsOn
+                      ? 'border-emerald-500/60 text-emerald-300 bg-emerald-950/30 hover:bg-emerald-500/20 shadow-[0_0_8px_rgba(16,185,129,0.25)]'
+                      : 'border-[#ff1a1a] text-[#ff9999] bg-[#781414]/50 hover:bg-[#781414] anomaly-glow-blood'
+                    : opticsOn
+                    ? 'border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500 hover:bg-zinc-800/40'
+                    : 'border-[#781414]/50 text-[#856c6c] bg-[#781414]/15 hover:bg-[#781414]/35'
+                }`}
+                title="Włącz/wyłącz pejzaż dźwiękowy (Sterylny syntezator / Próbki anomalii)"
+              >
+                {audioEnabled ? 'AUDIO: WŁ' : 'AUDIO: WYŁ'}
+              </button>
+
               {/* PRZYCISK PRZEŁĄCZANIA OPTYKI */}
               <button
                 onClick={() => setOpticsOn((prev) => !prev)}
