@@ -10,18 +10,24 @@ Aplikacja wykorzystuje pełnostosowy model **Next.js 15+ App Router** ze scentra
 
 ```
 app/
-├── layout.tsx              # Główny layout serwerowy + metadane korporacji NeuroClin
-├── globals.css             # Style Tailwind + motywy Day/Night + filtry CRT Analog Horror
-├── page.tsx                # Strona startowa: Portal NeuroClin Biosciences (w stylu BioIVT)
+├── layout.tsx              # Główny layout serwerowy + KaTeX CSS + metadane korporacji
+├── globals.css             # Style Tailwind + motywy Day/Night + filtry CRT + .redacted-bar
+├── page.tsx                # Strona startowa: Portal NeuroClin Biosciences (Dashboard B2B)
+├── mail/
+│   └── page.tsx            # Poczta wewnętrzna Webmail z zleceniem dr. Webera i tropem ARG
 ├── archive/
-│   └── page.tsx            # Baza publikacji i białych ksiąg wg wireframe'u archiwa.png
+│   └── page.tsx            # Baza publikacji (25+ czystych prac + 3 zredagowane akta Thorne'a)
 ├── chat/
-│   └── page.tsx            # Korporacyjny panel BioResearcher AI™ z degradacją Sanity
+│   └── page.tsx            # Bio-Researcher AI™ (naprawiony auto-scroll, LaTeX, 3-stopniowy Sanity)
+├── services/
+│   └── page.tsx            # Usługi & Cennik B2B: Assaye kontraktowe, kalkulator wyceny, modal RFQ
+├── blog/
+│   └── page.tsx            # Aktualności ze świata biotechnologii i historia Sektor-7
 ├── status/
 │   └── page.tsx            # Telemetria klastra, krio-pętli fenolowej i bioreaktorów
 └── api/
     └── chat/
-        └── route.ts        # Endpoint strumieniowy POST z dynamicznym wyborem promptów neurobiologicznych
+        └── route.ts        # Endpoint strumieniowy POST ze wsparciem SDK @google/genai
 ```
 
 ### Schemat Przepływu Komponentów i Stanu
@@ -35,19 +41,20 @@ app/
                                 +-----------------------------------+
                                 |     components/ClientShell.tsx    |
                                 |  ├── SystemStateProvider          |
-                                |  ├── CRT Overlays (w stadium inf) |
+                                |  ├── CRT Overlays (glitch/insan)  |
                                 |  ├── SystemHeader (Corporate Nav) |
                                 |  └── CorporateFooter              |
                                 +-----------------+-----------------+
                                                   |
-                    +--------------------+--------+--------+--------------------+
-                    |                    |                 |                    |
-                    v                    v                 v                    v
-            +---------------+    +---------------+ +---------------+    +---------------+
-            |  app/page.tsx |    | app/archive/  | | app/chat/     |    | app/status/   |
-            |  Frontpage    |    | page.tsx      | | page.tsx      |    | page.tsx      |
-            |  BioIVT Style |    | Archiwa.png   | | Asystent AI   |    | Status Klastra|
-            +---------------+    +---------------+ +---------------+    +---------------+
+        +---------------+---------------+---------+---------+---------------+---------------+
+        |               |               |                   |               |               |
+        v               v               v                   v               v               v
+  +-----------+   +-----------+   +-----------+       +-----------+   +-----------+   +-----------+
+  | app/      |   | app/mail/ |   | app/      |       | app/chat/ |   | app/      |   | app/blog/ |
+  | page.tsx  |   | page.tsx  |   | archive/  |       | page.tsx  |   | services/ |   | page.tsx  |
+  | Dashboard |   | Webmail   |   | page.tsx  |       | AI Copilot|   | page.tsx  |   | Biotech   |
+  | B2B       |   | Zadanie   |   | Baza prac |       | LaTeX     |   | Kalkulator|   | News      |
+  +-----------+   +-----------+   +-----------+       +-----------+   +-----------+   +-----------+
 ```
 
 ---

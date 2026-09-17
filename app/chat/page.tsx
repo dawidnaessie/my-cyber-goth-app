@@ -20,18 +20,19 @@ const INITIAL_CORPORATE_LOGS: Message[] = [
   {
     id: 'boot-1',
     role: 'assistant',
-    timestamp: '00:00:01',
+    timestamp: '08:45:00',
     content:
-      'WITAJ W BIORESEARCHER AI™ v4.2. Autonomiczny asystent analityczny NeuroClin Biosciences Inc. Połączono z bazą biofizyki komórkowej, kinetyki receptorowej oraz rejestrami mikromacierzy CA1-TH.\n\nParametry bazowe macierzy: potencjał spoczynkowy $V_m = -70.4\\text{ mV}$, stała czasowa desensytyzacji $\\tau_{NMDA} = 42\\text{ ms}$. W czym mogę pomóc w ramach Twojego protokołu badawczego?',
+      'WITAJ W BIORESEARCHER AI™ v4.2. Autonomiczny asystent analityczny NeuroClin Biosciences Inc. Połączono z bazą biofizyki komórkowej, kinetyki receptorowej oraz wytycznymi zespołu badawczego dr. Marcusa H. Webera.\n\nGotowy do analizy mechanizmów terapii chorób neurodegeneracyjnych (demencja, AD): kinetyki inhibitorów AChE ($V_m = -70.4\\text{ mV}$, stała $\\tau_{NMDA} = 42\\text{ ms}$), przeciwciał amyloidowych oraz biomarkerów osoczowych p-tau217. W czym mogę pomóc w ramach Twojego protokołu badawczego?',
   },
 ];
 
 const PRESET_RESEARCH_INQUIRIES = [
-  'Podaj równanie Goldmana-Hodgkina-Katza (GHK) i Nernsta dla potencjału neuronu CA1',
-  'Wyjaśnij mechanizm ekscytotoksyczności receptorów NMDA i napływu jonów Ca2+',
-  'Jakie parametry telemetryczne posiada matryca 16 384 mikrosond krzemowych?',
-  'Kinetyka desensytyzacji receptorów w komórkach piramidowych CA1',
-  'Jaki był cel protokołu stereotaktycznego Dr. Arisa Thorne’a z listopada 1994 r.?',
+  'Przeanalizuj mechanizm działania lecanemabu i ryzyko powikłań ARIA-E',
+  'Wyprowadź równanie kinetyki Michaelisa-Menten dla donepezilu i acetylocholinoesterazy',
+  'Jakie znaczenie diagnostyczne ma stężenie p-tau217 w osoczu?',
+  'Rola szlaku receptorowego TREM2 w modulacji odpowiedzi mikrogleju',
+  'Dlaczego publikacje dr. Thorne’a o organoidach CA1 są zredagowane?',
+  'Co wydarzyło się w Sektorze-7 w listopadzie 1994 roku?',
 ];
 
 export default function ChatPage() {
@@ -43,18 +44,26 @@ export default function ChatPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const isAtBottomRef = useRef<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // Inteligentne przewijanie: przewija tylko gdy użytkownik jest na dole lub wymuszone (force)
+  const scrollToBottom = useCallback((force = false) => {
+    if (force || isAtBottomRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
+  // Monitorowanie czy użytkownik sam przewinął w górę
+  const handleScroll = useCallback(() => {
+    if (!chatContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+    isAtBottomRef.current = scrollHeight - scrollTop - clientHeight < 60;
+  }, []);
 
   const getTimestamp = (): string => {
     const now = new Date();
@@ -133,6 +142,8 @@ export default function ChatPage() {
     setMessages(nextMessages);
     setInput('');
     setIsStreaming(true);
+    isAtBottomRef.current = true;
+    setTimeout(() => scrollToBottom(true), 50);
 
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -189,6 +200,9 @@ export default function ChatPage() {
           }
           return copy;
         });
+
+        // Przewijaj tylko jeśli użytkownik jest przy dolnej krawędzi (nie zrywaj czytania historii)
+        scrollToBottom(false);
       }
 
       setMessages((prev) => {
@@ -318,6 +332,8 @@ export default function ChatPage() {
 
       {/* OKNO WIADOMOŚCI CZATU */}
       <section
+        ref={chatContainerRef}
+        onScroll={handleScroll}
         className={`flex-1 rounded-xl p-4 md:p-6 border min-h-[420px] max-h-[580px] overflow-y-auto space-y-4 transition-all ${
           isDistorted
             ? 'bg-[#060303] border-[#781414]/70 font-mono text-[#e6c2b8]'

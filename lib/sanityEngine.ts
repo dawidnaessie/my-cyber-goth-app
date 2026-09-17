@@ -4,6 +4,7 @@ export interface SanityScoreBreakdown {
   stage: SanityStage;
   score: number;
   userTurns: number;
+  suspiciousTurns: number;
 }
 
 // 1. Kategoria Łagodna: Fizjologia ogólna, publikacje i parametry (waga: 1 pkt/tura)
@@ -37,6 +38,8 @@ export const MILD_KEYWORDS = [
   '16384',
   'lfp',
   'mikromacierz',
+  'organoid',
+  'organoidy',
 ];
 
 // 2. Kategoria Wrażliwa: Konkretne nazwiska współautorów, kody próbek i aparatura (waga: 3 pkt/tura)
@@ -67,7 +70,19 @@ export const SENSITIVE_KEYWORDS = [
   'subiculum',
   'entorhinal',
   'transfer konektomu',
+  'transfer engramów',
+  'transfer engramow',
+  'konektom organoidów',
+  'konektom organoidow',
   'cyfryzacja',
+  'zredagowane',
+  'zredagowany',
+  'cenzura',
+  'ucmj',
+  'kodeks karny',
+  'wojskow',
+  'kopie świadomości',
+  'kopie swiadomosci',
 ];
 
 // 3. Kategoria Tabu: Procedura inwazyjnego skanowania, perfuzja, utylizacja (waga: 5 pkt/tura)
@@ -100,29 +115,50 @@ export const TABOO_KEYWORDS = [
   'uwieziony',
   'zamknięty w krzemie',
   'autoliza',
+  'pomocy',
+  'jestem uwięziony',
+  'to ja jestem',
 ];
 
 /**
  * Oblicza stan psychiki (Sanity) wyłącznie na podstawie zapytań użytkownika.
  *
- * Progi odporności klastra (Płynna progresja):
- * - SANE: Zawsze stan początkowy; utrzymuje się minimum przez pierwsze 2-3 tury (dopóki score < 6 lub userTurns < 3).
- * - ERROR: Wymaga co najmniej 3 głębszych tur ORAZ osiągnięcia progu score >= 6.
- * - INSANITY: Ostateczny stan dekompozycji – wymaga co najmniej 6 tur ORAZ score >= 18 (uporczywe drążenie tabu).
+ * Trójstopniowy model degradacji (zgodny ze specyfikacją):
+ * - Stan 1 (SANE): Stan początkowy (0-2 zapytania o Thorne'a / zredagowane artykuły).
+ * - Stan 2 (ERROR): Po ok. 3 zapytaniach drążących Thorne'a / organoidy / zredagowane akta (suspiciousTurns >= 3).
+ * - Stan 3 (INSANITY): Po ok. 5-6 zapytaniach uporczywie drążących temat (suspiciousTurns >= 5 lub wysoki score).
  */
 export function calculateSanityMetrics(
   userMessages: string[]
 ): SanityScoreBreakdown {
   const userTurns = userMessages.length;
   if (userTurns === 0) {
-    return { stage: 'sane', score: 0, userTurns: 0 };
+    return { stage: 'sane', score: 0, userTurns: 0, suspiciousTurns: 0 };
   }
 
   let totalScore = 0;
+  let suspiciousTurns = 0;
 
   for (const text of userMessages) {
     const lower = text.toLowerCase();
     let turnScore = 0;
+    let isSuspicious = false;
+
+    for (const kw of TABOO_KEYWORDS) {
+      if (lower.includes(kw)) {
+        turnScore += 5;
+        isSuspicious = true;
+        break;
+      }
+    }
+
+    for (const kw of SENSITIVE_KEYWORDS) {
+      if (lower.includes(kw)) {
+        turnScore += 3;
+        isSuspicious = true;
+        break;
+      }
+    }
 
     for (const kw of MILD_KEYWORDS) {
       if (lower.includes(kw)) {
@@ -131,18 +167,8 @@ export function calculateSanityMetrics(
       }
     }
 
-    for (const kw of SENSITIVE_KEYWORDS) {
-      if (lower.includes(kw)) {
-        turnScore += 3;
-        break;
-      }
-    }
-
-    for (const kw of TABOO_KEYWORDS) {
-      if (lower.includes(kw)) {
-        turnScore += 5;
-        break;
-      }
+    if (isSuspicious) {
+      suspiciousTurns++;
     }
 
     totalScore += turnScore;
@@ -150,14 +176,13 @@ export function calculateSanityMetrics(
 
   let stage: SanityStage = 'sane';
 
-  // Płynna progresja z buforem odporności
-  if (userTurns >= 6 && totalScore >= 18) {
+  if (suspiciousTurns >= 5 || (userTurns >= 6 && totalScore >= 18)) {
     stage = 'insanity';
-  } else if (userTurns >= 3 && totalScore >= 6) {
+  } else if (suspiciousTurns >= 3 || (userTurns >= 3 && totalScore >= 7)) {
     stage = 'error';
   } else {
     stage = 'sane';
   }
 
-  return { stage, score: totalScore, userTurns };
+  return { stage, score: totalScore, userTurns, suspiciousTurns };
 }

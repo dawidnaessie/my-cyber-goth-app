@@ -17,9 +17,12 @@ export function SystemHeader() {
 
   const navItems = [
     { href: '/', label: 'Strona Główna' },
-    { href: '/archive', label: 'Publikacje & Archiwum' },
-    { href: '/chat', label: 'BioResearcher AI™' },
-    { href: '/status', label: 'Telemetria & Status' },
+    { href: '/mail', label: 'Poczta', badge: '1' },
+    { href: '/archive', label: 'Archiwum' },
+    { href: '/chat', label: 'Bio-Chat AI' },
+    { href: '/services', label: 'Usługi B2B' },
+    { href: '/blog', label: 'Aktualności' },
+    { href: '/status', label: 'Telemetria' },
   ];
 
   const handleNavClick = () => {
@@ -141,7 +144,7 @@ export function SystemHeader() {
         </Link>
 
         {/* LINKI NAWIGACJI DESKTOP */}
-        <nav className="hidden md:flex items-center space-x-1 font-sans text-sm font-medium">
+        <nav className="hidden md:flex items-center space-x-1 font-sans text-xs lg:text-sm font-medium">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -149,7 +152,7 @@ export function SystemHeader() {
                 key={item.href}
                 href={item.href}
                 onClick={handleNavClick}
-                className={`px-3 py-2 rounded-md transition-all ${
+                className={`px-2.5 lg:px-3 py-1.5 rounded-md transition-all inline-flex items-center gap-1.5 ${
                   isActive
                     ? isDistorted
                       ? 'bg-red-900/50 text-white font-semibold border border-red-700 anomaly-glow-blood'
@@ -157,7 +160,12 @@ export function SystemHeader() {
                     : 'text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
               >
-                {item.label}
+                <span>{item.label}</span>
+                {item.badge && (
+                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-amber-500 text-white animate-pulse">
+                    {item.badge}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -262,13 +270,18 @@ export function SystemHeader() {
               key={item.href}
               href={item.href}
               onClick={handleNavClick}
-              className={`block px-3 py-2 rounded-md text-sm font-medium ${
+              className={`px-3 py-2 rounded-md text-sm font-medium flex items-center justify-between ${
                 pathname === item.href
                   ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 font-bold'
                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              {item.label}
+              <span>{item.label}</span>
+              {item.badge && (
+                <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500 text-white">
+                  {item.badge}
+                </span>
+              )}
             </Link>
           ))}
         </div>

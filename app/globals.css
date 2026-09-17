@@ -109,6 +109,7 @@
 
 .analog-flicker {
   animation: crt-jitter 0.16s infinite;
+  overflow-x: hidden;
 }
 
 /* Glitch tekstu / aberracja chromatyczna */
@@ -143,4 +144,47 @@
 
 .animate-cursor {
   animation: terminal-cursor 0.9s infinite;
+}
+
+/* =========================================================================
+   STYLE CENZURY WOJSKOWEJ I ZREDAGOWANEGO DOKUMENTU (ARG REDACTED BARS)
+   ========================================================================= */
+
+.redacted-bar {
+  display: inline-block;
+  background-color: #0f172a;
+  color: #0f172a;
+  user-select: none;
+  cursor: help;
+  padding: 0 4px;
+  border-radius: 2px;
+  transition: all 0.25s ease-in-out;
+}
+
+.dark .redacted-bar {
+  background-color: #000000;
+  color: #000000;
+}
+
+.redacted-bar:hover,
+.redacted-bar.revealed {
+  background-color: #7f1d1d !important;
+  color: #fecaca !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+/* Klasa dla cenzury w nagłówkach */
+.redacted-solid {
+  background-color: currentColor;
+  opacity: 0.92;
+  display: inline-block;
+  height: 1.1em;
+  vertical-align: middle;
+  border-radius: 2px;
+}
+
+/* Bezpieczny glitch w trybie jasnym (zapobiega rozjeżdżaniu układu) */
+.light-glitch-active {
+  filter: contrast(1.15) saturate(1.2);
+  transition: filter 0.2s ease;
 }

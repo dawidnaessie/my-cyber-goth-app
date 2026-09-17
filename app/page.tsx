@@ -80,24 +80,43 @@ export default function HomePage() {
 
           <div className="pt-2 flex flex-wrap items-center gap-3">
             <Link
+              href="/mail"
+              onClick={() => soundEngine.playKeystroke()}
+              className="px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
+            >
+              <span>Poczta Wewnętrzna</span>
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-white text-amber-900 font-bold animate-pulse">
+                1 PILNY
+              </span>
+            </Link>
+
+            <Link
               href="/archive"
               onClick={() => soundEngine.playKeystroke()}
-              className="px-5 py-3 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
+              className="px-4 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
             >
-              <span>Przeglądaj Publikacje i Archiwa (1991–1994)</span>
+              <span>Archiwum Publikacji</span>
               <span>&rarr;</span>
+            </Link>
+
+            <Link
+              href="/services"
+              onClick={() => soundEngine.playKeystroke()}
+              className="px-4 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-semibold tracking-wide transition-all border border-slate-300 dark:border-slate-700"
+            >
+              Usługi & Cennik B2B
             </Link>
 
             <Link
               href="/chat"
               onClick={() => soundEngine.playKeystroke()}
-              className={`px-5 py-3 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all border ${
+              className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all border ${
                 isDistorted
                   ? 'bg-red-950 border-red-700 text-red-200 hover:bg-red-900 font-mono'
                   : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
               }`}
             >
-              Uruchom BioResearcher AI™
+              Bio-Chat AI
             </Link>
           </div>
 

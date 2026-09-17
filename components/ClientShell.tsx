@@ -37,27 +37,27 @@ function CorporateFooter() {
 
           <div>
             <h4 className="font-semibold text-slate-900 dark:text-slate-200 mb-3 tracking-wider uppercase font-sans">
-              PRODUKTY I MATERIAŁY
+              PRODUKTY I USŁUGI B2B
             </h4>
             <ul className="space-y-2 font-sans">
               <li>
-                <Link href="/" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Kultury Pierwotne CA1 (CA1-TH Series)
+                <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+                  Katalog Assayów Komórkowych & PCR
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Preparaty Synaptosomów Hipokampa
+                <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+                  Pomiary 16 384 Mikrosond HD-MEA
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Krzemowe Macierze 16 384 Mikrosond
+                <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+                  Hodowle Organoidów Kory Mózgowej
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Krio-Bufor Perfuzji Fenolowej
+                <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+                  Kalkulator Wyceny Badań Kontraktowych
                 </Link>
               </li>
             </ul>
@@ -65,27 +65,33 @@ function CorporateFooter() {
 
           <div>
             <h4 className="font-semibold text-slate-900 dark:text-slate-200 mb-3 tracking-wider uppercase font-sans">
-              ZASOBY NAUKOWE
+              PORTAL I ZASOBY
             </h4>
             <ul className="space-y-2 font-sans">
               <li>
-                <Link href="/archive" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Publikacje & Białe Księgi (1991–1994)
+                <Link href="/mail" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors flex items-center gap-1.5">
+                  <span>Poczta Wewnętrzna (Webmail)</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
                 </Link>
               </li>
               <li>
                 <Link href="/archive" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Dossier Archiwalne: Dr. Aris Thorne
+                  Baza Publikacji & Archiwa
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+                  Aktualności i Komunikaty Biotechnologiczne
                 </Link>
               </li>
               <li>
                 <Link href="/chat" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  BioResearcher AI™ Konsultant Kliniczny
+                  BioResearcher AI™ Konsultant Badań
                 </Link>
               </li>
               <li>
                 <Link href="/status" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Telemetria Bioreaktorów Klastra
+                  Telemetria Klastra Obliczeniowego
                 </Link>
               </li>
             </ul>
@@ -126,25 +132,49 @@ function CorporateFooter() {
 }
 
 function ShellContent({ children }: { children: React.ReactNode }) {
-  const { sanityStage, isGlitching, opticsOn } = useSystemState();
+  const { sanityStage, isGlitching, opticsOn, theme } = useSystemState();
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
   return (
     <div
-      className={`min-h-screen relative flex flex-col justify-between transition-colors duration-300 ${
-        isDistorted ? 'bg-[#050404] text-[#cfc4b2]' : 'bg-[#f8fafc] dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100'
-      }`}
+      className={`min-h-screen relative flex flex-col justify-between overflow-x-hidden transition-colors duration-300 ${
+        isDistorted
+          ? 'bg-[#050404] text-[#cfc4b2]'
+          : 'bg-[#f8fafc] dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100'
+      } ${isGlitching && !isDistorted && theme === 'light' ? 'light-glitch-active' : ''}`}
     >
-      {/* NAKŁADKI ANALOG HORROR (Renderowane tylko w stanie Insanity lub podczas glitcha) */}
-      {(isDistorted || isGlitching) && (
+      {/* NAKŁADKI ANALOG HORROR / GLITCH */}
+      {isDistorted ? (
         <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden" aria-hidden="true">
           <div className="absolute inset-0 analog-scanlines opacity-75" />
           <div className="absolute inset-0 analog-vignette opacity-85" />
           <div className="absolute inset-0 analog-noise opacity-60" />
         </div>
-      )}
+      ) : isGlitching ? (
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden" aria-hidden="true">
+          <div
+            className={`absolute inset-0 analog-scanlines ${
+              theme === 'dark' ? 'opacity-40' : 'opacity-15'
+            }`}
+          />
+          <div
+            className={`absolute inset-0 analog-vignette ${
+              theme === 'dark' ? 'opacity-45' : 'opacity-10'
+            }`}
+          />
+          <div
+            className={`absolute inset-0 analog-noise ${
+              theme === 'dark' ? 'opacity-35' : 'opacity-20'
+            }`}
+          />
+        </div>
+      ) : null}
 
-      <div className={`flex-1 flex flex-col transition-all ${isDistorted || isGlitching ? 'analog-flicker' : ''}`}>
+      <div
+        className={`flex-1 flex flex-col transition-all overflow-x-hidden ${
+          isDistorted || isGlitching ? 'analog-flicker' : ''
+        }`}
+      >
         <SystemHeader />
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col">
           {children}
