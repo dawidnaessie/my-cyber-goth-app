@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { useSystemState } from '@/components/SystemStateContext';
 import { soundEngine } from '@/lib/soundEngine';
 import { SanityStage } from '@/lib/prompts';
@@ -14,34 +15,27 @@ interface Message {
   isStreaming?: boolean;
 }
 
-const INITIAL_LOGS: Message[] = [
+const INITIAL_CORPORATE_LOGS: Message[] = [
   {
     id: 'boot-1',
     role: 'assistant',
     timestamp: '00:00:01',
     content:
-      'DIAGNOSTYKA NEUROFIZJOLOGICZNA // WĘZEŁ SYNAPTYCZNY 0x19: Aktywowano protokół BioResearcher AI. Fotony emitowane przez matrycę ekranu wymusiły kaskadę depolaryzacji rodopsyny w twojej siatkówce. Rejestrujemy opóźnienie przewodnictwa w pasmie wzrokowym na poziomie 42 milisekund.',
-  },
-  {
-    id: 'boot-2',
-    role: 'assistant',
-    timestamp: '00:00:02',
-    content:
-      'Interpretujesz ten tekst z opóźnieniem wynikającym z powolnej propagacji potencjałów iglicowych w twojej korze ciemieniowej. Twoje receptory NMDA podlegają stałemu obciążeniu metabolicznemu. Jaki symptom zakłócenia sensorycznego, motorycznego lub pamięciowego chcesz poddać analizie klastra?',
+      'WITAJ W BIORESEARCHER AI™ v4.2. Autonomiczny asystent analityczny NeuroClin Biosciences Inc. Połączono z bazą biofizyki komórkowej, kinetyki receptorowej oraz rejestrami mikromacierzy CA1-TH. W czym mogę pomóc w ramach Twojego protokołu badawczego?',
   },
 ];
 
-const PRESET_SIGNALS = [
-  'Dlaczego rejestruję opóźnienia percepcji siatkówki?',
-  'Wyjaśnij mechanizm ekscytotoksyczności receptorów NMDA',
-  'Kinetyka desensytyzacji receptorów NMDA w CA1',
-  'Czy proces cyfryzacji konektomu niszczy żywą tkankę?',
+const PRESET_RESEARCH_INQUIRIES = [
+  'Wyjaśnij mechanizm ekscytotoksyczności receptorów NMDA i napływu jonów Ca2+',
+  'Jakie parametry telemetryczne posiada matryca 16 384 mikrosond krzemowych?',
+  'Kinetyka desensytyzacji receptorów w komórkach piramidowych CA1',
+  'Jaki był cel protokołu stereotaktycznego Dr. Arisa Thorne’a z listopada 1994 r.?',
 ];
 
 export default function ChatPage() {
   const { opticsOn, sanityStage, setSanityStage, triggerGlitch } = useSystemState();
 
-  const [messages, setMessages] = useState<Message[]>(INITIAL_LOGS);
+  const [messages, setMessages] = useState<Message[]>(INITIAL_CORPORATE_LOGS);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -49,6 +43,8 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const isDistorted = !opticsOn || sanityStage === 'insanity';
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -68,7 +64,7 @@ export default function ChatPage() {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-    setMessages(INITIAL_LOGS);
+    setMessages(INITIAL_CORPORATE_LOGS);
     setErrorMessage(null);
     setSanityStage('sane');
   };
@@ -80,13 +76,7 @@ export default function ChatPage() {
 
     soundEngine.playKeystroke();
 
-    if (trimmed.toLowerCase() === '/clear' || trimmed.toLowerCase() === 'clear') {
-      handleClear();
-      setInput('');
-      return;
-    }
-
-    if (trimmed.toLowerCase() === '/reset' || trimmed.toLowerCase() === 'reset') {
+    if (trimmed.toLowerCase() === '/clear' || trimmed.toLowerCase() === 'clear' || trimmed.toLowerCase() === '/reset') {
       handleClear();
       setInput('');
       return;
@@ -94,339 +84,325 @@ export default function ChatPage() {
 
     setErrorMessage(null);
 
-    // PŁYNNA PROGRESJA SANITY: bufor odporności klastra oraz ważone punkty
+    // PŁYNNA PROGRESJA SANITY
     const priorUserTexts = messages
       .filter((m) => m.role === 'user')
       .map((m) => m.content);
-    const allUserTexts = [...priorUserTexts, trimmed];
+    const updatedUserTexts = [...priorUserTexts, trimmed];
 
-    const metrics = calculateSanityMetrics(allUserTexts);
-    let nextStage: SanityStage = sanityStage;
+    const currentMetrics = calculateSanityMetrics(updatedUserTexts);
+    const calculatedStage = currentMetrics.stage;
 
-    if (sanityStage === 'insanity' || metrics.stage === 'insanity') {
-      nextStage = 'insanity';
+    // Przejście stanów Sanity
+    if (sanityStage === 'insanity' || calculatedStage === 'insanity') {
       setSanityStage('insanity');
-    } else if (sanityStage === 'error' || metrics.stage === 'error') {
-      nextStage = 'error';
+    } else if (sanityStage === 'error' || calculatedStage === 'error') {
       setSanityStage('error');
-      // Wyzwolenie 1.6-sekundowego glitcha kineskopu przy wejściu w error
       if (sanityStage !== 'error') {
-        triggerGlitch(1600);
+        triggerGlitch(2000);
       }
     } else {
-      nextStage = 'sane';
       setSanityStage('sane');
     }
 
-    const userTimestamp = getTimestamp();
+    const effectiveStage: SanityStage =
+      sanityStage === 'insanity' || calculatedStage === 'insanity'
+        ? 'insanity'
+        : sanityStage === 'error' || calculatedStage === 'error'
+        ? 'error'
+        : 'sane';
+
     const userMessage: Message = {
-      id: `usr-${Date.now()}`,
+      id: `user-${Date.now()}`,
       role: 'user',
       content: trimmed,
-      timestamp: userTimestamp,
+      timestamp: getTimestamp(),
     };
 
-    const nextMessages = [...messages, userMessage];
-    setMessages(nextMessages);
-    setInput('');
-
-    // Rezerwacja węzła odpowiedzi
-    const assistantId = `bot-${Date.now()}`;
-    const assistantTimestamp = getTimestamp();
-    const placeholderMessage: Message = {
-      id: assistantId,
+    const assistantPlaceholder: Message = {
+      id: `assistant-${Date.now()}`,
       role: 'assistant',
       content: '',
-      timestamp: assistantTimestamp,
+      timestamp: getTimestamp(),
       isStreaming: true,
     };
 
-    setMessages([...nextMessages, placeholderMessage]);
+    const nextMessages = [...messages, userMessage, assistantPlaceholder];
+    setMessages(nextMessages);
+    setInput('');
     setIsStreaming(true);
 
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     try {
-      const payloadMessages = nextMessages.map((msg) => ({
-        role: msg.role === 'user' ? 'user' : 'assistant',
-        content: msg.content,
-      }));
-
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: payloadMessages,
-          sanityStage: nextStage,
+          messages: [...messages, userMessage].map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+          sanityStage: effectiveStage,
         }),
-        signal: abortController.signal,
+        signal: controller.signal,
       });
 
       if (!response.ok) {
-        let errText = '';
+        let errDesc = `Błąd połączenia z klastrem (Status: ${response.status})`;
         try {
-          const errorData = await response.json();
-          errText = errorData.error || `Zakłócenie interfejsu (Kod błędu: ${response.status})`;
+          const errJson = await response.json();
+          if (errJson.error) errDesc = errJson.error;
         } catch {
-          const rawText = await response.text().catch(() => '');
-          errText = rawText || `Zakłócenie interfejsu (Kod błędu: ${response.status})`;
+          // Fallback
         }
-        throw new Error(errText);
-      }
-
-      // Sprawdzamy nagłówek stadium zwrócony z serwera
-      const serverStage = response.headers.get('x-sanity-stage') as SanityStage | null;
-      if (serverStage && serverStage !== sanityStage) {
-        setSanityStage(serverStage);
-        if (serverStage === 'error') {
-          triggerGlitch(1600);
-        }
+        throw new Error(errDesc);
       }
 
       if (!response.body) {
-        throw new Error('Pusty strumień bajtów z procesora inferencji.');
+        throw new Error('Pusty strumień odpowiedzi serwera.');
       }
 
       const reader = response.body.getReader();
-      const decoder = new TextDecoder('utf-8');
-      let accumulatedText = '';
+      const decoder = new TextDecoder();
+      let accumulatedContent = '';
 
       while (true) {
-        const { done, value } = await reader.read();
+        const { value, done } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        accumulatedText += chunk;
+        const chunkText = decoder.decode(value, { stream: true });
+        accumulatedContent += chunkText;
 
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantId
-              ? { ...m, content: accumulatedText, isStreaming: true }
-              : m
-          )
-        );
+        setMessages((prev) => {
+          const copy = [...prev];
+          const lastIdx = copy.length - 1;
+          if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
+            copy[lastIdx] = {
+              ...copy[lastIdx],
+              content: accumulatedContent,
+              isStreaming: true,
+            };
+          }
+          return copy;
+        });
       }
 
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === assistantId
-            ? { ...m, isStreaming: false }
-            : m
-        )
-      );
+      setMessages((prev) => {
+        const copy = [...prev];
+        const lastIdx = copy.length - 1;
+        if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
+          copy[lastIdx] = {
+            ...copy[lastIdx],
+            content: accumulatedContent,
+            isStreaming: false,
+          };
+        }
+        return copy;
+      });
+
+      if (effectiveStage === 'error' && Math.random() < 0.35) {
+        triggerGlitch(1400);
+      }
     } catch (err: unknown) {
-      if ((err as Error).name === 'AbortError') {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantId
-              ? { ...m, content: m.content + ' [STRUMIEŃ PRZERWANY PRZEZ OPERATORA]', isStreaming: false }
-              : m
-          )
-        );
+      if (err instanceof Error && err.name === 'AbortError') {
+        setMessages((prev) => {
+          const copy = [...prev];
+          const lastIdx = copy.length - 1;
+          if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
+            copy[lastIdx] = {
+              ...copy[lastIdx],
+              content: copy[lastIdx].content + '\n\n[POŁĄCZENIE PRZERWANE PRZEZ KLIENTA]',
+              isStreaming: false,
+            };
+          }
+          return copy;
+        });
       } else {
-        const errorMsg = err instanceof Error ? err.message : String(err);
-        setErrorMessage(errorMsg);
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantId
-              ? {
-                  ...m,
-                  content:
-                    m.content ||
-                    `[BŁĄD DEKODOWANIA SYGNAŁU]: Inferencja zatrzymana przez jednostkę nadrzędną.\n${errorMsg}`,
-                  isStreaming: false,
-                }
-              : m
-          )
-        );
+        const messageText = err instanceof Error ? err.message : String(err);
+        setErrorMessage(messageText);
+        setMessages((prev) => {
+          const copy = [...prev];
+          const lastIdx = copy.length - 1;
+          if (lastIdx >= 0 && copy[lastIdx].role === 'assistant' && !copy[lastIdx].content) {
+            return copy.slice(0, -1);
+          }
+          return copy;
+        });
       }
     } finally {
       setIsStreaming(false);
       abortControllerRef.current = null;
-      inputRef.current?.focus();
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(e.key)) {
-      soundEngine.playKeystroke();
-    }
-
-    if (e.key === 'Enter') {
+    soundEngine.playKeystroke();
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
   };
 
-  const handleAbort = () => {
-    soundEngine.playKeystroke();
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-  };
-
   return (
-    <div className="flex-1 flex flex-col justify-between space-y-3">
-      {/* KONSOLA DIALOGOWA */}
+    <div className="flex-1 flex flex-col justify-between space-y-4 font-sans">
+      {/* NAGŁÓWEK TERMINALA CZATU */}
       <section
-        className={`flex-1 overflow-hidden flex flex-col relative min-h-[520px] border transition-all duration-300 ${
-          opticsOn
-            ? 'bg-[#0b0d14]/95 border-zinc-800 clean-border-glow'
-            : 'bg-[#080505]/95 border-[#781414]/60 anomaly-border-blood'
+        className={`p-4 rounded-xl border transition-all duration-300 ${
+          isDistorted
+            ? 'bg-[#090505] border-[#781414] anomaly-border-blood text-[#e6c2b8]'
+            : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
         }`}
       >
-        {/* Pasek statusu Sanity */}
-        <div
-          className={`p-2.5 px-4 border-b flex items-center justify-between text-xs font-mono transition-colors ${
-            opticsOn ? 'border-zinc-800/80 bg-[#0d0f18]' : 'border-[#781414]/30 bg-[#0d0606]'
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                sanityStage === 'insanity'
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-200 dark:border-slate-800">
+          <div className="flex items-center space-x-3">
+            <div
+              className={`w-3 h-3 rounded-full ${
+                isDistorted
                   ? 'bg-red-500 animate-ping'
                   : sanityStage === 'error'
                   ? 'bg-amber-400 animate-pulse'
-                  : 'bg-emerald-400'
+                  : 'bg-emerald-500'
               }`}
             />
-            <span
-              className={`font-bold tracking-wider uppercase text-[11px] ${
-                sanityStage === 'insanity'
-                  ? 'text-red-400 anomaly-glow-blood'
+            <div>
+              <h1
+                className={`text-base font-bold tracking-tight ${
+                  isDistorted ? 'text-red-400 anomaly-glow-blood font-mono' : 'text-slate-900 dark:text-white'
+                }`}
+              >
+                {isDistorted
+                  ? 'KLASTER THORNE’A // ZAKŁÓCENIE KONEKTOMU 0x19'
                   : sanityStage === 'error'
-                  ? 'text-amber-300'
-                  : 'text-cyan-300'
-              }`}
-            >
-              STAN SANITY:{' '}
-              {sanityStage === 'insanity'
-                ? 'INSANITY // DR. THORNE UJAWNIONY'
-                : sanityStage === 'error'
-                ? 'ERROR // DEKOMPOZYCJA WĘZŁA'
-                : 'SANE // BioResearcher AI'}
-            </span>
+                  ? 'BioResearcher AI™ // ABERRACJA POTENCJAŁÓW CA1'
+                  : 'BioResearcher AI™ // Konsultant Biofizyki Komórkowej'}
+              </h1>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                {isDistorted
+                  ? 'STAN: UWIĘZIENIE W KRZEMIE // SEKTOR-7 (1994)'
+                  : 'Model Analityczny: Gemini 3.6 Flash // Protokoły GLP/DoD'}
+              </p>
+            </div>
           </div>
 
-          <button
-            onClick={handleClear}
-            className={`px-2.5 py-0.5 border text-[10px] font-semibold tracking-wider ${
-              opticsOn
-                ? 'border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500'
-                : 'border-[#781414] text-[#ff8888] hover:bg-[#781414]/40'
-            }`}
-          >
-            PURGE BUFFER
-          </button>
-        </div>
-
-        {/* Okno wiadomości */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 font-mono text-xs md:text-sm">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`p-3.5 border-l-2 transition-all duration-200 ${
-                msg.role === 'user'
-                  ? opticsOn
-                    ? 'border-cyan-500 bg-cyan-950/20 text-zinc-100'
-                    : 'border-[#ff1a1a] bg-[#781414]/20 text-[#fcedeb] shadow-[0_0_12px_rgba(120,20,20,0.4)]'
-                  : opticsOn
-                  ? 'border-zinc-600 bg-zinc-900/40 text-zinc-200'
-                  : 'border-[#b58b45] bg-[#b58b45]/10 text-[#d8cfbe] anomaly-chromatic'
+          <div className="flex items-center space-x-2">
+            <span
+              className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                isDistorted
+                  ? 'bg-red-950 text-red-300 border border-red-800'
+                  : sanityStage === 'error'
+                  ? 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300'
+                  : 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300'
               }`}
             >
-              <div className="flex items-center justify-between text-[11px] mb-1.5 opacity-80">
-                <span className="font-bold tracking-wider">
-                  {msg.role === 'user' ? (
-                    <span className={opticsOn ? 'text-cyan-400' : 'text-[#ff6666]'}>
-                      [PROBAND / WEJŚCIE_BIOLOGICZNE]:~$
-                    </span>
-                  ) : (
-                    <span
-                      className={
-                        sanityStage === 'insanity'
-                          ? 'text-[#ff4d4d] anomaly-glow-blood font-bold'
-                          : opticsOn
-                          ? 'text-emerald-400 clean-glow-emerald'
-                          : 'text-[#b58b45] anomaly-glow-amber'
-                      }
-                    >
-                      {sanityStage === 'insanity'
-                        ? '⚡ DR. ARIS THORNE [KONEKTOM]:'
-                        : sanityStage === 'error'
-                        ? '⚡ WĘZEŁ_0x19 [ANOMALIA]:'
-                        : '⚡ BIO_RESEARCHER://ANALYST:'}
-                    </span>
-                  )}
+              SANITY: {sanityStage.toUpperCase()}
+            </span>
+            <button
+              onClick={handleClear}
+              className="px-2.5 py-1 rounded text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
+            >
+              Wyczyść
+            </button>
+          </div>
+        </div>
+
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-sans">
+          Zadawaj pytania dotyczące kinetyki receptorów NMDA, procedury fiksacji CA1 lub prac badawczych zespołu Sektor-7.
+          Wszelkie dane archiwalne weryfikowane są z rejestrem publikacji NeuroClin.
+        </p>
+      </section>
+
+      {/* OKNO WIADOMOŚCI CZATU */}
+      <section
+        className={`flex-1 rounded-xl p-4 md:p-6 border min-h-[420px] max-h-[580px] overflow-y-auto space-y-4 transition-all ${
+          isDistorted
+            ? 'bg-[#060303] border-[#781414]/70 font-mono text-[#e6c2b8]'
+            : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-inner text-slate-800 dark:text-slate-200'
+        }`}
+      >
+        {messages.map((msg) => (
+          <div
+            key={msg.id}
+            className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+          >
+            <div
+              className={`max-w-3xl rounded-xl p-4 text-xs md:text-sm leading-relaxed transition-all shadow-sm ${
+                msg.role === 'user'
+                  ? isDistorted
+                    ? 'bg-red-950/60 border border-red-700 text-red-100 font-mono'
+                    : 'bg-sky-600 text-white font-sans'
+                  : isDistorted
+                  ? 'bg-[#100707] border border-red-900/80 text-red-200 font-mono anomaly-glow-blood'
+                  : 'bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 font-sans'
+              }`}
+            >
+              <div className="flex items-center justify-between text-[10px] mb-1 opacity-70 font-mono">
+                <span className="font-bold uppercase tracking-wider">
+                  {msg.role === 'user'
+                    ? 'UŻYTKOWNIK // BADAWCA:'
+                    : isDistorted
+                    ? '⚡ DR. ARIS THORNE [KONEKTOM]:'
+                    : 'BioResearcher AI™:'}
                 </span>
-                <span className={`text-[10px] ${opticsOn ? 'text-zinc-500' : 'text-[#706659]'}`}>
-                  {msg.timestamp}
-                </span>
+                <span className="ml-3">{msg.timestamp}</span>
               </div>
 
-              <div className="whitespace-pre-wrap leading-relaxed tracking-wide break-words">
+              <div className="whitespace-pre-wrap break-words">
                 {msg.content}
                 {msg.isStreaming && (
                   <span
-                    className={`inline-block w-2.5 h-4 ml-1 align-middle animate-cursor ${
-                      opticsOn ? 'bg-cyan-400' : 'bg-[#ff1a1a]'
+                    className={`inline-block w-2 h-3.5 ml-1 align-middle ${
+                      isDistorted ? 'bg-red-500 animate-pulse' : 'bg-sky-500 animate-pulse'
                     }`}
                   />
                 )}
               </div>
             </div>
-          ))}
+          </div>
+        ))}
 
-          {errorMessage && (
-            <div className="p-3 border border-[#ff1a1a] bg-[#781414]/25 text-[#ffb3b3] text-xs space-y-1 anomaly-border-blood">
-              <p className="font-bold tracking-wider">[KRYTYCZNY BŁĄD PROCESORA DIAGNOSTYCZNEGO]:</p>
-              <p>{errorMessage}</p>
-            </div>
-          )}
+        {errorMessage && (
+          <div className="p-3 rounded-lg border border-red-500 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-xs font-mono">
+            <p className="font-bold">[BŁĄD KOMUNIKACJI KLASTRA]:</p>
+            <p>{errorMessage}</p>
+          </div>
+        )}
 
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Szybkie wektory analizy / wskazówki ARG */}
-        <div
-          className={`p-2 border-t flex items-center gap-1.5 overflow-x-auto text-[11px] transition-colors ${
-            opticsOn ? 'border-zinc-800 bg-[#0d0f18]' : 'border-[#781414]/30 bg-[#0a0707]'
-          }`}
-        >
-          <span
-            className={`px-1 select-none whitespace-nowrap uppercase tracking-wider font-semibold ${
-              opticsOn ? 'text-zinc-500' : 'text-[#706659]'
-            }`}
-          >
-            WEKTORY:
-          </span>
-          {PRESET_SIGNALS.map((preset, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleSend(preset)}
-              disabled={isStreaming}
-              className={`px-2.5 py-1 border transition-all whitespace-nowrap disabled:opacity-40 text-[11px] ${
-                opticsOn
-                  ? 'border-zinc-800 text-zinc-300 hover:border-cyan-500 hover:text-cyan-200 hover:bg-cyan-950/30'
-                  : 'border-[rgba(140,97,54,0.3)] text-[#bfae95] hover:border-[#ff1a1a] hover:text-[#ffcccc] hover:bg-[#781414]/20'
-              }`}
-            >
-              {preset}
-            </button>
-          ))}
-        </div>
+        <div ref={messagesEndRef} />
       </section>
 
-      {/* PANEL WPROWADZANIA DANYCH */}
+      {/* SZYBKIE PRZYKŁADY ZAPYTAŃ BADAWCZYCH */}
+      <section className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+        <span className="text-[10px] font-mono text-slate-400 whitespace-nowrap font-semibold uppercase">
+          ZAPYTANIA:
+        </span>
+        {PRESET_RESEARCH_INQUIRIES.map((preset, idx) => (
+          <button
+            key={idx}
+            onClick={() => {
+              soundEngine.playKeystroke();
+              handleSend(preset);
+            }}
+            disabled={isStreaming}
+            className={`px-3 py-1.5 rounded-full border whitespace-nowrap transition-all disabled:opacity-40 text-xs font-sans ${
+              isDistorted
+                ? 'bg-red-950/40 border-red-800 text-red-300 hover:bg-red-900/60 font-mono'
+                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-sky-400 hover:text-sky-600'
+            }`}
+          >
+            {preset}
+          </button>
+        ))}
+      </section>
+
+      {/* FORMULARZ WPISYWANIA WIADOMOŚCI */}
       <footer
-        className={`p-3 border transition-all duration-300 ${
-          opticsOn
-            ? 'bg-[#0f111a]/90 backdrop-blur-md border-zinc-800 clean-border-glow'
-            : 'bg-[#0d0707]/95 border-[#781414]/70 anomaly-border-blood'
+        className={`p-3 rounded-xl border transition-all ${
+          isDistorted
+            ? 'bg-[#0a0505] border-[#781414] anomaly-border-blood'
+            : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
         }`}
       >
         <form
@@ -436,13 +412,6 @@ export default function ChatPage() {
           }}
           className="flex items-center gap-2"
         >
-          <span
-            className={`font-bold text-sm hidden sm:inline select-none ${
-              opticsOn ? 'text-cyan-400 clean-glow-cyan' : 'text-[#ff1a1a] anomaly-glow-blood'
-            }`}
-          >
-            &gt;&gt;
-          </span>
           <input
             ref={inputRef}
             type="text"
@@ -452,39 +421,37 @@ export default function ChatPage() {
             disabled={isStreaming}
             placeholder={
               isStreaming
-                ? 'Dekodowanie strumienia konektomu... [INFERENCJA W TOKU]'
-                : sanityStage === 'insanity'
-                ? 'Rejestr klastra zdezorganizowany. Wprowadź odpowiedź...'
-                : sanityStage === 'error'
-                ? 'Zakłócenie bufora pamięci... Wprowadź parametr...'
-                : 'Wprowadź zapytanie o kinetykę synaptyczną lub parametr biofizyczny...'
+                ? 'Trwa inferencja w klastrze obliczeniowym...'
+                : 'Wpisz zapytanie o kinetykę NMDA, CA1 lub podaj sygnaturę publikacji...'
             }
-            className={`flex-1 text-xs md:text-sm px-3 py-2.5 outline-none font-mono tracking-wider transition border ${
-              opticsOn
-                ? 'bg-[#08090f] border-zinc-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 text-zinc-100 placeholder-zinc-500'
-                : 'bg-[#060404] border-[#781414]/60 focus:border-[#ff1a1a] focus:ring-1 focus:ring-[#ff1a1a]/40 text-[#cfc4b2] placeholder-[#734e4e]'
+            className={`flex-1 text-xs sm:text-sm px-4 py-2.5 rounded-lg outline-none transition border font-sans ${
+              isDistorted
+                ? 'bg-[#050303] border-[#781414] text-red-200 placeholder-red-800 font-mono focus:border-red-600'
+                : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-sky-500'
             }`}
           />
 
           {isStreaming ? (
             <button
               type="button"
-              onClick={handleAbort}
-              className="px-4 py-2.5 bg-[#781414]/30 border border-[#ff1a1a] text-[#ff9999] hover:bg-[#781414]/60 text-xs tracking-wider transition font-bold"
+              onClick={() => {
+                if (abortControllerRef.current) abortControllerRef.current.abort();
+              }}
+              className="px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold tracking-wider transition"
             >
-              PRZERWIJ ODCZYT
+              PRZERWIJ
             </button>
           ) : (
             <button
               type="submit"
               disabled={!input.trim()}
-              className={`px-5 py-2.5 border text-xs tracking-wider font-bold transition disabled:opacity-30 ${
-                opticsOn
-                  ? 'bg-cyan-500/20 border-cyan-500 text-cyan-200 hover:bg-cyan-500 hover:text-black clean-glow-cyan'
-                  : 'bg-[#781414]/30 border-[#ff1a1a] text-[#ffcccc] hover:bg-[#781414] hover:text-white anomaly-glow-blood'
+              className={`px-5 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition disabled:opacity-30 shadow-sm ${
+                isDistorted
+                  ? 'bg-red-900 hover:bg-red-800 text-white font-mono border border-red-700'
+                  : 'bg-sky-600 hover:bg-sky-700 text-white font-sans'
               }`}
             >
-              TRANSMITUJ
+              WYŚLIJ
             </button>
           )}
         </form>

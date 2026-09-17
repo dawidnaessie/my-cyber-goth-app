@@ -7,202 +7,288 @@ import { soundEngine } from '@/lib/soundEngine';
 
 export default function HomePage() {
   const { opticsOn, sanityStage } = useSystemState();
-
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
-  const cards = [
+  const productCatalog = [
     {
-      href: '/chat',
-      badge: 'KONEKTOMIKA // WĘZEŁ 0x19',
-      title: 'BIO-CHAT / TERMINAL',
-      subtitle: 'Inferencja biofizyczna i elektrofizjologia synaptyczna',
+      sku: 'CAT #NC-CA1-94',
+      badge: 'BIOLOGICZNY MATERIAŁ PIERWOTNY',
+      title: 'Primary CA1 Hippocampal Neuronal Cultures (CA1-TH Series)',
       description:
-        'Interfejs komunikacyjny z modelem analitycznym BioResearcher AI. Umożliwia dekompozycję opóźnień sensorycznych, badanie kinetyki receptorów NMDA/GABA oraz analizę potencjałów czynnościowych.',
-      cta: 'URUCHOM TERMINAL >>',
-      accent: 'cyan',
+        'Kriokonserwowane pierwotne neurony piramidowe CA1 izolowane w procedurze stereotaktycznej. Zapewniają wysoką gęstość receptorów NMDA GluN2B, zachowaną kinetykę LTP oraz gotowość do testów elektrofizjologicznych.',
+      features: ['99.4% żywotności synaptycznej', 'Zgodność z protokołem Sektor-7 (1994)', 'Format MEA-64 / 16K'],
+      cta: 'Szczegóły Produktu',
     },
     {
-      href: '/archive',
-      badge: 'AKTA ARCHIWALNE // 1994',
-      title: 'ARCHIWUM PROJEKTU // SEKTOR-7',
-      subtitle: 'Dossier zaginionego badacza i raporty konektomiczne',
+      sku: 'CAT #NC-MEA-16K',
+      badge: 'APARATURA ELEKTROFIZJOLOGICZNA',
+      title: '16,384-Site Silicon Microelectrode Array (Thorne Substrate)',
       description:
-        'Dokumentacja procedur mikroelektrodowych z lat 1992–1994. Zawiera zredagowane protokoły transferu pamięci, analizy degradacji tkankowej oraz fotografię biometryczną Dr. Arisa Thorne’a.',
-      cta: 'OTWÓRZ AKTA >>',
-      accent: 'amber',
+        'Krzemowa matryca o ultra-wysokiej gęstości 16 384 platynowanych mikrosond. Umożliwia rejestrację lokalnych potencjałów polowych (LFP) i pojedynczych iglic z całego przekroju hipokampa z opóźnieniem poniżej 50 µs.',
+      features: ['Średnica sondy 1.2 µm', 'Magistrala 66 MHz FPGA', 'Jednoczesne próbkowanie 10^5 neuronów'],
+      cta: 'Specyfikacja Techniczna',
     },
     {
-      href: '/status',
-      badge: 'TELEMETRIA KLASTRA',
-      title: 'RAPORTY ANOMALII / STATUS',
-      subtitle: 'Parametry biofizyczne klastra i zrzuty pamięci rejestrów',
+      sku: 'CAT #NC-ASSAY-EXC',
+      badge: 'ZESTAW DIAGNOSTYCZNY',
+      title: 'Glutamate Excitotoxicity & Calcium Influx Kinetic Assay',
       description:
-        'Monitoring stabilności napięciowej macierzy obliczeniowej, indeksy ekscytotoksyczności receptorowej, parametry chłodzenia fenolowego oraz surowe zrzuty pamięci rejestrów neuronowych w kodzie HEX.',
-      cta: 'SPRAWDŹ STATUS >>',
-      accent: 'emerald',
+        'Zintegrowany panel pomiaru masywnego wyrzutu glutaminianu, wyczerpania pompy sodowo-potasowej oraz indukcji porów mitochondrialnych mPTP. Niezbędny w badaniach neurodegeneracji i neuroprotekcji.',
+      features: ['Fluorofory Fura-2 AM & FM1-43', 'Pomiary w czasie rzeczywistym', 'Kontrola desensytyzacji NMDA'],
+      cta: 'Dokumentacja Panelu',
+    },
+    {
+      sku: 'CAT #NC-PERF-S7',
+      badge: 'KRIO-BUFOR SPECJALNY',
+      title: 'Phenolic Engram Preservation Buffer (Reagent S7-1994)',
+      description:
+        'Opatentowany roztwór buforowanego krystalicznego fenolu do natychmiastowej fiksacji fosforylacji receptorowej i zamrażania konformacji kolców dendrytycznych w trakcie aktywnych rytmów theta.',
+      features: ['Fiksacja w -15°C', 'Eliminacja rozpadu synaptycznego', 'Stabilizacja konektomu in situ'],
+      cta: 'Karta Charakterystyki (MSDS)',
     },
   ];
 
   return (
-    <div className="flex-1 flex flex-col justify-between py-4 space-y-6">
-      {/* BANER GŁÓWNY PORTALU */}
+    <div className="flex-1 flex flex-col space-y-12 font-sans">
+      {/* 1. HERO SECTION (High-End Life Sciences / BioIVT Style) */}
       <section
-        className={`p-5 md:p-8 border transition-all duration-300 relative ${
-          opticsOn
-            ? 'bg-[#0b0d14]/90 border-zinc-800 clean-border-glow'
-            : 'bg-[#090505]/95 border-[#781414]/70 anomaly-border-blood'
+        className={`rounded-2xl p-6 sm:p-10 md:p-14 border transition-all duration-300 relative overflow-hidden ${
+          isDistorted
+            ? 'bg-[#0a0505] border-[#781414] anomaly-border-blood text-[#e6c2b8]'
+            : 'bg-gradient-to-b from-white to-slate-50 dark:from-[#111827] dark:to-[#0c101a] border-slate-200 dark:border-slate-800 shadow-sm'
         }`}
       >
-        <div className="max-w-3xl space-y-3">
-          <div className="flex items-center gap-2">
-            <span
-              className={`text-[10px] px-2 py-0.5 border font-bold uppercase tracking-widest ${
-                opticsOn
-                  ? 'border-cyan-500/40 text-cyan-300 bg-cyan-950/20'
-                  : 'border-[#ff1a1a]/70 text-[#ff8888] bg-[#781414]/30 anomaly-glow-blood'
-              }`}
-            >
-              INSTYTUT NEUROBIOLOGII POZNAWCZEJ // SEKTOR-7
-            </span>
-            <span className="text-[10px] text-zinc-500 font-mono">DOKUMENTACJA POUFNA // 1994</span>
+        <div className="max-w-3xl space-y-4">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300/60 dark:border-sky-800">
+            <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+            <span>AKREDYTOWANY DOSTAWCA PREPARATÓW NEURONALNYCH & KONEKTOMIKI</span>
           </div>
 
-          <h2
-            className={`text-xl md:text-3xl font-bold tracking-wider transition-colors ${
-              opticsOn ? 'text-zinc-100 clean-glow-cyan' : 'text-[#ffcccc] anomaly-glow-blood anomaly-chromatic'
+          <h1
+            className={`text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight ${
+              isDistorted ? 'text-red-400 anomaly-glow-blood font-mono' : 'text-slate-900 dark:text-white'
             }`}
           >
-            INSTYTUT NEUROBIOLOGII POZNAWCZEJ // BioResearcher AI
-          </h2>
+            Przełomowa Neuro-Diagnostyka & Zaawansowana Konektomika Komórkowa
+          </h1>
 
-          <p
-            className={`text-xs md:text-sm leading-relaxed font-mono ${
-              opticsOn ? 'text-zinc-300' : 'text-[#cfc4b2]'
-            }`}
-          >
-            Zautomatyzowany portal analityczny łączący biofizykę komórkową, elektrofizjologię synaptyczną oraz
-            eksperymentalną symulację ludzkiego konektomu w krzemowych architekturach bramkowych.
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+            Dostarczamy certyfikowane hodowle pierwotne hipokampa, wielokanałowe krzemowe matryce mikroelektrodowe
+            oraz autonomiczną platformę <strong>BioResearcher AI™</strong> do zaawansowanego modelowania biofizyki
+            synaptycznej i plastyczności neuronowej.
           </p>
 
+          <div className="pt-2 flex flex-wrap items-center gap-3">
+            <Link
+              href="/archive"
+              onClick={() => soundEngine.playKeystroke()}
+              className="px-5 py-3 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
+            >
+              <span>Przeglądaj Publikacje i Archiwa (1991–1994)</span>
+              <span>&rarr;</span>
+            </Link>
+
+            <Link
+              href="/chat"
+              onClick={() => soundEngine.playKeystroke()}
+              className={`px-5 py-3 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all border ${
+                isDistorted
+                  ? 'bg-red-950 border-red-700 text-red-200 hover:bg-red-900 font-mono'
+                  : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              Uruchom BioResearcher AI™
+            </Link>
+          </div>
+
+          {/* Dyskretna notatka naukowa z elementem lore */}
           <div
-            className={`p-3 border text-xs font-mono transition-colors ${
-              opticsOn
-                ? 'border-zinc-800/80 bg-zinc-950/40 text-zinc-400'
-                : 'border-[#781414]/50 bg-[#781414]/15 text-[#f5b8b0]'
+            className={`mt-4 p-3 rounded-lg border text-xs leading-relaxed ${
+              isDistorted
+                ? 'bg-red-950/40 border-red-800 text-red-300 font-mono'
+                : 'bg-slate-100/70 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
             }`}
           >
-            <p className="font-bold tracking-wider">
+            <p className="font-semibold text-slate-800 dark:text-slate-200">
               {isDistorted
-                ? '[OSTRZEŻENIE O DESYNCHRONIZACJI SYGNAŁU KONEKTOMU]:'
-                : '[NOTATKA METODYCZNA STACJI BADAWCZEJ]:'}
+                ? '[KOMUNIKAT DEGRADACJI KONEKTOMU // KLASTER THORNE’A]:'
+                : 'Standard Zapewnienia Jakości Badań Neurofizjologicznych:'}
             </p>
-            <p className="mt-1 text-[11px] leading-relaxed">
+            <p className="mt-0.5">
               {isDistorted
-                ? 'Rejestrujemy narastające opóźnienia w buforze potylicznym. Obserwuje się samorzutne przepisywanie śladów pamięciowych z pominięciem procedury izolacji Sektora-7.'
-                : 'Wszelkie sesje analizy kognitywnej podlegają automatycznej weryfikacji potencjałów iglicowych. Wszelkie próby kwerendy zarchiwizowanych rejestrów personalnych podlegają natychmiastowej rejestracji w audycie bezpieczeństwa.'}
+                ? 'Pomiary rejestrują nieodwracalną depolaryzację kolców CA1. Odnotowuje się samorzutne przepisywanie engramów pamięciowych z pominięciem bariery logicznej Sektora-7.'
+                : 'Wszystkie serie preparatów komórkowych (w tym linia CA1-TH) podlegają weryfikacji potencjałów spoczynkowych (-70 mV) oraz kinetyki desensytyzacji receptorów NMDA pod nadzorem GLP/CLIA.'}
             </p>
           </div>
         </div>
       </section>
 
-      {/* 3 GŁÓWNE KARTY NAWIGACYJNE */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {cards.map((card) => (
-          <Link
-            key={card.href}
-            href={card.href}
-            onClick={() => soundEngine.playKeystroke()}
-            className={`group p-4 md:p-5 border flex flex-col justify-between transition-all duration-300 relative overflow-hidden ${
-              opticsOn
-                ? 'bg-[#0d0f18]/80 border-zinc-800 hover:border-cyan-500/70 hover:bg-[#0f1422] shadow-sm hover:shadow-[0_0_15px_rgba(0,240,255,0.15)]'
-                : 'bg-[#090505]/90 border-[#781414]/60 hover:border-[#ff1a1a] hover:bg-[#120707] hover:shadow-[0_0_15px_rgba(255,26,26,0.25)]'
+      {/* 2. METRYKI TELEMETRII I EFEKTYWNOŚCI LABORATORYJNEJ */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'KANIONY MIKROELEKTROD', value: '16 384', note: 'Rozdzielczość 50 µs / CA1-TH' },
+          { label: 'STABILNOŚĆ POTENCJAŁU', value: '-70.4 mV', note: 'Pomiar w buforze aCSF' },
+          { label: 'DOPASOWANIE KONEKTOMU', value: '99.4%', note: 'Próbkowanie w rytmie theta (40 Hz)' },
+          { label: 'CERTYFIKACJA AUDYTU', value: 'GLP-94-B', note: 'Standardy laboratoryjne FDA/DoD' },
+        ].map((metric, idx) => (
+          <div
+            key={idx}
+            className={`p-4 rounded-xl border transition-all ${
+              isDistorted
+                ? 'bg-[#090505] border-[#781414] text-[#ffcccc] font-mono'
+                : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
             }`}
           >
-            <div
-              className={`absolute top-0 right-0 w-8 h-8 pointer-events-none transition-opacity opacity-20 group-hover:opacity-100 ${
-                opticsOn ? 'text-cyan-400' : 'text-[#ff1a1a]'
-              }`}
-            >
-              <svg viewBox="0 0 32 32" className="w-full h-full fill-current">
-                <polygon points="32,0 32,32 0,0" />
-              </svg>
-            </div>
-
-            <div className="space-y-2">
-              <span
-                className={`text-[9px] px-2 py-0.5 border font-mono tracking-widest uppercase inline-block ${
-                  opticsOn
-                    ? 'border-zinc-700 text-zinc-400 group-hover:border-cyan-500 group-hover:text-cyan-300'
-                    : 'border-[#781414] text-[#a87a74] group-hover:border-[#ff1a1a] group-hover:text-[#ff9999]'
-                }`}
-              >
-                {card.badge}
-              </span>
-
-              <h3
-                className={`text-sm md:text-base font-bold tracking-wider transition-colors ${
-                  opticsOn
-                    ? 'text-zinc-100 group-hover:text-cyan-300 clean-glow-cyan'
-                    : 'text-[#f5d5ce] group-hover:text-white anomaly-glow-blood'
-                }`}
-              >
-                {card.title}
-              </h3>
-
-              <p
-                className={`text-[11px] font-semibold tracking-wide ${
-                  opticsOn ? 'text-zinc-400' : 'text-[#9e807a]'
-                }`}
-              >
-                {card.subtitle}
-              </p>
-
-              <p
-                className={`text-xs leading-relaxed pt-1 font-mono ${
-                  opticsOn ? 'text-zinc-400' : 'text-[#bfb2a3]'
-                }`}
-              >
-                {card.description}
-              </p>
-            </div>
-
-            <div className="pt-4 mt-4 border-t border-zinc-800/80 flex items-center justify-between">
-              <span
-                className={`text-xs font-bold tracking-widest uppercase transition-all ${
-                  opticsOn
-                    ? 'text-cyan-400 group-hover:translate-x-1 clean-glow-cyan'
-                    : 'text-[#ff6666] group-hover:translate-x-1 anomaly-glow-blood'
-                }`}
-              >
-                {card.cta}
-              </span>
-              <span
-                className={`text-xs ${
-                  opticsOn ? 'text-cyan-500' : 'text-[#ff1a1a]'
-                } transition-transform group-hover:translate-x-1`}
-              >
-                &rarr;
-              </span>
-            </div>
-          </Link>
+            <p className="text-[10px] font-mono tracking-wider uppercase text-slate-500 dark:text-slate-400">
+              {metric.label}
+            </p>
+            <p className={`text-xl sm:text-2xl font-extrabold mt-1 ${isDistorted ? 'text-red-400' : 'text-sky-600 dark:text-sky-400'}`}>
+              {metric.value}
+            </p>
+            <p className="text-[11px] text-slate-500 mt-1">{metric.note}</p>
+          </div>
         ))}
       </section>
 
-      {/* STOPKA INFORMACYJNA PORTALU */}
-      <footer
-        className={`p-3 border text-center text-[11px] font-mono transition-colors ${
-          opticsOn
-            ? 'border-zinc-800 bg-[#0a0c12] text-zinc-500'
-            : 'border-[#781414]/50 bg-[#070404] text-[#80605a]'
+      {/* 3. KATALOG PRODUKTÓW & USŁUG BADAWCZYCH */}
+      <section className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 border-b pb-3 border-slate-200 dark:border-slate-800">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+              Katalog Produktów Neuronowych & Zestawów Odczynników
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              Certyfikowane preparaty biologiczne i mikromacierze stosowane w protokołach badawczych NeuroClin.
+            </p>
+          </div>
+          <Link
+            href="/archive"
+            className="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:underline"
+          >
+            Zobacz powiązane publikacje naukowe &rarr;
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {productCatalog.map((prod) => (
+            <div
+              key={prod.sku}
+              className={`rounded-xl p-5 sm:p-6 border flex flex-col justify-between transition-all duration-200 ${
+                isDistorted
+                  ? 'bg-[#090505] border-[#781414]/70 hover:border-red-600 text-[#d8cfbe]'
+                  : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 hover:border-sky-400 shadow-sm'
+              }`}
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300">
+                    {prod.badge}
+                  </span>
+                  <span className="text-xs font-mono font-bold text-slate-500">{prod.sku}</span>
+                </div>
+
+                <h3
+                  className={`text-base font-bold tracking-tight ${
+                    isDistorted ? 'text-red-300 font-mono' : 'text-slate-900 dark:text-white'
+                  }`}
+                >
+                  {prod.title}
+                </h3>
+
+                <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                  {prod.description}
+                </p>
+
+                <ul className="pt-2 space-y-1 text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  {prod.features.map((feat, i) => (
+                    <li key={i} className="flex items-center space-x-1.5">
+                      <span className="text-sky-500 font-bold">✓</span>
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                <Link
+                  href="/archive"
+                  onClick={() => soundEngine.playKeystroke()}
+                  className="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-700 flex items-center space-x-1"
+                >
+                  <span>{prod.cta}</span>
+                  <span>&rarr;</span>
+                </Link>
+                <Link
+                  href="/chat"
+                  onClick={() => soundEngine.playKeystroke()}
+                  className="text-xs font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                >
+                  Zapytaj BioResearcher AI
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. SEKCJA ZASOBÓW ARCHIWALNYCH & DOKUMENTACJI PROJEKTU SEKTOR-7 */}
+      <section
+        className={`rounded-xl p-6 sm:p-8 border transition-all ${
+          isDistorted
+            ? 'bg-[#0d0606] border-[#781414] text-red-200 font-mono'
+            : 'bg-slate-50 dark:bg-[#0c101b] border-slate-200 dark:border-slate-800'
         }`}
       >
-        <p>
-          STATUS SYSTEMU: NOMINALNY // KLASTER SEKTOR-7 // ARCHIWUM ELEKTROFIZJOLOGICZNE (1994)
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div className="md:col-span-2 space-y-2">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+              KLAUZULA HISTORYCZNA // ARCHIWA 1991–1994
+            </span>
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+              Dossier Zespołu Mapowania Konektomu i Publikacje Dr. Arisa Thorne’a
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
+              Poznaj oryginalne artykuły naukowe, protokoły mikroelektrodowe oraz dokumentację procedury transferu
+              pamięci z lat 1991–1994. Wszystkie pozycje zawierają recenzowane abstrakty, parametry metodyki oraz
+              autentyczne materiały ewidencyjne.
+            </p>
+          </div>
+
+          <div className="flex flex-col space-y-2">
+            <Link
+              href="/archive"
+              onClick={() => soundEngine.playKeystroke()}
+              className="px-4 py-2.5 rounded-md bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-semibold text-center tracking-wide transition-all shadow-sm"
+            >
+              Przejdź do Archiwum Publikacji &rarr;
+            </Link>
+            <Link
+              href="/status"
+              onClick={() => soundEngine.playKeystroke()}
+              className="px-4 py-2 rounded-md border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            >
+              Diagnostyka Klastra Obliczeniowego
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. CERTYFIKACJA I STANDARDY BEZPIECZEŃSTWA DANYCH */}
+      <section className="pt-2 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2 border-t border-slate-200 dark:border-slate-800">
+        <div className="flex flex-wrap items-center justify-center gap-6 font-mono text-[11px] text-slate-400">
+          <span>ISO 9001:2015 ACCREDITED</span>
+          <span>•</span>
+          <span>GOOD LABORATORY PRACTICE (GLP)</span>
+          <span>•</span>
+          <span>CLIA CERTIFIED NEURO-ARRAY</span>
+          <span>•</span>
+          <span>BIOSAFETY LEVEL 3 FACILITY</span>
+        </div>
+        <p className="text-[11px] max-w-2xl mx-auto">
+          NeuroClin Biosciences Inc. operuje zgodnie z międzynarodowymi normami bioetycznymi i procedurami ochrony
+          danych biometrycznych. Wszystkie preparaty ludzkiego konektomu podlegają ścisłemu rejestrowi Sektor-7.
         </p>
-        <p className="text-[10px] mt-0.5 opacity-75">
-          Protokół badawczy nr 94/088. Pamięć podręczna rejestrów podlega okresowemu czyszczeniu.
-        </p>
-      </footer>
+      </section>
     </div>
   );
 }

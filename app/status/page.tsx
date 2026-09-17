@@ -20,47 +20,79 @@ export default function StatusPage() {
 
   const DECODED_TEXT = `SEKTOR-7 // CONNECTOME RECORD 0x19 // DR. ARIS THORNE EMBEDDED IN SILICON // NMDA EXCITOTOXICITY CASCADE ACTIVE // SOMATIC FEEDBACK NULL`;
 
+  const telemetryMetrics = [
+    {
+      subsystem: 'Bioreaktor CA1-TH (Węzeł 0x19)',
+      status: isDistorted ? 'NIEODWRACALNA DEPOLARYZACJA' : 'NOMINALNY (ZSYNCHRONIZOWANY)',
+      metric: 'Potencjał Spoczynkowy',
+      value: isDistorted ? '+12.4 mV [SZOK]' : '-70.4 mV',
+      alert: isDistorted,
+    },
+    {
+      subsystem: 'Krio-Pętla Kwasu Fenolowego',
+      status: isDistorted ? 'PRZEGRZANIE BUFORA' : 'STABILNY (-15.2°C)',
+      metric: 'Przepływ Cieczy Krio',
+      value: isDistorted ? '0.0 mL/min [STOP]' : '4.2 mL/min',
+      alert: isDistorted,
+    },
+    {
+      subsystem: 'Macierz FPGA 16 384 Mikrosond',
+      status: isDistorted ? 'SAMORZUTNY RE-ROUTING' : 'AKTYWNA (66 MHz)',
+      metric: 'Odświeżanie Bufora',
+      value: isDistorted ? '418 ms [DESYNCHRO]' : '1.4 ms',
+      alert: isDistorted,
+    },
+    {
+      subsystem: 'Panel Detekcji Ekscytotoksyczności',
+      status: isDistorted ? 'KASKADA WAPNIOWA TRWAŁA' : 'POZIOM BAZOWY',
+      metric: 'Wskaźnik Fura-2 AM',
+      value: isDistorted ? '8.42 Ratio [ALARM]' : '0.41 Ratio',
+      alert: isDistorted,
+    },
+  ];
+
   return (
-    <div className="flex-1 flex flex-col space-y-6 py-2">
-      {/* NAGŁÓWEK MONITORINGU */}
+    <div className="flex-1 flex flex-col space-y-6 font-sans">
+      {/* NAGŁÓWEK DASHBOARDU */}
       <section
-        className={`p-4 md:p-6 border transition-all duration-300 ${
-          opticsOn
-            ? 'bg-[#0b0d14]/90 border-zinc-800 clean-border-glow'
-            : 'bg-[#0a0505]/95 border-[#781414]/70 anomaly-border-blood'
+        className={`p-5 md:p-7 rounded-xl border transition-all duration-300 ${
+          isDistorted
+            ? 'bg-[#090505] border-[#781414] anomaly-border-blood text-[#e6c2b8]'
+            : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
         }`}
       >
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3 border-zinc-800/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 border-slate-200 dark:border-slate-800">
           <div>
-            <span
-              className={`text-[9px] px-2 py-0.5 border font-bold uppercase tracking-widest ${
-                opticsOn
-                  ? 'border-emerald-500/40 text-emerald-300 bg-emerald-950/20'
-                  : 'border-[#ff1a1a]/70 text-[#ff8888] bg-[#781414]/30 anomaly-glow-blood'
+            <div className="flex items-center space-x-2 text-xs font-sans text-slate-500 mb-1">
+              <Link href="/" className="hover:text-sky-600">Home</Link>
+              <span>&gt;</span>
+              <span className="text-slate-400">Infrastruktura</span>
+              <span>&gt;</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">Status Klastra</span>
+            </div>
+            <h1
+              className={`text-xl md:text-2xl font-extrabold tracking-tight ${
+                isDistorted ? 'text-red-400 anomaly-glow-blood font-mono' : 'text-slate-900 dark:text-white'
               }`}
             >
-              DIAGNOSTYKA KONTROLERA // INSTYTUT NEUROFIZJOLOGII (1994)
-            </span>
-            <h2
-              className={`text-lg md:text-2xl font-bold tracking-wider mt-1.5 ${
-                opticsOn ? 'text-zinc-100 clean-glow-cyan' : 'text-[#ffcccc] anomaly-glow-blood anomaly-chromatic'
-              }`}
-            >
-              RAPORTY ANOMALII // STATUS KLASTRA NEUROOBLICZENIOWEGO
-            </h2>
+              TELEMETRIA KLASTRA & BIOREAKTORÓW NEURALNYCH
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Pasywny monitoring parametrów macierzy neuroobliczeniowej, kriokomór i wskaźników biofizycznych NeuroClin.
+            </p>
           </div>
 
-          <div className="text-[10px] font-mono text-zinc-500 text-right">
+          <div className="text-right text-xs font-mono text-slate-500">
             <p>CZAS MAGISTRALI: 03:18:42 UTC</p>
             <p>
-              STAN SANITY:{' '}
+              STAN SYSTEMU:{' '}
               <span
                 className={`font-bold ${
                   sanityStage === 'insanity'
                     ? 'text-red-500 anomaly-glow-blood'
                     : sanityStage === 'error'
-                    ? 'text-amber-400'
-                    : 'text-emerald-400'
+                    ? 'text-amber-500'
+                    : 'text-emerald-600 dark:text-emerald-400'
                 }`}
               >
                 {sanityStage.toUpperCase()}
@@ -69,113 +101,78 @@ export default function StatusPage() {
           </div>
         </div>
 
-        <p className="text-xs text-zinc-400 font-mono mt-3 leading-relaxed">
-          Pasywna telemetria podziemnej macierzy neuroobliczeniowej Sektor-7. Poniższe wskaźniki odzwierciedlają
-          stan spolaryzowania bramek FPGA, dynamikę uszkodzeń ekscytotoksycznych, przepływ kriochłodziwa oraz
-          częstotliwość błędu bufora asocjacyjnego hipokampa.
+        <p className="text-xs text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
+          Poniższy pulpit integruje dane telemetryczne z podziemnego kompleksu laboratoryjnego Sektor-7.
+          Wszelkie odchylenia napięcia spoczynkowego lub desynchronizacja oscylacji 40 Hz podlegają automatycznemu
+          rejestrowi audytowemu.
         </p>
       </section>
 
-      {/* SIATKA METRYK TELEMETRII */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div
-          className={`p-4 border font-mono text-xs ${
-            opticsOn ? 'bg-[#0d101a] border-zinc-800' : 'bg-[#0a0505] border-[#781414]/60'
-          }`}
-        >
-          <span className="text-[10px] text-zinc-500 block">SUB-WĘZEŁ KONEKTOMU:</span>
-          <span className="text-sm font-bold text-cyan-400 mt-1 block">THORNE_CA1_CLUSTER</span>
-          <p className="text-[11px] text-zinc-400 mt-2">
-            Status: {isDistorted ? 'NIEODWRACALNA DEPOLARYZACJA' : 'ZSYNCHRONIZOWANY (40 Hz)'}
-          </p>
-        </div>
-
-        <div
-          className={`p-4 border font-mono text-xs ${
-            opticsOn ? 'bg-[#0d101a] border-zinc-800' : 'bg-[#0a0505] border-[#781414]/60'
-          }`}
-        >
-          <span className="text-[10px] text-zinc-500 block">PERFUZJA HISTOLOGICZNA:</span>
-          <span className={`text-sm font-bold mt-1 block ${isDistorted ? 'text-red-400' : 'text-amber-400'}`}>
-            KRIO-BUFOR // KWAS FENOLOWY
-          </span>
-          <p className="text-[11px] text-zinc-400 mt-2">Temperatura: -4.2°C // Ciśnienie: 102 kPa</p>
-        </div>
-
-        <div
-          className={`p-4 border font-mono text-xs ${
-            opticsOn ? 'bg-[#0d101a] border-zinc-800' : 'bg-[#0a0505] border-[#781414]/60'
-          }`}
-        >
-          <span className="text-[10px] text-zinc-500 block">EKSCYTOTOKSYCZNOŚĆ NMDA:</span>
-          <span
-            className={`text-sm font-bold mt-1 block ${
-              sanityStage === 'insanity'
-                ? 'text-red-500 anomaly-glow-blood'
-                : sanityStage === 'error'
-                ? 'text-amber-400'
-                : 'text-emerald-400'
+      {/* KAFLE STATUSÓW PODSYSTEMÓW */}
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+        {telemetryMetrics.map((item, idx) => (
+          <div
+            key={idx}
+            className={`p-4 rounded-xl border flex flex-col justify-between transition-all ${
+              item.alert
+                ? 'bg-[#150707] border-red-800 text-red-200 anomaly-glow-blood'
+                : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm text-slate-800 dark:text-slate-200'
             }`}
           >
-            {sanityStage === 'insanity' ? '87.6% [KASKADA WAPNIOWA]' : sanityStage === 'error' ? '35.2%' : '0.4%'}
-          </span>
-          <p className="text-[11px] text-zinc-400 mt-2">Przeciążenie receptorów: KRYTYCZNE</p>
-        </div>
+            <div>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider block">PODSYSTEM:</span>
+              <h3 className="font-bold text-xs mt-0.5 text-sky-600 dark:text-sky-400">{item.subsystem}</h3>
+              <p className={`text-[11px] mt-2 font-semibold ${item.alert ? 'text-red-400' : 'text-slate-500'}`}>
+                Status: {item.status}
+              </p>
+            </div>
 
-        <div
-          className={`p-4 border font-mono text-xs ${
-            opticsOn ? 'bg-[#0d101a] border-zinc-800' : 'bg-[#0a0505] border-[#781414]/60'
-          }`}
-        >
-          <span className="text-[10px] text-zinc-500 block">INTEGRALNOŚĆ ENZYMATYCZNA:</span>
-          <span className="text-sm font-bold text-[#ff6666] mt-1 block">ROZPAD SOMATYCZNY</span>
-          <p className="text-[11px] text-zinc-400 mt-2">Brak somatycznego sprzężenia zwrotnego</p>
-        </div>
-      </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex justify-between items-baseline">
+              <span className="text-[10px] text-slate-400">{item.metric}:</span>
+              <span className="font-bold text-sm">{item.value}</span>
+            </div>
+          </div>
+        ))}
+      </section>
 
-      {/* SZYFROWANY ZRZUT PAMIĘCI HEX (Z DEKODEREM ARG) */}
+      {/* ZRZUT PAMIĘCI REJESTRÓW HEX (ARG LORE) */}
       <section
-        className={`p-4 md:p-6 border font-mono transition-colors ${
-          opticsOn
-            ? 'bg-[#0b0d14]/90 border-zinc-800 text-zinc-300'
-            : 'bg-[#0a0505]/95 border-[#781414]/70 text-[#d8cfbe]'
+        className={`p-5 rounded-xl border transition-colors ${
+          isDistorted
+            ? 'bg-[#0a0505] border-[#781414] text-red-200'
+            : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
         }`}
       >
-        <div className="flex justify-between items-center border-b pb-3 border-zinc-800 mb-3 text-xs">
-          <span className="font-bold text-cyan-400">[ZRZUT PAMIĘCI KONSOLI RATUNKOWEJ // HEX MEMORY DUMP]</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-200 dark:border-slate-800">
+          <div>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+              REJESTR PAMIĘCI // SUB-ADRES 0x19-TH
+            </span>
+            <h3 className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">
+              Surowy Zrzut Magistrali Pamięci Tablicy FPGA
+            </h3>
+          </div>
+
           <button
             onClick={handleToggleDecoder}
-            className={`px-3 py-1 border text-xs font-bold tracking-wider transition ${
-              opticsOn
-                ? 'border-cyan-500 bg-cyan-950/30 text-cyan-300 hover:bg-cyan-500/20'
-                : 'border-[#ff1a1a] bg-[#781414]/40 text-[#ff8888] hover:bg-[#781414]'
-            }`}
+            className="px-3 py-1.5 rounded text-xs font-mono font-semibold transition-all bg-sky-50 dark:bg-sky-950 text-sky-700 dark:text-sky-300 border border-sky-300 dark:border-sky-800 hover:bg-sky-100"
           >
-            {decodedLogs ? 'UKRYJ ZDEKODOWANY TEKST' : 'DEKODUJ PAKIET RAW'}
+            {decodedLogs ? 'Pokaż Surowy Kod HEX' : 'Zdekoduj Bufor ASCII (UTF-8)'}
           </button>
         </div>
 
-        <div className="p-3 bg-black/80 border border-zinc-800/80 rounded text-xs space-y-2 overflow-x-auto">
-          <p className="text-zinc-500 text-[11px] select-none">// SUROWY STRUMIEŃ BAJTÓW Z PŁATÓW SKRONIOWYCH KLASTRA:</p>
-          <p className="text-emerald-400 tracking-widest break-all font-mono leading-relaxed">{RAW_HEX}</p>
-
-          {decodedLogs && (
-            <div className="mt-3 pt-3 border-t border-zinc-800 animate-fadeIn">
-              <p className="text-amber-400 text-[11px] font-bold select-none">// WYNIK DEKODOWANIA KODU ASCII:</p>
-              <p
-                className={`text-sm font-bold tracking-wider mt-1 ${
-                  isDistorted ? 'text-red-400 anomaly-glow-blood' : 'text-cyan-300 clean-glow-cyan'
-                }`}
-              >
-                &gt;&gt; {DECODED_TEXT}
-              </p>
-              <div className="mt-2.5 pt-2 border-t border-zinc-800/80 text-[10px] text-zinc-500 font-mono flex justify-between">
-                <span>SUMA KONTROLNA CRC32: 0x8F04B1</span>
-                <span>ZGODNOŚĆ PAKIETU: 100%</span>
-              </div>
-            </div>
+        <div className="mt-4 p-4 rounded-lg bg-slate-900 text-slate-200 font-mono text-xs leading-relaxed overflow-x-auto shadow-inner">
+          {decodedLogs ? (
+            <p className="text-emerald-400 font-bold tracking-wider">{DECODED_TEXT}</p>
+          ) : (
+            <p className="text-slate-400 tracking-widest break-all">{RAW_HEX}</p>
           )}
         </div>
+
+        <p className="text-[11px] text-slate-500 mt-2 font-mono">
+          Pamięć rejestracyjna podtrzymywana bateryjnie od listopada 1994 roku. Ostatnia próba modyfikacji rejestru:
+          zablokowana przez sprzętowy kontroler bezpieczeństwa Sektor-7.
+        </p>
       </section>
     </div>
   );

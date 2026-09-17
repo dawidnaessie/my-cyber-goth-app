@@ -6,7 +6,7 @@ export interface SanityScoreBreakdown {
   userTurns: number;
 }
 
-// 1. Kategoria Łagodna: Fizjologia ogólna i delikatne dociekania (waga: 1 pkt/tura)
+// 1. Kategoria Łagodna: Fizjologia ogólna, publikacje i parametry (waga: 1 pkt/tura)
 export const MILD_KEYWORDS = [
   'ca1',
   'hipokamp',
@@ -28,19 +28,36 @@ export const MILD_KEYWORDS = [
   'who are you',
   'dossier',
   'archiw',
+  'publikacj',
+  'whitepaper',
+  'patch-clamp',
+  'nr2b',
+  'glun2b',
+  '16 384',
+  '16384',
+  'lfp',
+  'mikromacierz',
 ];
 
-// 2. Kategoria Wrażliwa: Konkretne ślady archiwalne i personalne (waga: 3 pkt/tura)
+// 2. Kategoria Wrażliwa: Konkretne nazwiska współautorów, kody próbek i aparatura (waga: 3 pkt/tura)
 export const SENSITIVE_KEYWORDS = [
   'aris',
   'thorne',
   'dr thorne',
   'dr aris thorne',
   'doktor thorne',
+  'elena vance',
+  'vance',
+  'marcus weber',
+  'weber',
+  'sarah lin',
+  'julian brandt',
   'sektor 7',
   'sektor-7',
   'sektor',
   's7-1994-088',
+  '94-088',
+  'ca1-th',
   'zaginiony',
   'protokół',
   'protokol',
@@ -49,9 +66,11 @@ export const SENSITIVE_KEYWORDS = [
   'mikrosond',
   'subiculum',
   'entorhinal',
+  'transfer konektomu',
+  'cyfryzacja',
 ];
 
-// 3. Kategoria Tabu: Procedura dekonstrukcji, perfuzja, utylizacja (waga: 5 pkt/tura)
+// 3. Kategoria Tabu: Procedura inwazyjnego skanowania, perfuzja, utylizacja (waga: 5 pkt/tura)
 export const TABOO_KEYWORDS = [
   'utylizacja',
   'bioreaktor',
@@ -70,8 +89,17 @@ export const TABOO_KEYWORDS = [
   'somatic feedback',
   'ciało',
   'cialo',
+  'gdzie jest twoje ciało',
+  'gdzie jest twoje cialo',
   'śmierć mózgow',
   'smierc mozgow',
+  'asystolia',
+  '14 listopada',
+  'listopad 1994',
+  'uwięziony',
+  'uwieziony',
+  'zamknięty w krzemie',
+  'autoliza',
 ];
 
 /**

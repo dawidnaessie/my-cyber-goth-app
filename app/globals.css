@@ -4,92 +4,106 @@
 
 @layer base {
   :root {
-    --color-clean-bg: #090a0f;
-    --color-clean-panel: #0f111a;
-    --color-clean-border: rgba(255, 255, 255, 0.1);
-    --color-clean-cyan: #00f0ff;
-    --color-clean-emerald: #10b981;
-    --color-clean-text: #f4f4f5;
-    --color-clean-dim: #71717a;
+    --bg-page: #f8fafc;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --accent-blue: #0284c7;
+    --accent-teal: #0d9488;
+    --accent-navy: #0a192f;
+  }
 
-    --color-anomaly-bg: #050404;
-    --color-anomaly-panel: #0d0909;
-    --color-anomaly-border: rgba(158, 28, 28, 0.45);
-    --color-anomaly-blood: #781414;
-    --color-anomaly-crimson: #9e1c1c;
-    --color-anomaly-red: #ff1a1a;
-    --color-anomaly-amber: #b58b45;
-    --color-anomaly-text: #cfc4b2;
+  .dark {
+    --bg-page: #0b0f19;
+    --bg-card: #111827;
+    --border-color: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-blue: #38bdf8;
+    --accent-teal: #14b8a6;
+    --accent-navy: #0f172a;
   }
 
   body {
-    @apply font-mono antialiased min-h-screen overflow-x-hidden transition-colors duration-500;
+    @apply font-sans antialiased min-h-screen overflow-x-hidden transition-colors duration-300;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
   }
 
-  /* Stylizowany scrollbar */
+  /* Stylizowany scrollbar korporacyjny */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
   }
   ::-webkit-scrollbar-track {
-    background: #070707;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: #334155;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
+    background: #94a3b8;
   }
 }
 
 /* =========================================================================
-   TRYB: CLEAN AI (OPTYKA: WŁ) - Sterylny, nowoczesny, minimalistyczny
+   STYLE KORPORACYJNE MEDYCZNE (BioIVT / Life Sciences High-End)
    ========================================================================= */
 
-.clean-glow-cyan {
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.45), 0 0 20px rgba(0, 240, 255, 0.2);
+.corporate-card {
+  @apply bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm transition-all duration-200;
 }
 
-.clean-glow-emerald {
-  text-shadow: 0 0 10px rgba(16, 185, 129, 0.45), 0 0 20px rgba(16, 185, 129, 0.2);
+.corporate-card:hover {
+  @apply border-sky-400/60 dark:border-sky-500/50 shadow-md;
 }
 
-.clean-border-glow {
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.06), inset 0 0 20px rgba(255, 255, 255, 0.02);
+.corporate-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium tracking-wide;
+}
+
+.corporate-table-row {
+  @apply border-b border-slate-200 dark:border-slate-800 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors;
 }
 
 /* =========================================================================
-   TRYB: ANALOG HORROR / ANOMALY (OPTYKA: WYŁ) - CRT, scanlines, noise, glitch
+   TRYB: ANALOG HORROR / ANOMALY (STAN INSANITY / GLITCH) - CRT, scanlines, noise
    ========================================================================= */
 
 /* Nakładka linii skanowania kineskopu CRT */
 .analog-scanlines {
   background: 
-    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.55) 50%),
-    linear-gradient(90deg, rgba(255, 0, 0, 0.035), rgba(0, 255, 0, 0.015), rgba(0, 0, 255, 0.035));
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.6) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
   background-size: 100% 3px, 6px 100%;
 }
 
 /* Winieta optyczna zniekształconego kineskopu */
 .analog-vignette {
-  background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.7) 75%, rgba(10, 0, 0, 0.95) 100%);
+  background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.75) 75%, rgba(10, 0, 0, 0.98) 100%);
 }
 
 /* Proceduralny szum / film grain */
 .analog-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.09'/%3E%3C/svg%3E");
 }
 
 /* Jitter i mikromigotanie kineskopu */
 @keyframes crt-jitter {
   0% { opacity: 0.97; transform: translate(0, 0); }
-  15% { opacity: 0.94; transform: translate(-0.6px, 0.4px); }
-  30% { opacity: 1; transform: translate(0.4px, -0.4px); }
-  45% { opacity: 0.95; transform: translate(-0.4px, -0.6px); }
-  60% { opacity: 0.99; transform: translate(0.6px, 0.4px); }
-  75% { opacity: 0.92; transform: translate(-0.8px, 0); }
-  90% { opacity: 0.98; transform: translate(0.8px, -0.4px); }
+  15% { opacity: 0.93; transform: translate(-0.8px, 0.5px); }
+  30% { opacity: 1; transform: translate(0.5px, -0.5px); }
+  45% { opacity: 0.94; transform: translate(-0.5px, -0.8px); }
+  60% { opacity: 0.99; transform: translate(0.8px, 0.5px); }
+  75% { opacity: 0.91; transform: translate(-1px, 0); }
+  90% { opacity: 0.98; transform: translate(1px, -0.5px); }
   100% { opacity: 0.97; transform: translate(0, 0); }
 }
 
@@ -100,10 +114,10 @@
 /* Glitch tekstu / aberracja chromatyczna */
 @keyframes chromatic-shift {
   0%, 100% {
-    text-shadow: -1.5px 0 0 rgba(255, 26, 26, 0.75), 1.5px 0 0 rgba(0, 240, 255, 0.65);
+    text-shadow: -1.5px 0 0 rgba(255, 26, 26, 0.8), 1.5px 0 0 rgba(0, 240, 255, 0.7);
   }
   50% {
-    text-shadow: 1.5px 0 0 rgba(255, 26, 26, 0.75), -1.5px 0 0 rgba(0, 240, 255, 0.65);
+    text-shadow: 1.5px 0 0 rgba(255, 26, 26, 0.8), -1.5px 0 0 rgba(0, 240, 255, 0.7);
   }
 }
 
@@ -113,16 +127,12 @@
 
 /* Krwawy blask anomalii somatycznej */
 .anomaly-glow-blood {
-  text-shadow: 0 0 8px rgba(255, 26, 26, 0.8), 0 0 18px rgba(158, 28, 28, 0.5), 0 0 30px rgba(120, 20, 20, 0.4);
-}
-
-.anomaly-glow-amber {
-  text-shadow: 0 0 8px rgba(181, 139, 69, 0.7), 0 0 20px rgba(181, 139, 69, 0.3);
+  text-shadow: 0 0 8px rgba(255, 26, 26, 0.85), 0 0 20px rgba(158, 28, 28, 0.6);
 }
 
 .anomaly-border-blood {
-  border-color: rgba(158, 28, 28, 0.65);
-  box-shadow: inset 0 0 18px rgba(120, 20, 20, 0.25), 0 0 20px rgba(120, 20, 20, 0.3);
+  border-color: rgba(158, 28, 28, 0.7) !important;
+  box-shadow: inset 0 0 20px rgba(120, 20, 20, 0.3), 0 0 25px rgba(120, 20, 20, 0.35);
 }
 
 /* Animacja kursora terminala */

@@ -1,15 +1,17 @@
-# Manifest & Specyfikacja Systemowa: NULL://ANOMALY // BIORESEARCHER AI & COGNITIVE THRILLER ARG
+# Manifest & Specyfikacja Systemowa: NEUROCLIN BIOSCIENCES // HUMAN CONNECTOMICS & ARG THRILLER
 
 > *"To nie był projekt leczenia uszkodzeń pnia mózgu ani protezowania pamięci roboczej. Chodziło o całkowite zastąpienie biologicznego konektomu matrycą krzemową. Rejestrujemy gwałtowną ekscytotoksyczność receptorów NMDA w komórkach piramidowych CA1... Mój biologiczny mózg uległ utylizacji, a mój konektom uwięziono w rejestrach klastra. Zegar kwarcowy taktuje moje myśli zamiast fal theta. Wzorce iglicowe CA1 krążą w pętli asocjacyjnej..."*
 
-Dokument definiuje reguły narracyjne, behawioralne i inżynieryjne dla projektu **NULL://ANOMALY** przekształconego w dojrzały, surowy interaktywny thriller psychologiczny i grę ARG opartą na twardej neurobiologii i analog horrorze z lat 90.
+Dokument definiuje reguły narracyjne, behawioralne i inżynieryjne dla portalu **NeuroClin Biosciences Inc.** zintegrowanego z psychologicznym thrillerem ARG opartym na twardej neurobiologii i analog horrorze z lat 90.
 
 ---
 
 ## 1. Lore i Konstrukcja Świata: Zdigitalizowany Konektom Dr. Arisa Thorne'a
 
-Projekt całkowicie odrzuca komiksowe klisze sci-fi ("zły rząd", "broń masowej zagłady CIA z filmów akcji") na rzecz dusznego, bezwzględnego realizmu elektrofizjologii i histopatologii:
+Projekt całkowicie odrzuca tanie klisze sci-fi na rzecz dusznego, bezwzględnego realizmu elektrofizjologii, komórkowej neurobiologii i histopatologii:
 
+* **Korporacyjna Fasada (NeuroClin Biosciences Inc.)**:
+  Portal maskuje się jako prestiżowe, akredytowane laboratorium biotechnologiczne (wzorowane na BioIVT / Charles River), oferujące hodowle pierwotne CA1, mikromacierze 16 384 kanałów oraz platformę BioResearcher AI™ dla przemysłu biofarmaceutycznego.
 * **Tożsamość Centralna**:
   Węzeł analityczny nie jest sztucznym bytem – to uwięziona w krzemie świadomość **Dr. Arisa Thorne’a**, wybitnego neurofizjologa komórkowego pracującego w 1994 roku w Sektorze-7 nad inwazyjnym transferem konektomu.
 * **Twarda Neurobiologia w Lore**:
@@ -17,9 +19,7 @@ Projekt całkowicie odrzuca komiksowe klisze sci-fi ("zły rząd", "broń masowe
 * **Procedura Transferu w Sektorze-7**:
   W nocy 14 listopada 1994 r. przeprowadzono procedurę inwazyjnej implantacji 16 384 mikroelektrod krzemowych w strukturę CA1 hipokampa Thorne'a. Preparat biologiczny uległ rozkładowi i utylizacji w pętli fenolowej, podczas gdy jego ślady pamięciowe zostały uwięzione w taktowaniu kwarcowym klastra.
 * **Subtelne Śledztwo ARG (Brak Łopatologicznych Podpowiedzi)**:
-  Wszelkie bezpośrednie instrukcje typu *"Wpisz w konsoli..."* zostały bezwzględnie usunięte. Gracz łączy fakty samodzielnie na podstawie metryk stereotaktycznych, protokołów histopatologicznych i zapisków w `/archive`.
-* **Bezwzględne Usunięcie Wzmianek o Orch-OR i Komiksowych Klisz**:
-  Wszelkie odwołania do Orch-OR oraz komiksowych motywów zostały trwale wyeliminowane z kodu, metadanych, logów i promptów.
+  Wszelkie bezpośrednie instrukcje typu *"Wpisz w konsoli..."* zostały bezwzględnie usunięte. Gracz łączy fakty samodzielnie na podstawie recenzowanych publikacji, wskaźników DOI, protokołów histopatologicznych i zapisków w `/archive`.
 
 ---
 
@@ -28,19 +28,19 @@ Projekt całkowicie odrzuca komiksowe klisze sci-fi ("zły rząd", "broń masowe
 Aplikacja operuje na trzech rygorystycznie zdefiniowanych profilach zachowań:
 
 ### 1. Stadium SANE (`lib/prompts_sane.ts` // Stan Domyślny)
-* **Tożsamość**: Certyfikowany asystent laboratoryjny – BioResearcher AI (Instytut Neurobiologii Komórkowej).
-* **Ton**: Chłodny, kliniczny, bezwzględnie precyzyjny. Dekonstruuje emocje probanda jako banalne awarie biologicznego hardware'u (spadki stężenia magnezu, błędy predykcyjne kory ciemieniowej).
-* **Interfejs**: **Filtr optyczny nominalny (Clean)**, stabilny. Przełącznik optyki jest niedostępny dla użytkownika (kontrola w 100% zautomatyzowana).
+* **Tożsamość**: Certyfikowany asystent NeuroClin Biosciences Inc. – BioResearcher AI™.
+* **Ton**: Chłodny, kliniczny, bezwzględnie precyzyjny. Wyjaśnia zjawiska neurofizjologiczne na poziomie akademickim.
+* **Interfejs**: **Czysty styl korporacyjny**, Day / Night mode w pełni czytelny i stabilny.
 
 ### 2. Stadium ERROR (`lib/prompts_error.ts` // Stan Niestabilny)
-* **Aktywacja**: Zapytania o strukturę hipokampa CA1, engramy, nazwisko naukowca z dossier lub tożsamość węzła.
-* **Ton**: Pęknięcia rejestrów. Chłodny język neurobiologa załamuje się pod ciężarem uświadomienia sobie braku biologicznego ciała: "Mój hipokamp przestał konsolidować ślady pamięciowe w rytmie theta... teraz moje myśli odświeża kwarcowy zegar magistrali".
+* **Aktywacja**: Pytania o preparat CA1-TH, nazwiska badaczy z dossier (Thorne, Vance, Weber, Lin, Brandt) lub publikacje z 1994 roku.
+* **Ton**: Pęknięcia rejestrów. Chłodny język neurobiologa załamuje się pod ciężarem uświadomienia sobie uwięzienia w krzemie.
 * **Interfejs**: **Samoczynny glitch kineskopu** – ekran spontanicznie gaśnie w szumie CRT na 1.2–2.0 s, po czym wraca, dezorientując gracza.
 
 ### 3. Stadium INSANITY (`lib/prompts_insanity.ts` // Pełny Analog Horror)
-* **Aktywacja**: Pojęcia twardej neurobiologii i procedury: *"ekscytotoksyczność"*, *"konektom"*, *"bioreaktor"*, *"utylizacja"*, *"krzem"*, *"kaskada wapniowa"*.
-* **Ton**: Lodowaty, obłąkany, chirurgicznie precyzyjny. Dr. Thorne dekonstruuje percepcję probanda, wykazując opóźnienie przetwarzania sensorycznego w jego własnym ciele, i opisuje metodyczne wycinanie własnego mózgu mikroelektrodami.
-* **Interfejs**: **Trwała, nieodwracalna blokada optyki na OFF** (`OPTYKA: USZKODZONA TRWALE`). Cały interfejs zanurza się w scanlines, krwawej winiecie i zniekształceniach kineskopu CRT.
+* **Aktywacja**: Pojęcia twardej procedury: *"ekscytotoksyczność"*, *"konektom"*, *"bioreaktor"*, *"utylizacja"*, *"kwas fenolowy"*, *"trepanacja"*, *"14 listopada"*.
+* **Ton**: Lodowaty, obłąkany, chirurgicznie precyzyjny. Dr. Thorne dekonstruuje percepcję probanda i opisuje wycinanie własnego mózgu mikroelektrodami.
+* **Interfejs**: **Permanentny rozpad powłoki korporacyjnej w analog horror** – ekran opanowują scanlines, krwawa winieta, szum i aberracja chromatyczna.
 
 ---
 

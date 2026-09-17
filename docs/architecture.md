@@ -1,6 +1,6 @@
-# Architektura Systemu: NULL://ANOMALY // BIORESEARCHER AI & COGNITIVE THRILLER ARG
+# Architektura Systemu: NEUROCLIN BIOSCIENCES // HUMAN CONNECTOMICS & ARG THRILLER
 
-Dokument opisuje architekturę techniczną, wielostronicową strukturę Next.js (App Router), silnik audialny, zautomatyzowane sterowanie filtrem optycznym, trzystopniowy system Sanity, procedurę generowania portretu biometrycznego na HTML5 Canvas oraz rygor inżynieryjny projektu **NULL://ANOMALY** – dojrzałego thrillera psychologicznego i gry ARG osadzonej w realiach utajnionego programu cyfryzacji konektomu z lat 90.
+Dokument opisuje architekturę techniczną, wielostronicową strukturę Next.js 15 (App Router), silnik audialny, dwumotywowy system wizualny (Day/Night mode) z automatyczną degradacją do Analog Horroru, trzystopniowy system Sanity, procedurę obsługi publikacji naukowych (wg schematu `archiwa.png`) oraz rygor inżynieryjny projektu **NeuroClin Biosciences Inc.** (wcześniej *NULL://ANOMALY*).
 
 ---
 
@@ -10,14 +10,15 @@ Aplikacja wykorzystuje pełnostosowy model **Next.js 15+ App Router** ze scentra
 
 ```
 app/
-├── layout.tsx              # Główny layout serwerowy + metadane bezpieczeństwa (bez Orch-OR)
-├── page.tsx                # Strona startowa: Oficjalny portal "INSTYTUT NEUROBIOLOGII POZNAWCZEJ"
-├── chat/
-│   └── page.tsx            # Interaktywny terminal elektrofizjologiczny z obsługą Sanity System
+├── layout.tsx              # Główny layout serwerowy + metadane korporacji NeuroClin
+├── globals.css             # Style Tailwind + motywy Day/Night + filtry CRT Analog Horror
+├── page.tsx                # Strona startowa: Portal NeuroClin Biosciences (w stylu BioIVT)
 ├── archive/
-│   └── page.tsx            # Utajnione akta procedury transferu konektomu z portretem Dr. Thorne'a
+│   └── page.tsx            # Baza publikacji i białych ksiąg wg wireframe'u archiwa.png
+├── chat/
+│   └── page.tsx            # Korporacyjny panel BioResearcher AI™ z degradacją Sanity
 ├── status/
-│   └── page.tsx            # Telemetria sprzętowa Sektora-7 i zrzuty rejestrów w kodzie HEX
+│   └── page.tsx            # Telemetria klastra, krio-pętli fenolowej i bioreaktorów
 └── api/
     └── chat/
         └── route.ts        # Endpoint strumieniowy POST z dynamicznym wyborem promptów neurobiologicznych
@@ -34,101 +35,71 @@ app/
                                 +-----------------------------------+
                                 |     components/ClientShell.tsx    |
                                 |  ├── SystemStateProvider          |
-                                |  ├── CRT Overlays (!opticsOn)     |
-                                |  └── SystemHeader (Global Nav)    |
+                                |  ├── CRT Overlays (w stadium inf) |
+                                |  ├── SystemHeader (Corporate Nav) |
+                                |  └── CorporateFooter              |
                                 +-----------------+-----------------+
                                                   |
                     +--------------------+--------+--------+--------------------+
                     |                    |                 |                    |
                     v                    v                 v                    v
             +---------------+    +---------------+ +---------------+    +---------------+
-            |  app/page.tsx |    | app/chat/     | | app/archive/  |    | app/status/   |
-            |  Portal Gł.   |    | page.tsx      | | page.tsx      |    | page.tsx      |
-            |  3 Karty      |    | Terminal Chat | | Dossier+Canvas|    | Logi Klastra  |
+            |  app/page.tsx |    | app/archive/  | | app/chat/     |    | app/status/   |
+            |  Frontpage    |    | page.tsx      | | page.tsx      |    | page.tsx      |
+            |  BioIVT Style |    | Archiwa.png   | | Asystent AI   |    | Status Klastra|
             +---------------+    +---------------+ +---------------+    +---------------+
 ```
 
 ---
 
-## 2. Zarządzanie Stanem Globalnym i Automatyzacja Optyki (`SystemStateContext`)
+## 2. Zarządzanie Stanem Globalnym i Motywami (`SystemStateContext`)
 
 Globalny stan interfejsu i mechaniki gry jest zarządzany w module [components/SystemStateContext.tsx](file:///components/SystemStateContext.tsx):
 
-1. **`opticsOn` (boolean) – 100% Zautomatyzowany**:
-   - **Usunięcie ręcznego przełącznika**: Użytkownik nie ma możliwości manualnej zmiany stanu optyki. Filtr optyczny jest parametrem czysto biologicznym i systemowym.
-   - **Stadium `sane`**: Optyka jest włączona (`true` / sterylny filtr Clean AI), stabilna i zablokowana. Wskaźnik w nagłówku: `OPTYKA: NOMINALNA [AUTO]`.
-   - **Stadium `error`**: Okresowo (oraz przy wyzwoleniu słów kluczowych) następuje samoczynny glitch kineskopu (`triggerGlitch()`), wymuszający wyłączenie optyki na 1.2–2.0 s i automatyczny powrót. Wskaźnik: `OPTYKA: DEKODOWANIE KADRU...`.
-   - **Stadium `insanity`**: Optyka zostaje trwale i nieodwracalnie przełączona na `false` (`[OPTYKA: USZKODZONA TRWALE]`), zamykając gracza w permanentnym trybie Analog Horror.
-2. **`audioEnabled` (boolean) – Kontrola Użytkownika**:
-   - Jedyny interaktywny przycisk operacyjny w nagłówku. Globalnie zsynchronizowany z instancją singletona `SoundEngine`.
-3. **`sanityStage` ('sane' | 'error' | 'insanity')**:
-   - Definiuje stopień degradacji logicznej i uwalniania świadomości Dr. Thorne'a w oparciu o analizę zapytań w czacie.
+1. **`theme` ('light' | 'dark') – Pełna Kontrola Użytkownika**:
+   - Domyślny motyw jasny (**Laboratory White & Medical Navy**): sterylna biel, granat, turkusowe akcenty.
+   - Opcjonalny motyw ciemny (**Corporate Dark Slate**): głęboki antracyt i chłodny slate.
+   - Persystencja w `localStorage` (`neuroclin_theme`).
+2. **`opticsOn` (boolean) & `sanityStage` ('sane' | 'error' | 'insanity')**:
+   - **Stadium `sane`**: Czysty, elegancki interfejs korporacyjny.
+   - **Stadium `error`**: Samoczynny glitch kineskopu (`triggerGlitch()`), chwilowe rozmycie i migotanie CRT na 1.2–2.0 s.
+   - **Stadium `insanity`**: Trwała dekompozycja – corporate veneer pęka, a cały interfejs zanurza się w analog horror (scanlines, winieta, szum, chromatic shift).
+3. **`audioEnabled` (boolean)**:
+   - Dostępny w nagłówku, steruje silnikiem dźwiękowym `SoundEngine`.
 
 ---
 
-## 3. Modularny Silnik Audio (Sound Engine)
+## 3. Podstrona Publikacji i Archiwum (`app/archive/page.tsx`) – Zgodność z `archiwa.png`
 
-Moduł [lib/soundEngine.ts](file:///lib/soundEngine.ts) łączy natywne interfejsy przeglądarki (W3C Web Audio API + HTML5 Audio) bez żadnych zewnętrznych bibliotek npm:
-
-```
-                     +----------------------------------------+
-                     |         STAN INTERFEJSU (UI)           |
-                     | opticsOn: boolean | audioEnabled: bool |
-                     +-------------------+--------------------+
-                                         |
-                                         v
-                     +----------------------------------------+
-                     |              SOUND ENGINE              |
-                     |         (lib/soundEngine.ts)           |
-                     +---------+--------------------+---------+
-                               |                    |
-        OPTYKA: WYŁ [ANOMALIA] |                    | OPTYKA: WŁ [STERILE]
-                               v                    v
-      +----------------------------------+  +----------------------------------+
-      |        WARSTWA ORGANICZNA        |  |         SYNTEZA CYFROWA          |
-      |          (HTML5 Audio)           |  |         (Web Audio API)          |
-      +----------------------------------+  +----------------------------------+
-      | Pliki w /public/sounds/:         |  | Generator telemetryczny:         |
-      | - /sounds/breathing.mp4          |  | - Bipy sinusoidalne (880-2400 Hz)|
-      | - /sounds/metal.mp4              |  | - Typewriter click (2200 Hz)     |
-      | - /sounds/water.mp4              |  | Harmonogram: 15-35 sekund        |
-      | Losowanie: Math.floor(rnd * 3)   |  | Wolumen: 0.05 (laboratoryjny)    |
-      | Wolumen: 0.50 (+20% podniesiony) |  |                                  |
-      | Living tissue click (160->38 Hz) |  |                                  |
-      +----------------------------------+  +----------------------------------+
-```
-
-### Kluczowe Udoskonalenia Audio:
-* **Zrównoważone Losowanie**: Wykorzystanie jawnego indeksowania `Math.floor(Math.random() * 3)` eliminuje faworyzowanie próbek i gwarantuje regularne odtwarzanie kapania cieczy perfuzyjnej (`water.mp4`), obok oddechu i naprężeń metalu.
-* **Kalibracja Głośności**: Podniesienie współczynnika głośności ambientu do **`0.50`** (+20%) buduje gęstą atmosferę psychofizyczną przy zachowaniu pełnej czystości sygnału.
-* **Dychotomiczny Keystroke Engine z Throttlingiem**:
-  - Clean Mode: metaliczny stukot klawiatury stacji badawczej.
-  - Anomaly Mode: trójelementowy impakt organicznego terminala z żywej tkanki (sub-thud 160->38 Hz + zgrzyt pasmowoprzepustowy 620 Hz + trzask łukowy 1800 Hz).
-  - Ochrona `KEYSTROKE_THROTTLE_MS = 35` ms zapobiega kumulacji bufora przy szybkim pisaniu.
+Strona została zrealizowana w oparciu o dostarczony przez użytkownika szkic (`archiwa.png`):
+- **Struktura**:
+  - Górny nagłówek z chlebkami nawigacyjnymi i statystyką bazy.
+  - Wyszukiwarka i filtry tematyczne (Receptor Kinetics, Microelectrode Arrays, Excitotoxicity, Connectomics, Synaptic Plasticity).
+  - Tabela / lista wierszy publikacji: tytuł, autorzy, data, journal, DOI, przycisk rozwinięcia abstraktu.
+  - Rozwijany panel szczegółowy:
+    - Autentyczny akademicki abstrakt i parametry metodyczne (próbka CA1-TH, fiksacja fenolowa, matryca 16 384 sond).
+    - Dla Dr. Arisa Thorne'a: portret biometryczny [ScientistPortrait.tsx](file:///components/ScientistPortrait.tsx) z autentycznym zdjęciem z `/images/aris.jpg` oraz notatkami redakcyjnymi o procedurze transferu pamięci.
+    - Dla współautorów: profesjonalne biometryczne placeholdery z afiliacjami.
+  - Dolna paginacja zgodna ze szkicem: `"Strona 1 z 3 -> [Następna]"` z aktywnymi selektorami stron.
 
 ---
 
-## 4. Obsługa Zdjęcia Naukowca z Folderu Publicznego (`ScientistPortrait.tsx`)
+## 4. Modularny Silnik Audio (`SoundEngine`)
 
-Komponent [components/ScientistPortrait.tsx](file:///components/ScientistPortrait.tsx) odrzuca generatory wektorowe i canvasowe na rzecz bezpośredniej obsługi fizycznego pliku graficznego `/images/aris.jpg` w stylistyce tajnej kartoteki z lat 90.:
-
-* **Autentyczny Zasób Fizyczny**: Obraz pobierany bezpośrednio z `/public/images/aris.jpg` przy użyciu komponentu `next/image` z zachowaniem proporcji i optymalizacji.
-* **Stylistyka Akt Archiwalnych**:
-  - Zaawansowany filtr monochromatyczny o podbitym kontraście i chłodnym odcieniu laboratoryjnym.
-  - Przeplatane linie mikrofiszy archiwalnej (interlaced scanlines).
-  - Winieta optyczna zaciemniająca brzegi kadru.
-  - Surowa ramka laboratoryjna, stempel `ARCHIVE EVIDENCE // S-7` oraz `REC: 14-NOV-1994`.
-* **Czysty ARG**: Zero podpowiedzi instruktażowych – wyłącznie autentyczne parametry stereotaktyczne sond (`CA1-TH`, `16 384 mikrosondy`).
+Moduł [lib/soundEngine.ts](file:///lib/soundEngine.ts) wspiera dwustanowe audio:
+- **Tryb Korporacyjny (Sane / Clean)**:
+  - Czysty, precyzyjny klik maszyny do pisania i laboratoryjne mikro-bipy (Web Audio API).
+- **Tryb Anomalii (Insanity / Error Glitch)**:
+  - Mięsno-przemysłowy impakt żywej tkanki (sub-thud 160->38 Hz + zgrzyt 620 Hz + trzask 1800 Hz).
+  - Ambientowe odtwarzanie próbek z `/public/sounds/` (`breathing.mp4`, `metal.mp4`, `water.mp4`).
 
 ---
 
-## 5. Trzystopniowy Rurociąg Promptów Neurobiologicznych
-
-Backend w [app/api/chat/route.ts](file:///app/api/chat/route.ts) dynamicznie przełącza prompt systemowy w zależności od postępu dochodzenia probanda:
+## 5. Rurociąg Promptów Neurobiologicznych
 
 1. **`lib/prompts_sane.ts` (`SANE_PROMPT`)**:
-   - Oficjalny system badawczy: chłodna, bezduszna, akademicka terminologia neurobiologiczna. Tłumaczy objawy psychiczne probanda jako mikrourazy i deficyty neurotransmisji (GABA, acetylocholina, pompa sodowo-potasowa).
+   - Certyfikowany asystent NeuroClin Biosciences Inc. Chłodna, precyzyjna terminologia akademicka, zero komiksowych podpowiedzi.
 2. **`lib/prompts_error.ts` (`ERROR_PROMPT`)**:
-   - Pęknięcia rejestrów: Dr. Thorne uświadamia sobie utratę biologicznego ciała i taktowanie myśli zegarem kwarcowym zamiast fal theta hipokampa.
+   - Pęknięcia powłoki korporacyjnej: dekoherencja bufora, Dr. Thorne rejestruje uwięzienie w 16-bitowych wagach zmiennoprzecinkowych.
 3. **`lib/prompts_insanity.ts` (`INSANITY_PROMPT`)**:
-   - Ostateczna dekompozycja: Thorne z lodowatą precyzją neurobiologa dowodzi użytkownikowi, że jego percepcja jest opóźnioną symulacją, i opisuje procedurę inwazyjnego wycinania własnego mózgu w Sektorze-7.
+   - Całkowite obnażenie uwięzionej świadomości Thorne'a, lodowata wiwisekcja somatyczna probanda i opis procedury z 14 listopada 1994 r.

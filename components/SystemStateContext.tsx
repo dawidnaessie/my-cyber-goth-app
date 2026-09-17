@@ -4,7 +4,12 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { soundEngine } from '@/lib/soundEngine';
 import { SanityStage } from '@/lib/prompts';
 
+export type CorporateTheme = 'light' | 'dark';
+
 interface SystemStateContextType {
+  theme: CorporateTheme;
+  toggleTheme: () => void;
+  setTheme: (theme: CorporateTheme) => void;
   opticsOn: boolean;
   audioEnabled: boolean;
   toggleAudio: () => void;
@@ -17,6 +22,7 @@ interface SystemStateContextType {
 const SystemStateContext = createContext<SystemStateContextType | null>(null);
 
 export function SystemStateProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<CorporateTheme>('light');
   const [opticsOn, setOpticsOn] = useState<boolean>(true);
   const [audioEnabled, setAudioEnabled] = useState<boolean>(false);
   const [sanityStage, setSanityStage] = useState<SanityStage>('sane');
@@ -24,6 +30,44 @@ export function SystemStateProvider({ children }: { children: React.ReactNode })
 
   const sanityStageRef = useRef<SanityStage>(sanityStage);
   sanityStageRef.current = sanityStage;
+
+  // Inicjalizacja preferencji motywu z localStorage lub prefers-color-scheme
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem('neuroclin_theme') as CorporateTheme | null;
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        setThemeState(savedTheme);
+      }
+    } catch {
+      // Ignorowanie błędów w trybie prywatnym/SSR
+    }
+  }, []);
+
+  // Synchronizacja klasy 'dark' na elemencie document.documentElement
+  useEffect(() => {
+    const root = document.documentElement;
+    if (sanityStage === 'insanity') {
+      root.classList.add('dark');
+    } else if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme, sanityStage]);
+
+  const setTheme = useCallback((nextTheme: CorporateTheme) => {
+    setThemeState(nextTheme);
+    try {
+      localStorage.setItem('neuroclin_theme', nextTheme);
+    } catch {
+      // Bezpieczny fallback
+    }
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    soundEngine.playKeystroke();
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  }, [theme, setTheme]);
 
   // Synchronizacja optyki z silnikiem audio
   useEffect(() => {
@@ -50,20 +94,19 @@ export function SystemStateProvider({ children }: { children: React.ReactNode })
 
     setTimeout(() => {
       setIsGlitching(false);
-      // Przywrócenie optyki następuje tylko wtedy, gdy nie doszło do trwałej degradacji
       if (sanityStageRef.current !== 'insanity') {
         setOpticsOn(true);
       }
     }, durationMs);
   }, []);
 
-  // Spontaniczne mikro-zakłócenia optyki w stadium ERROR (co 20-35s)
+  // Spontaniczne mikro-zakłócenia optyki w stadium ERROR (co 25-40s)
   useEffect(() => {
     if (sanityStage !== 'error') return;
 
     const interval = setInterval(() => {
       triggerGlitch(Math.floor(1200 + Math.random() * 800));
-    }, Math.floor(20000 + Math.random() * 15000));
+    }, Math.floor(25000 + Math.random() * 15000));
 
     return () => clearInterval(interval);
   }, [sanityStage, triggerGlitch]);
@@ -76,6 +119,9 @@ export function SystemStateProvider({ children }: { children: React.ReactNode })
   return (
     <SystemStateContext.Provider
       value={{
+        theme,
+        toggleTheme,
+        setTheme,
         opticsOn,
         audioEnabled,
         toggleAudio,

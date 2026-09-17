@@ -3,20 +3,21 @@ import './globals.css';
 import { ClientShell } from '@/components/ClientShell';
 
 export const metadata: Metadata = {
-  title: 'BioResearcher AI // BIOLOGY RESEARCH APPLICATION',
+  title: 'NeuroClin Biosciences // Human Connectomics & Primary Neural Assays',
   description:
-    'Rządowy portal badawczy neurobiologii, bio-fizyki komórkowej i konektomiki kognitywnej. Terminal analityczny Departamentu Obrony.',
+    'Akredytowany portal badawczy neurobiologii, pierwotnych hodowli neuronów CA1, mikromacierzy elektrodowych oraz BioResearcher AI™.',
   keywords: [
-    'ai',
-    'bio-physics',
-    'cellular-biology',
-    'neurobiology',
-    'connectome',
-    'cognitive-lab',
-    'bioresearcher',
-    'terminal',
+    'neuroclin',
+    'biosciences',
+    'connectomics',
+    'ca1-hippocampus',
+    'nmda-kinetics',
+    'microelectrode-array',
+    'cellular-neurobiology',
+    'bioresearcher-ai',
+    'life-sciences',
   ],
-  authors: [{ name: 'DOD_BIOLOGICAL_DIVISION' }],
+  authors: [{ name: 'NeuroClin Biosciences Inc.' }],
 };
 
 export default function RootLayout({
@@ -25,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pl" className="dark">
-      <body className="bg-[#050404] text-[#e0e0e0] font-mono antialiased min-h-screen relative selection:bg-[#781414] selection:text-[#f3ede2]">
+    <html lang="pl" suppressHydrationWarning>
+      <body className="font-sans antialiased min-h-screen relative transition-colors duration-300">
         <ClientShell>{children}</ClientShell>
       </body>
     </html>

@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,6 +9,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        corporate: {
+          navy: '#0a192f',
+          darknavy: '#07101f',
+          slate: '#0f172a',
+          blue: '#0284c7',
+          sky: '#0ea5e9',
+          teal: '#0d9488',
+          accent: '#0284c7',
+          border: '#e2e8f0',
+          darkborder: '#1e293b',
+          lightbg: '#f8fafc',
+          card: '#ffffff',
+          darkcard: '#111827',
+        },
         cyber: {
           bg: '#050505',
           dark: '#0a0a0f',
@@ -35,7 +50,24 @@ module.exports = {
         }
       },
       fontFamily: {
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Courier New"', 'monospace'],
+        sans: [
+          'Inter',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          'sans-serif',
+        ],
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          '"Courier New"',
+          'monospace',
+        ],
       },
       animation: {
         'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
