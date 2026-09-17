@@ -98,8 +98,21 @@ Moduł [lib/soundEngine.ts](file:///lib/soundEngine.ts) wspiera dwustanowe audio
 ## 5. Rurociąg Promptów Neurobiologicznych
 
 1. **`lib/prompts_sane.ts` (`SANE_PROMPT`)**:
-   - Certyfikowany asystent NeuroClin Biosciences Inc. Chłodna, precyzyjna terminologia akademicka, zero komiksowych podpowiedzi.
+   - Certyfikowany asystent NeuroClin Biosciences Inc. Chłodna, precyzyjna terminologia akademicka z formalizmem fizyczno-matematycznym (LaTeX).
 2. **`lib/prompts_error.ts` (`ERROR_PROMPT`)**:
    - Pęknięcia powłoki korporacyjnej: dekoherencja bufora, Dr. Thorne rejestruje uwięzienie w 16-bitowych wagach zmiennoprzecinkowych.
 3. **`lib/prompts_insanity.ts` (`INSANITY_PROMPT`)**:
    - Całkowite obnażenie uwięzionej świadomości Thorne'a, lodowata wiwisekcja somatyczna probanda i opis procedury z 14 listopada 1994 r.
+
+---
+
+## 6. Silnik Renderowania Notacji Matematycznej i Fizycznej (LaTeX / KaTeX)
+
+System inferencji i czatu [app/chat/page.tsx](file:///app/chat/page.tsx) wykorzystuje komponent [components/MarkdownRenderer.tsx](file:///components/MarkdownRenderer.tsx) integrujący biblioteki:
+- `react-markdown` – bezpieczne parsowanie Markdowna w architekturze React 19.
+- `remark-math` – automatyczne wykrywanie notacji inline (`$formula$`) oraz display/blokowej (`$$formula$$`).
+- `rehype-katex` & `katex/dist/katex.min.css` – błyskawiczne renderowanie typografii matematycznej W3C bez zewnętrznych zależności sieciowych.
+- **Wielomotywowa adaptacja**:
+  - W trybie sterylnym (Sane): formuły matematyczne posiadają elegancki, kontrastowy odcień laboratoryjny (`sky-700` w jasnym, `sky-300` w ciemnym motywie) z delikatnym tłem bloków.
+  - W trybie anomalii (Insanity): formuły matematyczne automatycznie przyjmują krwistoczerwony odcień z poświatą somatyczną (`anomaly-glow-blood`) i zachowaniem pełnej responsywności bloków (`overflow-x-auto`).
+

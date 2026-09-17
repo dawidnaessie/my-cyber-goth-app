@@ -6,6 +6,7 @@ import { useSystemState } from '@/components/SystemStateContext';
 import { soundEngine } from '@/lib/soundEngine';
 import { SanityStage } from '@/lib/prompts';
 import { calculateSanityMetrics } from '@/lib/sanityEngine';
+import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 
 interface Message {
   id: string;
@@ -21,11 +22,12 @@ const INITIAL_CORPORATE_LOGS: Message[] = [
     role: 'assistant',
     timestamp: '00:00:01',
     content:
-      'WITAJ W BIORESEARCHER AI™ v4.2. Autonomiczny asystent analityczny NeuroClin Biosciences Inc. Połączono z bazą biofizyki komórkowej, kinetyki receptorowej oraz rejestrami mikromacierzy CA1-TH. W czym mogę pomóc w ramach Twojego protokołu badawczego?',
+      'WITAJ W BIORESEARCHER AI™ v4.2. Autonomiczny asystent analityczny NeuroClin Biosciences Inc. Połączono z bazą biofizyki komórkowej, kinetyki receptorowej oraz rejestrami mikromacierzy CA1-TH.\n\nParametry bazowe macierzy: potencjał spoczynkowy $V_m = -70.4\\text{ mV}$, stała czasowa desensytyzacji $\\tau_{NMDA} = 42\\text{ ms}$. W czym mogę pomóc w ramach Twojego protokołu badawczego?',
   },
 ];
 
 const PRESET_RESEARCH_INQUIRIES = [
+  'Podaj równanie Goldmana-Hodgkina-Katza (GHK) i Nernsta dla potencjału neuronu CA1',
   'Wyjaśnij mechanizm ekscytotoksyczności receptorów NMDA i napływu jonów Ca2+',
   'Jakie parametry telemetryczne posiada matryca 16 384 mikrosond krzemowych?',
   'Kinetyka desensytyzacji receptorów w komórkach piramidowych CA1',
@@ -349,8 +351,12 @@ export default function ChatPage() {
                 <span className="ml-3">{msg.timestamp}</span>
               </div>
 
-              <div className="whitespace-pre-wrap break-words">
-                {msg.content}
+              <div className="break-words">
+                {msg.role === 'user' ? (
+                  <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                ) : (
+                  <MarkdownRenderer content={msg.content} isDistorted={isDistorted} />
+                )}
                 {msg.isStreaming && (
                   <span
                     className={`inline-block w-2 h-3.5 ml-1 align-middle ${
