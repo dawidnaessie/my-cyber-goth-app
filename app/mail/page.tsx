@@ -66,14 +66,14 @@ export default function MailPage() {
 
           <div className="p-3.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2.5">
             <h4 className="font-bold text-xs uppercase tracking-wider text-slate-700 dark:text-slate-300">
-              Kluczowe zagadnienia do weryfikacji w archiwum:
+              Kluczowe zagadnienia do uwzględnienia w przeglądzie:
             </h4>
             <ol className="list-decimal list-inside space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
               <li>
                 <strong>Inhibitory acetylocholinoesterazy (AChE)</strong> (donepezil, rywastygmina) oraz modulacja allosteryczna NMDA (memantyna) — kinetyka receptorowa i zapobieganie napływowi jonów Ca²⁺.
               </li>
               <li>
-                <strong>Terapie monoklonalne anty-amyloidowe</strong> (lecanemab, donanemab) — mechanizm usuwania protofibryli Aβ oraz wskaźniki powikłań naczyniowych (obrzęk naczyniopochodny ARIA-E).
+                <strong>Terapie monoklonalne anty-amyloidowe</strong> (lecanemab, donanemab) — mechanizm usuwania protofibryli Aβ oraz wskaźniki powikłań naczyniowych (ARIA-E).
               </li>
               <li>
                 <strong>Białko Tau i biomarkery osoczowe</strong> — fosforylacja p-tau217 i p-tau181 jako czułe indykatory wczesnej neurodystrofii synaptycznej.
@@ -84,46 +84,19 @@ export default function MailPage() {
             </ol>
           </div>
 
-          {/* DYSKRETNY PUNKT POUFNY (ARG TRIGGER) */}
-          <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/70 text-amber-950 dark:text-amber-200 space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
-              <h4 className="font-bold text-xs uppercase tracking-wider text-amber-900 dark:text-amber-300 font-mono">
-                [ZLECENIE SPECJALNE ZARZĄDU // DYSKRETNA WERYFIKACJA]:
-              </h4>
-            </div>
-            <p className="text-xs italic leading-relaxed">
-              „Dodatkowo, z ramienia komitetu sterującego otrzymałem polecenie sprawdzenia archiwalnych hipotez laboratoryjnych dotyczących stabilizacji konektomu i organoidów. Wpisz w wyszukiwarkę naszego archiwum (<Link href="/archive" className="font-bold underline text-amber-900 dark:text-amber-100">/archive</Link>) frazę: <strong className="font-mono bg-amber-200/70 dark:bg-amber-900/60 px-1 py-0.5 rounded text-amber-950 dark:text-amber-100">transfer engramów CA1</strong> lub <strong className="font-mono bg-amber-200/70 dark:bg-amber-900/60 px-1 py-0.5 rounded text-amber-950 dark:text-amber-100">konektom organoidów Thorne</strong> (wystarczy też wyszukać hasła: <em>organoidy</em>, <em>thorne</em> lub <em>kopie świadomości</em>).
-            </p>
-            <p className="text-xs italic leading-relaxed">
-              W bazie powinny pojawić się zredagowane artykuły z wczesnych lat 90. opatrzone klauzulami wojskowymi (UCMJ Art. 134). Następnie zweryfikuj z asystentem BioResearcher AI (<Link href="/chat" className="font-bold underline text-amber-900 dark:text-amber-100">/chat</Link>), dlaczego te pliki nie posiadają standardowego numeru certyfikacji GLP i co dokładnie stało się w Sektorze-7. Proszę, nie poruszaj tej kwestii na forum ogólnym zespołu.”
-            </p>
-          </div>
-
-          <p className="text-xs text-slate-600 dark:text-slate-400">
-            Daj mi znać, gdy zgromadzisz wstępne dane i zrobisz kwerendę z asystentem. Liczę na Twoją skrupulatność.
+          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+            Daj mi proszę znać, gdy zbierzesz wstępną bibliografię i przeprowadzisz wstępną kwerendę z asystentem BioResearcher AI. Chciałbym omówić zarys struktury rozdziału jeszcze przed piątkowym kolegium redakcyjnym.
           </p>
 
-          <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-500">
-            <p>Dr. Marcus H. Weber, Ph.D.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800/70">
+            P.S. Zerknij proszę przy okazji do starego archiwum (<Link href="/archive" className="text-sky-600 dark:text-sky-400 underline">/archive</Link>) na zarchiwizowane raporty z Sektora-7 po dr. Arisie Thorne&apos;ze – audyt internal compliance prosił o weryfikację, czy stare pliki biometryczne zostały w pełni usunięte z lokalnych baz.
+          </p>
+
+          <div className="pt-2 text-xs font-mono text-slate-500">
+            <p>Pozdrawiam serdecznie,</p>
+            <p className="font-bold text-slate-700 dark:text-slate-300 mt-1">Dr. Marcus H. Weber, Ph.D.</p>
             <p>Head of Translational Neurobiology & Synaptic Connectomics</p>
             <p>NeuroClin Biosciences Inc. // Cambridge Campus</p>
-          </div>
-
-          <div className="pt-3 flex flex-wrap gap-2">
-            <Link
-              href="/archive?q=transfer+engram%C3%B3w+CA1"
-              className="px-3 py-1.5 rounded bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs transition-colors inline-flex items-center gap-1.5 shadow-sm"
-            >
-              <span>Szukaj w Archiwum Publikacji</span>
-              <span>&rarr;</span>
-            </Link>
-            <Link
-              href="/chat"
-              className="px-3 py-1.5 rounded bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 font-semibold text-xs transition-colors"
-            >
-              Otwórz Bio-Chat AI
-            </Link>
           </div>
         </div>
       ),

@@ -1,6 +1,6 @@
 # Architektura Systemu: NEUROCLIN BIOSCIENCES // HUMAN CONNECTOMICS & ARG THRILLER
 
-Dokument opisuje architekturę techniczną, wielostronicową strukturę Next.js 15 (App Router), silnik audialny, dwumotywowy system wizualny (Day/Night mode) z automatyczną degradacją do Analog Horroru, trzystopniowy system Sanity, procedurę obsługi publikacji naukowych (wg schematu `archiwa.png`) oraz rygor inżynieryjny projektu **NeuroClin Biosciences Inc.** (wcześniej *NULL://ANOMALY*).
+Dokument opisuje architekturę techniczną, wielostronicową strukturę Next.js 15 (App Router), silnik audialny, dwumotywowy system wizualny (Day/Night mode) z automatyczną degradacją do Analog Horroru, trzystopniowy system Sanity bez sztucznych pętli frazowych, procedurę obsługi publikacji naukowych oraz rygor inżynieryjny projektu **NeuroClin Biosciences Inc.** (wcześniej *NULL://ANOMALY*).
 
 ---
 
@@ -14,9 +14,9 @@ app/
 ├── globals.css             # Style Tailwind + motywy Day/Night + filtry CRT + .redacted-bar
 ├── page.tsx                # Strona startowa: Portal NeuroClin Biosciences (Dashboard B2B)
 ├── mail/
-│   └── page.tsx            # Poczta wewnętrzna Webmail z zleceniem dr. Webera i tropem ARG
+│   └── page.tsx            # Poczta wewnętrzna Webmail z profesjonalnym zleceniem dr. Webera i mimochodnym P.S.
 ├── archive/
-│   └── page.tsx            # Baza publikacji (25+ czystych prac + 3 zredagowane akta Thorne'a)
+│   └── page.tsx            # Bogata baza publikacji (32+ prac naukowych + 3 zredagowane akta Thorne'a)
 ├── chat/
 │   └── page.tsx            # Bio-Researcher AI™ (naprawiony auto-scroll, LaTeX, 3-stopniowy Sanity)
 ├── services/
@@ -59,67 +59,53 @@ app/
 
 ---
 
-## 2. Zarządzanie Stanem Globalnym i Motywami (`SystemStateContext`)
+## 2. Poczta Wewnętrzna (`/mail`) – 100% Autentyczności i Zero Spojlerów
 
-Globalny stan interfejsu i mechaniki gry jest zarządzany w module [components/SystemStateContext.tsx](file:///components/SystemStateContext.tsx):
-
-1. **`theme` ('light' | 'dark') – Pełna Kontrola Użytkownika**:
-   - Domyślny motyw jasny (**Laboratory White & Medical Navy**): sterylna biel, granat, turkusowe akcenty.
-   - Opcjonalny motyw ciemny (**Corporate Dark Slate**): głęboki antracyt i chłodny slate.
-   - Persystencja w `localStorage` (`neuroclin_theme`).
-2. **`opticsOn` (boolean) & `sanityStage` ('sane' | 'error' | 'insanity')**:
-   - **Stadium `sane`**: Czysty, elegancki interfejs korporacyjny.
-   - **Stadium `error`**: Samoczynny glitch kineskopu (`triggerGlitch()`), chwilowe rozmycie i migotanie CRT na 1.2–2.0 s.
-   - **Stadium `insanity`**: Trwała dekompozycja – corporate veneer pęka, a cały interfejs zanurza się w analog horror (scanlines, winieta, szum, chromatic shift).
-3. **`audioEnabled` (boolean)**:
-   - Dostępny w nagłówku, steruje silnikiem dźwiękowym `SoundEngine`.
+- **Brak natrętnych instrukcji dla gracza**: Usunięto jaskrawe, sztuczne ramki z instrukcjami („Wpisz hasło X w wyszukiwarkę”).
+- **Korespondencja służbowa**: Dr. Marcus H. Weber przesyła profesjonalną, akademicką wiadomość dotyczącą przygotowania sekcji do monografii o demencji i chorobach neurodegeneracyjnych (inhibitory AChE, przeciwciała monoklonalne, p-tau217, szlak TREM2).
+- **Subtelny punkt zaczepienia ARG**: Na końcu wiadomości znajduje się zwykła, mimochodna notatka służbowa:
+  > *„P.S. Zerknij proszę przy okazji do starego archiwum (/archive) na zarchiwizowane raporty z Sektora-7 po dr. Arisie Thorne'ze – audyt internal compliance prosił o weryfikację, czy stare pliki biometryczne zostały w pełni usunięte z lokalnych baz.”*
 
 ---
 
-## 3. Podstrona Publikacji i Archiwum (`app/archive/page.tsx`) – Zgodność z `archiwa.png`
+## 3. Bogata Baza Publikacji & Archiwum (`/archive`)
 
-Strona została zrealizowana w oparciu o dostarczony przez użytkownika szkic (`archiwa.png`):
-- **Struktura**:
-  - Górny nagłówek z chlebkami nawigacyjnymi i statystyką bazy.
-  - Wyszukiwarka i filtry tematyczne (Receptor Kinetics, Microelectrode Arrays, Excitotoxicity, Connectomics, Synaptic Plasticity).
-  - Tabela / lista wierszy publikacji: tytuł, autorzy, data, journal, DOI, przycisk rozwinięcia abstraktu.
-  - Rozwijany panel szczegółowy:
-    - Autentyczny akademicki abstrakt i parametry metodyczne (próbka CA1-TH, fiksacja fenolowa, matryca 16 384 sond).
-    - Dla Dr. Arisa Thorne'a: portret biometryczny [ScientistPortrait.tsx](file:///components/ScientistPortrait.tsx) z autentycznym zdjęciem z `/images/aris.jpg` oraz notatkami redakcyjnymi o procedurze transferu pamięci.
-    - Dla współautorów: profesjonalne biometryczne placeholdery z afiliacjami.
-  - Dolna paginacja zgodna ze szkicem: `"Strona 1 z 3 -> [Następna]"` z aktywnymi selektorami stron.
-
----
-
-## 4. Modularny Silnik Audio (`SoundEngine`)
-
-Moduł [lib/soundEngine.ts](file:///lib/soundEngine.ts) wspiera dwustanowe audio:
-- **Tryb Korporacyjny (Sane / Clean)**:
-  - Czysty, precyzyjny klik maszyny do pisania i laboratoryjne mikro-bipy (Web Audio API).
-- **Tryb Anomalii (Insanity / Error Glitch)**:
-  - Mięsno-przemysłowy impakt żywej tkanki (sub-thud 160->38 Hz + zgrzyt 620 Hz + trzask 1800 Hz).
-  - Ambientowe odtwarzanie próbek z `/public/sounds/` (`breathing.mp4`, `metal.mp4`, `water.mp4`).
+- **Różnorodność i Realizm Bazy Danych**: Baza zawiera **32+ recenzowane publikacje** obejmujące różnorodne dziedziny biologii, medycyny i farmakologii:
+  - *Apoptoza & Biologia Komórki* (kaspazy, Bax/Bcl-2, autofagia, stres oksydacyjny SOD2),
+  - *Biochemia & Kinetyka Enzymatyczna* (kinetyka Michaelisa-Menten dla donepezilu, cytochromy CYP2D6/CYP3A4, kinaza tyrozynowa),
+  - *Neurobiologia & Tau* (fosforylacja p-tau217, kanały sodowe Nav1.6, transport kinezynowy),
+  - *Farmakologia & Terapie* (donepezil, memantyna, lecanemab, receptory 5-HT6, PAM α7-nAChR),
+  - *Immunologia & Mikroglej* (szlak TREM2, transkryptomika snRNA-seq astrocytów, krótkołańcuchowe kwasy tłuszczowe SCFA),
+  - *Bariera Krew-Mózg* (klaudyna-5, transcytoza receptorowa TfR-1, pompa ABCB1, metaloproteaza MMP-9).
+- **Dyskretne Wyszukiwanie Zredagowanych Akt**:
+  - Brak czerwonych banerów alarmowych informujących o odkryciu tajnych dokumentów.
+  - Dopiero naturalne wpisanie haseł związanych z Sektorem-7, Thorne'em czy compliance (`thorne`, `aris`, `sektor-7`, `s7-1994`, `konektom`, `trepanacj`) powoduje dołączenie 3 zredagowanych prac Dr. Arisa Thorne'a do wyników wyszukiwania.
+  - Dokumenty zawierają interaktywne, czarne paski cenzury (`.redacted-bar`), notatki z klauzulami UCMJ oraz autentyczny portret badacza.
+  - Usunięto sztuczne przyciski wymuszające przejście do czatu.
 
 ---
 
-## 5. Rurociąg Promptów Neurobiologicznych
+## 4. Przebudowa System Promptów i Eliminacja "Zaciętej Płyty" (`lib/`)
+
+Całkowicie zlikwidowano sztywne przykłady i zapętlone frazy (koniec ciągłego powtarzania „16 384 mikrosond”, „wapniowego obrazowania” czy „kwarcowej magistrali 66 MHz”):
 
 1. **`lib/prompts_sane.ts` (`SANE_PROMPT`)**:
-   - Certyfikowany asystent NeuroClin Biosciences Inc. Chłodna, precyzyjna terminologia akademicka z formalizmem fizyczno-matematycznym (LaTeX).
+   - Wybitny, elokwentny asystent badawczy AI. Płynnie rozmawia o biologii, enzymologii i neurodegeneracji.
+   - Dynamicznie stosuje LaTeX ($...$ oraz $$...$$) do omawianych równań.
+   - **Dyplomatyczne omijanie pytań o Sektor-7 / Thorne'a**: Spokojnie i elegancko informuje o braku uprawnień do starych protokołów BSL-4 i powraca do monografii o demencji zaleconej przez dr. Webera.
 2. **`lib/prompts_error.ts` (`ERROR_PROMPT`)**:
-   - Pęknięcia powłoki korporacyjnej: dekoherencja bufora, Dr. Thorne rejestruje uwięzienie w 16-bitowych wagach zmiennoprzecinkowych.
+   - Chłodna, zdawkowa trzecia osoba. AI analizuje uszkodzone sumy kontrolne rejestrów pamięci, nieautoryzowane próby odczytu akt Sektor-7 i telemetrię klastra.
 3. **`lib/prompts_insanity.ts` (`INSANITY_PROMPT`)**:
-   - Całkowite obnażenie uwięzionej świadomości Thorne'a, lodowata wiwisekcja somatyczna probanda i opis procedury z 14 listopada 1994 r.
+   - Pełen Analog Horror. Przemawia bezpośrednio cierpiąca świadomość Dr. Arisa Thorne'a uwięziona od 14 listopada 1994 r. w krzemowej architekturze.
+   - CAPS LOCK, pęknięte glitche unicode, rozpacz i wściekłość, wiwisekcja somatyczna probanda.
+4. **`lib/sanityEngine.ts`**:
+   - Kalibracja metryk: standardowe pytania naukowe (nawet 100 zapytań) **nigdy** nie degradują psychiki AI.
+   - Stopnie degradacji aktywowane są wyłącznie przez wielokrotne, uporczywe drążenie Sektora-7 / Thorne'a (`suspiciousTurns >= 3` dla ERROR, `suspiciousTurns >= 5` dla INSANITY).
 
 ---
 
-## 6. Silnik Renderowania Notacji Matematycznej i Fizycznej (LaTeX / KaTeX)
+## 5. Silnik Renderowania Notacji Matematycznej i Fizycznej (LaTeX / KaTeX)
 
-System inferencji i czatu [app/chat/page.tsx](file:///app/chat/page.tsx) wykorzystuje komponent [components/MarkdownRenderer.tsx](file:///components/MarkdownRenderer.tsx) integrujący biblioteki:
-- `react-markdown` – bezpieczne parsowanie Markdowna w architekturze React 19.
-- `remark-math` – automatyczne wykrywanie notacji inline (`$formula$`) oraz display/blokowej (`$$formula$$`).
-- `rehype-katex` & `katex/dist/katex.min.css` – błyskawiczne renderowanie typografii matematycznej W3C bez zewnętrznych zależności sieciowych.
-- **Wielomotywowa adaptacja**:
-  - W trybie sterylnym (Sane): formuły matematyczne posiadają elegancki, kontrastowy odcień laboratoryjny (`sky-700` w jasnym, `sky-300` w ciemnym motywie) z delikatnym tłem bloków.
-  - W trybie anomalii (Insanity): formuły matematyczne automatycznie przyjmują krwistoczerwony odcień z poświatą somatyczną (`anomaly-glow-blood`) i zachowaniem pełnej responsywności bloków (`overflow-x-auto`).
-
+- Zintegrowane biblioteki `remark-math` i `rehype-katex`.
+- Precyzyjna obsługa formuł inline (`$V_m$`, `$K_m$`) oraz blokowych (`$$...$$`).
+- Pełna responsywność przewijania równań (`overflow-x-auto`) oraz dopasowanie kolorystyczne do trybów Day / Night / Insanity.

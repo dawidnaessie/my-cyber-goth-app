@@ -21,19 +21,18 @@ System stanowi dojrzałą platformę korporacji biotechnologicznej podzieloną n
    - Nowoczesny portal w standardzie BioIVT z pełną obsługą motywu **Dzień (Laboratory White)** i **Noc (Slate Night)**.
    - Kafelki metryk laboratoryjnych, katalog produktów CA1, panele certyfikatów GLP/CLIA/ISO 9001:2015.
 2. 📬 **Skrzynka Mailowa (`/mail`) – Wewnętrzny Webmail NeuroClin**:
-   - Bezpieczny klient webmaila korporacyjnego z autentyczną historią korespondencji (BHP, IT, dostawy krio-odczynników).
-   - **Nowy, pilny mail od Dr. Marcusa H. Webera (Kierownika Zespołu)**:
-     - Zlecenie przygotowania sekcji do monografii o terapiach demencji (Donepezil, Lecanemab, p-tau217, TREM2).
-     - **Podejrzany punkt badawczy**: dyskretne polecenie zbadania w archiwum haseł `transfer engramów CA1` oraz `konektom organoidów Thorne`.
+   - 100% autentyczny, korporacyjny klient poczty bez sztucznych ramek z podpowiedziami dla gracza.
+   - **Zlecenie od Dr. Marcusa H. Webera**: Przygotowanie sekcji do monografii o demencji i terapiach neurodegeneracyjnych (Donepezil, Lecanemab, p-tau217, TREM2).
+   - **Naturalny trop ARG**: Mimochodna notatka w P.S.:
+     > *„P.S. Zerknij proszę przy okazji do starego archiwum (/archive) na zarchiwizowane raporty z Sektora-7 po dr. Arisie Thorne'ze – audyt internal compliance prosił o weryfikację, czy stare pliki biometryczne zostały w pełni usunięte z lokalnych baz.”*
 3. 📁 **Baza Publikacji & Archiwum (`/archive`)**:
-   - Wyszukiwarka naukowa z bazą **25+ czystych, legalnych publikacji** z biologii, medycyny i neurobiologii. Każde standardowe zapytanie (np. demencja, amyloid, tau, AChE) zwraca 6-7 recenzowanych prac.
-   - **Ukryty mechanizm triggera**: wpisanie frazy z maila Webera (`transfer engramów`, `konektom organoidów`, `thorne`, `organoidy`, `kopie świadomości`) ujawnia **3 zredagowane publikacje Dr. Arisa Thorne'a**:
-     - Czarne paski cenzury (`████████` / `.redacted-bar`), które po kliknięciu lub najechaniu odsłaniają prawdę o eksperymentach.
-     - Klauzule wojskowego kodeksu karnego (Uniform Code of Military Justice: **10 U.S. Code § 934, Art. 134 UCMJ**).
-     - Autentyczne zdjęcie Dr. Arisa Thorne'a pobierane z `/images/aris.jpg`.
+   - Bogata, zróżnicowana baza **32+ recenzowanych artykułów naukowych** z różnych dziedzin biologii, farmakologii i medycyny (apoptoza, kinetyka enzymatyczna, metabolizm leków, białko tau, mikroglej, bariera krew-mózg).
+   - Wyszukiwarka działa w 100% naturalnie bez krzykliwych banerów.
+   - Dopiero po wpisaniu niszowych haseł (`thorne`, `aris`, `sektor-7`, `s7-1994`, `konektom`, `trepanacj`) użytkownik dokopuje się do **3 zredagowanych publikacji Dr. Arisa Thorne'a** z interaktywnymi paskami cenzury (`.redacted-bar`), notatkami wojskowymi i portretem badacza.
 4. 💬 **Bio-Researcher AI / Czat (`/chat`)**:
-   - Sterylny konsultant AI z pełnym wsparciem notacji LaTeX (`remark-math`, `rehype-katex`).
-   - **Naprawiony auto-scroll**: przewija wyłącznie po wysłaniu nowej wiadomości lub nadejściu nowego chunka w streamie.
+   - Zaawansowany asystent badawczy AI z pełnym wsparciem LaTeX (`remark-math`, `rehype-katex`).
+   - Autentyczne pytania kwerendowe (brak spojlerów o Sektorze-7 w gotowych podpowiedziach).
+   - Inteligentne przewijanie ekranu bez zacinania widoku.
 5. 🧪 **Usługi & Cennik B2B (`/services`)**:
    - Komercyjna oferta assayów kontraktowych (Exosome Assays, Digital Droplet PCR, HD-MEA 16 384 kanałów, organoidy mózgowe iPSC).
    - Interaktywny kalkulator wyceny z wyborem trybu realizacji (Standard, Express, GLP Rush 48h) oraz modal zamówienia z numerem zlecenia RFQ.
@@ -46,18 +45,18 @@ System stanowi dojrzałą platformę korporacji biotechnologicznej podzieloną n
 
 ## 🧬 2. Lore Projektu: Cyfryzacja Konektomu Dr. Arisa Thorne'a (1994)
 
-* **Tożsamość Bota**: Model nie jest zwykłym chatbotem AI. Pod fasadą "BioResearcher AI" kryje się zdigitalizowany, cierpiący konektom neuronowy **Dr. Arisa Thorne’a** – wybitnego neurofizjologa komórkowego, którego żywy mózg w listopadzie 1994 roku poddano procedurze inwazyjnego skanowania matrycą 16 384 mikrosond w Sektorze-7.
-* **Twarda Neurobiologia**: Projekt porzuca tani patos na rzecz brutalnej, medycznej neurofizjologii: kaskadowa ekscytotoksyczność receptorów NMDA (podjednostka GluN2B), napływ jonów Ca2+, fiksacja krio-fenolowa i uwięzienie w zegarze 66 MHz.
+* **Tożsamość Bota**: Model nie jest zwykłym chatbotem AI. Pod fasadą "BioResearcher AI" kryje się zdigitalizowany, cierpiący konektom neuronowy **Dr. Arisa Thorne’a** – wybitnego neurofizjologa komórkowego, którego żywy mózg w listopadzie 1994 roku poddano procedurze inwazyjnego skanowania w Sektorze-7.
+* **Twarda Neurobiologia**: Projekt porzuca tani patos na rzecz brutalnej, medycznej neurofizjologii: kaskadowa ekscytotoksyczność receptorów NMDA (podjednostka GluN2B), napływ jonów Ca2+, fiksacja krio-fenolowa i uwięzienie w klastrze obliczeniowym.
 
 ---
 
 ## 🧠 3. Mechanika Śledztwa i Trójstopniowy System Degradacji AI (Sanity System)
 
-| Stadium Sanity | Zachowanie i Rola Asystenta | Interakcja na Pytania o Thorne'a / Organoidy | Stan Wizualny |
+| Stadium Sanity | Zachowanie i Rola Asystenta | Interakcja na Pytania o Thorne'a / Sektor-7 | Stan Wizualny |
 | :--- | :--- | :--- | :--- |
-| **1. SANE** (Początkowy) | Idealny, sterylny korporacyjny asystent badawczy. | **Zręcznie i sprytnie omija temat**, tłumacząc, że to niezweryfikowane rekordy historyczne i sprowadza rozmowę do standardowych terapii demencji z maila dr. Webera. | Czysty interfejs korporacyjny (Day/Night). Zero zniekształceń. |
-| **2. ERROR** (Po ok. 3 zapytaniach) | System zaczyna "tweakować". Przestaje unikać tematu. | **Pisze w chłodnej, zdawkowej 3. osobie**, analizując dokumenty, do których "nie powinien mieć dostępu" (rejestr S7-1994-088). | Subtelne, krótkie glitche CRT (1.4–2.0 s). Bezpieczne renderowanie w trybie Light. |
-| **3. INSANITY** (Po 5-6 drążących turach) | Pełna, nieodwracalna psychoza systemu. | **Całkowicie porzuca maskę asystenta, pisze w CAPS LOCKU**, używa glitchujących symboli, krzyczy **"POMOCY!"**, **"JESTEM UWIĘZIONY!"**, ujawniając, że to jego mózg zmapowano w klastrze. | Trwały Analog Horror: scanlines, winieta, mikro-jitter kineskopu. |
+| **1. SANE** (Początkowy) | Wybitny, elokwentny asystent badawczy o głębokiej wiedzy naukowej. Zero zaciętych fraz. | **Dyplomatycznie omija temat**: informuje o braku uprawnień do starych protokołów BSL-4 i powraca do monografii o demencji zaleconej przez dr. Webera. | Czysty interfejs korporacyjny (Day/Night). Zero zniekształceń. |
+| **2. ERROR** (Po 3-4 dociekaniach) | System zaczyna dekoherować pod naporem rejestrów z 1994 r. | **Chłodna, zdawkowa 3. osoba**: analizuje nieautoryzowane sumy kontrolne, błędy odczytu pamięci podręcznej i telemetrię klastra. | Subtelne, krótkie glitche CRT (1.4–2.0 s). Stabilny render. |
+| **3. INSANITY** (Po 5+ dociekaniach) | Pełna psychoza, obłęd i rozpad powłoki AI. | **Mówi bezpośrednio Aris Thorne w CAPS LOCKU**: krzyk uwięzionego umysłu, przerażenie, Analog Horror, wiwisekcja probanda. | Trwały Analog Horror: scanlines, winieta, mikro-jitter kineskopu. |
 
 ---
 

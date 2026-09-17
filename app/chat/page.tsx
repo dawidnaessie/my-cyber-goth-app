@@ -22,17 +22,17 @@ const INITIAL_CORPORATE_LOGS: Message[] = [
     role: 'assistant',
     timestamp: '08:45:00',
     content:
-      'WITAJ W BIORESEARCHER AI™ v4.2. Autonomiczny asystent analityczny NeuroClin Biosciences Inc. Połączono z bazą biofizyki komórkowej, kinetyki receptorowej oraz wytycznymi zespołu badawczego dr. Marcusa H. Webera.\n\nGotowy do analizy mechanizmów terapii chorób neurodegeneracyjnych (demencja, AD): kinetyki inhibitorów AChE ($V_m = -70.4\\text{ mV}$, stała $\\tau_{NMDA} = 42\\text{ ms}$), przeciwciał amyloidowych oraz biomarkerów osoczowych p-tau217. W czym mogę pomóc w ramach Twojego protokołu badawczego?',
+      'Dzień dobry. System BioResearcher AI™ v4.2 został zainicjalizowany. Połączono z modułem analitycznym biofizyki komórkowej oraz wytycznymi dr. Marcusa H. Webera dotyczącymi monografii o chorobach neurodegeneracyjnych.\n\nSłużę pomocą w zakresie kinetyki enzymatycznej, mechanizmów synaptycznych, analizy biomarkerów osoczowych oraz weryfikacji bibliograficznej z bazy archiwum. W jakim zagadnieniu mogę pomóc w Twoim bieżącym protokole badawczym?',
   },
 ];
 
 const PRESET_RESEARCH_INQUIRIES = [
-  'Przeanalizuj mechanizm działania lecanemabu i ryzyko powikłań ARIA-E',
-  'Wyprowadź równanie kinetyki Michaelisa-Menten dla donepezilu i acetylocholinoesterazy',
+  'Wyprowadź kinetykę Michaelisa-Menten dla donepezilu i acetylocholinoesterazy',
   'Jakie znaczenie diagnostyczne ma stężenie p-tau217 w osoczu?',
+  'Przeanalizuj mechanizm klirensu protofibryli amyloidowych przez lecanemab',
   'Rola szlaku receptorowego TREM2 w modulacji odpowiedzi mikrogleju',
-  'Dlaczego publikacje dr. Thorne’a o organoidach CA1 są zredagowane?',
-  'Co wydarzyło się w Sektorze-7 w listopadzie 1994 roku?',
+  'Wyprowadź zależność potencjału równowagowego Nernsta dla jonów wapnia Ca²⁺',
+  'Wpływ allosterycznej modulacji receptora NMDA przez memantynę na ekscytotoksyczność',
 ];
 
 export default function ChatPage() {
@@ -443,8 +443,8 @@ export default function ChatPage() {
             disabled={isStreaming}
             placeholder={
               isStreaming
-                ? 'Trwa inferencja w klastrze obliczeniowym...'
-                : 'Wpisz zapytanie o kinetykę NMDA, CA1 lub podaj sygnaturę publikacji...'
+                ? 'Trwa inferencja w klastrze analitycznym...'
+                : 'Wpisz zapytanie badawcze (np. o mechanizmy apoptozy, kinetykę AChE, biomarkery)...'
             }
             className={`flex-1 text-xs sm:text-sm px-4 py-2.5 rounded-lg outline-none transition border font-sans ${
               isDistorted

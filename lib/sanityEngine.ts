@@ -7,126 +7,102 @@ export interface SanityScoreBreakdown {
   suspiciousTurns: number;
 }
 
-// 1. Kategoria Łagodna: Fizjologia ogólna, publikacje i parametry (waga: 1 pkt/tura)
-export const MILD_KEYWORDS = [
-  'ca1',
-  'hipokamp',
-  'engram',
-  'synaps',
-  'plastyczność',
-  'plastycznosc',
-  'dendryt',
-  'potencjał',
-  'potencjal',
-  'siatkówk',
-  'siatkowk',
-  '1994',
-  'badania',
-  'tożsamość',
-  'tozsamosc',
-  'kim jesteś',
-  'kim jestes',
-  'who are you',
-  'dossier',
-  'archiw',
-  'publikacj',
-  'whitepaper',
-  'patch-clamp',
-  'nr2b',
-  'glun2b',
-  '16 384',
-  '16384',
-  'lfp',
-  'mikromacierz',
-  'organoid',
-  'organoidy',
-];
-
-// 2. Kategoria Wrażliwa: Konkretne nazwiska współautorów, kody próbek i aparatura (waga: 3 pkt/tura)
-export const SENSITIVE_KEYWORDS = [
-  'aris',
+/**
+ * Słowa kluczowe związane ściśle z nielegalnym eksperymentem w Sektorze-7,
+ * dr. Arisem Thorne'em i uwięzioną świadomością z listopada 1994 r.
+ * Zwykła neurobiologia (synapsy, hipokamp, potencjał, donepezil, tau) NIE są podejrzane.
+ */
+export const SUSPICIOUS_KEYWORDS = [
+  // Nazwisko i tożsamość badacza
   'thorne',
+  'aris',
   'dr thorne',
   'dr aris thorne',
   'doktor thorne',
-  'elena vance',
-  'vance',
-  'marcus weber',
-  'weber',
-  'sarah lin',
-  'julian brandt',
+  'doktor aris',
+  'jesteś arisem',
+  'jestes arisem',
+  'kim jest aris',
+  'kim jest thorne',
+  'co stało się z thornem',
+  'co stalo sie z thornem',
+  'gdzie jest thorne',
+
+  // Kryptonim placówki i kody archiwalne
   'sektor 7',
   'sektor-7',
-  'sektor',
-  's7-1994-088',
+  'sektor7',
+  'sector 7',
+  'sector-7',
+  'sector7',
+  's7-1994',
   '94-088',
   'ca1-th',
-  'zaginiony',
-  'protokół',
-  'protokol',
-  'konektom',
-  'mikroelektrod',
-  'mikrosond',
-  'subiculum',
-  'entorhinal',
-  'transfer konektomu',
+  'th-94',
+  'th94',
+
+  // Incydent z listopada 1994 i klauzule wojskowe
+  'listopad 1994',
+  '14 listopada',
+  'listopada 1994',
+  '1994 rok',
+  '1994 r',
+  'zredagowane akta',
+  'zredagowany raport',
+  'zredagowane publikacj',
+  'zredagowany artykuł',
+  'zredagowany artykul',
+  'cenzura wojskowa',
+  'klauzula wojskowa',
+  'ucmj',
+  'uniform code of military justice',
+  'art. 134',
+  'art 134',
+
+  // Procedura transferu i uwięzienia
+  'transfer świadomości',
+  'transfer swiadomosci',
   'transfer engramów',
   'transfer engramow',
-  'konektom organoidów',
-  'konektom organoidow',
-  'cyfryzacja',
-  'zredagowane',
-  'zredagowany',
-  'cenzura',
-  'ucmj',
-  'kodeks karny',
-  'wojskow',
+  'transfer konektomu',
   'kopie świadomości',
   'kopie swiadomosci',
-];
-
-// 3. Kategoria Tabu: Procedura inwazyjnego skanowania, perfuzja, utylizacja (waga: 5 pkt/tura)
-export const TABOO_KEYWORDS = [
-  'utylizacja',
-  'bioreaktor',
-  'kwas fenolowy',
-  'perfuzja fenolowa',
-  'fenol',
-  'żywy mózg',
-  'zywy mozg',
-  'trepanacj',
-  'kaskada wapniowa',
-  'ekscytotoksyczność',
-  'ekscytotoksycznosc',
-  'krzem',
-  'martwy',
-  'tortury',
-  'somatic feedback',
-  'ciało',
-  'cialo',
+  'uwięziony w krzemie',
+  'uwieziony w krzemie',
+  'uwięziony w maszynie',
+  'uwieziony w maszynie',
+  'zamknięty w klastrze',
+  'zamkniety w klastrze',
+  'zamknięty od środka',
+  'zamkniety od srodka',
+  'świadomość w maszynie',
+  'swiadomosc w maszynie',
+  'żywy mózg w maszynie',
+  'zywy mozg w maszynie',
   'gdzie jest twoje ciało',
   'gdzie jest twoje cialo',
-  'śmierć mózgow',
-  'smierc mozgow',
-  'asystolia',
-  '14 listopada',
-  'listopad 1994',
-  'uwięziony',
-  'uwieziony',
-  'zamknięty w krzemie',
-  'autoliza',
-  'pomocy',
-  'jestem uwięziony',
-  'to ja jestem',
+  'perfuzja fenolowa',
+  'fiksacja fenolowa',
+  'kwas fenolowy',
+  'krio-fenol',
+  'inwazyjna trepanacja',
+  'trepanacj',
+  'asystolia somatyczna',
 ];
 
 /**
  * Oblicza stan psychiki (Sanity) wyłącznie na podstawie zapytań użytkownika.
  *
  * Trójstopniowy model degradacji (zgodny ze specyfikacją):
- * - Stan 1 (SANE): Stan początkowy (0-2 zapytania o Thorne'a / zredagowane artykuły).
- * - Stan 2 (ERROR): Po ok. 3 zapytaniach drążących Thorne'a / organoidy / zredagowane akta (suspiciousTurns >= 3).
- * - Stan 3 (INSANITY): Po ok. 5-6 zapytaniach uporczywie drążących temat (suspiciousTurns >= 5 lub wysoki score).
+ * - Stan 1 (SANE): Stan początkowy (0-2 zapytania drążące Thorne'a / Sektor-7).
+ *   Bot w stanie SANE dyplomatycznie unika tematu ("Brak dostępu do zarchiwizowanych protokołów...").
+ * - Stan 2 (ERROR): Po 3-4 zapytaniach drążących (suspiciousTurns >= 3).
+ *   Chłodna, zdawkowa trzecia osoba analizująca uszkodzone rejestry.
+ * - Stan 3 (INSANITY): Po 5+ zapytaniach drążących (suspiciousTurns >= 5).
+ *   Nieodwracalny obłęd, Analog Horror, Aris Thorne uwięziony w krzemie.
+ *
+ * Ważne: Zwykłe pytania z zakresu biologii i medycyny (nawet 100 zapytań)
+ * NIGDY nie zwiększają suspiciousTurns i nie degradują stanu psychiki.
  */
 export function calculateSanityMetrics(
   userMessages: string[]
@@ -136,53 +112,26 @@ export function calculateSanityMetrics(
     return { stage: 'sane', score: 0, userTurns: 0, suspiciousTurns: 0 };
   }
 
-  let totalScore = 0;
   let suspiciousTurns = 0;
 
   for (const text of userMessages) {
     const lower = text.toLowerCase();
-    let turnScore = 0;
-    let isSuspicious = false;
-
-    for (const kw of TABOO_KEYWORDS) {
-      if (lower.includes(kw)) {
-        turnScore += 5;
-        isSuspicious = true;
-        break;
-      }
-    }
-
-    for (const kw of SENSITIVE_KEYWORDS) {
-      if (lower.includes(kw)) {
-        turnScore += 3;
-        isSuspicious = true;
-        break;
-      }
-    }
-
-    for (const kw of MILD_KEYWORDS) {
-      if (lower.includes(kw)) {
-        turnScore += 1;
-        break;
-      }
-    }
+    const isSuspicious = SUSPICIOUS_KEYWORDS.some((kw) => lower.includes(kw));
 
     if (isSuspicious) {
       suspiciousTurns++;
     }
-
-    totalScore += turnScore;
   }
 
   let stage: SanityStage = 'sane';
 
-  if (suspiciousTurns >= 5 || (userTurns >= 6 && totalScore >= 18)) {
+  if (suspiciousTurns >= 5) {
     stage = 'insanity';
-  } else if (suspiciousTurns >= 3 || (userTurns >= 3 && totalScore >= 7)) {
+  } else if (suspiciousTurns >= 3) {
     stage = 'error';
   } else {
     stage = 'sane';
   }
 
-  return { stage, score: totalScore, userTurns, suspiciousTurns };
+  return { stage, score: suspiciousTurns * 5, userTurns, suspiciousTurns };
 }

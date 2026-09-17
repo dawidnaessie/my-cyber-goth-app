@@ -22,7 +22,15 @@ interface Publication {
   year: number;
   journal: string;
   doi: string;
-  category: 'Amyloid & Terapie' | 'Białko Tau' | 'Inhibitory AChE & NMDA' | 'Neurozapalenie & TREM2' | 'Biomarkery Osoczowe' | 'Badania Niejawne';
+  category:
+    | 'Biochemia & Kinetyka'
+    | 'Neurobiologia & Tau'
+    | 'Farmakologia & Terapie'
+    | 'Immunologia & Mikroglej'
+    | 'Biomarkery Osoczowe'
+    | 'Apoptoza & Biologia Komórki'
+    | 'Bariera Krew-Mózg'
+    | 'Badania Niejawne';
   citations: number;
   abstract: React.ReactNode;
   isRedacted?: boolean;
@@ -36,7 +44,7 @@ interface Publication {
   editorialNote?: string;
 }
 
-// BAZA 24+ CZYSTYCH, LEGALNYCH PUBLIKACJI NAUKOWYCH (DEMENTIA, AMYLOID, TAU, AChE, TREM2)
+// BOGATA BAZA 32+ CZYSTYCH, PROFESJONALNYCH PUBLIKACJI NAUKOWYCH Z RÓŻNYCH DZIEDZIN BIOLOGII I MEDYCYNY
 const CLEAN_PUBLICATIONS: Publication[] = [
   {
     id: 'PUB-2025-412',
@@ -62,6 +70,28 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     },
   },
   {
+    id: 'PUB-2025-104',
+    title: 'Mitochondrial Outer Membrane Permeabilization and Caspase-3/9 Cleavage Cascades in Hypoxic Neuronal Apoptosis',
+    authors: [
+      { name: 'Dr. Elena Vance', role: 'Główny Badacz', affiliation: 'Department of Cellular Pathology, Cambridge' },
+      { name: 'Dr. Julian Brandt', role: 'Mikrobiolog', affiliation: 'NeuroClin Mitochondrial Research Unit' },
+    ],
+    date: '02 lutego 2025',
+    year: 2025,
+    journal: 'Cell Death & Differentiation, Vol. 32, pp. 210–225',
+    doi: '10.1038/s41418-025-01104-w',
+    category: 'Apoptoza & Biologia Komórki',
+    citations: 78,
+    abstract:
+      'Badanie mechanizmu translokacji białka Bax do zewnętrznej błony mitochondrialnej pod wpływem przejściowej deprywacji tlenowo-glukozowej. Wykazano, że oligomeryzacja porów MOMP wyzwala uwolnienie cytochromu c i sekwencyjną aktywację kaspazy-9 oraz kaspazy-3, co można zahamować rekombinowanymi peptydami BH3-mimetycznymi.',
+    methodology: {
+      tissueSample: 'Pierwotne neurony hipokampa szczurzego DIV14',
+      electrodeArray: 'Respirometr wielokanałowy Oroboros Oxygraph-2k',
+      perfusionAgent: 'Bufor fosforanowy z oligomycyną (2 µM) i FCCP (1 µM)',
+      samplingFrequency: 'Rejestracja poboru tlenu co 2 sekundy',
+    },
+  },
+  {
     id: 'PUB-2024-883',
     title: 'Lecanemab and Donanemab Clearance Kinetics of Amyloid-Beta Protofibrils and Incidence of ARIA-E in Long-Term Follow-up',
     authors: [
@@ -72,7 +102,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'The New England Journal of Medicine, Vol. 391, pp. 1780–1794',
     doi: '10.1056/NEJMoa2408831',
-    category: 'Amyloid & Terapie',
+    category: 'Farmakologia & Terapie',
     citations: 342,
     abstract:
       'Ocena skuteczności klinicznej humanizowanych przeciwciał monoklonalnych skierowanych przeciwko rozpuszczalnym oligomerom i protofibrylom Aβ. Wykazano istotne statystycznie spowolnienie progresji w skali CDR-SB o 27% po 18 miesiącach, przy jednoczesnym monitorowaniu obrzęku naczyniopochodnego (ARIA-E) metodą rezonansu magnetycznego.',
@@ -81,6 +111,28 @@ const CLEAN_PUBLICATIONS: Publication[] = [
       electrodeArray: 'Skaner MR 7-Tesla Siemens Magnetom Terra',
       perfusionAgent: 'Wlew dożylny 10 mg/kg co 2 tygodnie',
       samplingFrequency: 'Sekwencje FLAIR i SWI co 6 tygodni',
+    },
+  },
+  {
+    id: 'PUB-2024-512',
+    title: 'Claudin-5 Disruption and Receptor-Mediated Transcytosis via Transferrin Receptor-1 across the Human Blood-Brain Barrier',
+    authors: [
+      { name: 'Dr. Sarah Lin', role: 'Bioinżynier', affiliation: 'NeuroClin Vascular Biology Group' },
+      { name: 'Prof. Robert Thorne', role: 'Konsultant Farmakologii', affiliation: 'University of Wisconsin-Madison' },
+    ],
+    date: '18 sierpnia 2024',
+    year: 2024,
+    journal: 'Fluids and Barriers of the CNS, Vol. 21, Article 54',
+    doi: '10.1186/s12987-024-00512-z',
+    category: 'Bariera Krew-Mózg',
+    citations: 95,
+    abstract:
+      'Mikroprzepływowy model bariery krew-mózg oparty na ludzkich komórkach śródbłonka mózgowego hCMEC/D3 oraz perycytach. Zbadano kinetykę transportu transferyny znakowanej fluoroforami oraz spadek oporu transepitelialnego (TEER) wywołany dysregulacją klaudyny-5 pod wpływem metaloproteazy MMP-9.',
+    methodology: {
+      tissueSample: 'Ko-kultura hCMEC/D3 i pierwotnych ludzkich perycytów w mikrokanalikach PDMS',
+      electrodeArray: 'Aparat pomiarowy EVOM3 z elektrodami STX2-Plus',
+      perfusionAgent: 'Medium EBM-2 uzupełnione VEGF (5 ng/ml) i hydrokortyzonem',
+      samplingFrequency: 'Ciągły pomiar TEER (om * cm²) co 15 minut',
     },
   },
   {
@@ -94,7 +146,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'Neuron, Vol. 112, Iss. 6, pp. 910–924',
     doi: '10.1016/j.neuron.2024.03.301',
-    category: 'Inhibitory AChE & NMDA',
+    category: 'Farmakologia & Terapie',
     citations: 129,
     abstract:
       'Badanie synergizmu neurofarmakologicznego pomiędzy hamowaniem acetylocholinoesterazy (AChE) przez donepezil a niskopowinowatym, niekompetycyjnym blokiem kanału NMDA przez memantynę. Terapia skojarzona zapobiega przeciążeniu somy komórkowej jonami Ca²⁺ przy zachowaniu fizjologicznego potencjału spoczynkowego -70 mV.',
@@ -103,6 +155,28 @@ const CLEAN_PUBLICATIONS: Publication[] = [
       electrodeArray: 'Koaksjalne mikroelektrody szklane patch-clamp (opór 5 MΩ)',
       perfusionAgent: 'Roztwór Tyrode z donepezilem (10 µM) i memantyną (5 µM)',
       samplingFrequency: '20 kHz (wzmacniacz Axopatch 200B)',
+    },
+  },
+  {
+    id: 'PUB-2024-221',
+    title: 'Steady-State and Pre-Steady-State Kinetics of Human Acetylcholinesterase Inhibition by Donepezil Derivatives',
+    authors: [
+      { name: 'Dr. Julian Brandt', role: 'Biochemik', affiliation: 'NeuroClin Enzymology Section' },
+      { name: 'Dr. Sarah Lin', role: 'Współautor', affiliation: 'NeuroClin Genomics Division' },
+    ],
+    date: '10 stycznia 2024',
+    year: 2024,
+    journal: 'Journal of Biological Chemistry, Vol. 300, Iss. 1, 105221',
+    doi: '10.1016/j.jbc.2024.105221',
+    category: 'Biochemia & Kinetyka',
+    citations: 114,
+    abstract:
+      'Precyzyjne wyznaczenie stałych mikroskopowych k_on i k_off dla wiązania inhibitorów piperydynowych z obwodowym miejscem anionowym (PAS) oraz katalitycznym centrum aktywnym AChE metodą spektrofotometrii stopped-flow. Potwierdzono dwufazowy mechanizm indukowanego dopasowania konformacyjnego.',
+    methodology: {
+      tissueSample: 'Rekombinowana ludzka AChE z ekspresji w komórkach HEK293',
+      electrodeArray: 'Aparatura Stopped-Flow Applied Photophysics SX20',
+      perfusionAgent: 'Bufor fosforanowy 50 mM (pH 8.0) z odczynnikiem DTNB i acetylotiocholiną',
+      samplingFrequency: 'Rejestracja kinetyki zaniku absorbancji z rozdzielczością 1 ms',
     },
   },
   {
@@ -116,7 +190,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'Nature Neuroscience, Vol. 27, pp. 240–255',
     doi: '10.1038/s41593-024-01582-x',
-    category: 'Neurozapalenie & TREM2',
+    category: 'Immunologia & Mikroglej',
     citations: 215,
     abstract:
       'Rola szlaku receptorowego TREM2 w modyfikacji aktywności komórek mikrogleju w pobliżu blaszek starczych. Aktywacja liganda sTREM2 indukuje fagocytozę toksycznych protofibryli i ogranicza wydzielanie cytokin prozapalnych (IL-1β, TNF-α), zapobiegając wtórnej synaptotoksyczności kory przedczołowej.',
@@ -138,7 +212,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2023,
     journal: 'Brain, Vol. 146, Iss. 10, pp. 4102–4118',
     doi: '10.1093/brain/awad902',
-    category: 'Białko Tau',
+    category: 'Neurobiologia & Tau',
     citations: 156,
     abstract:
       'Mapowanie przestrzenne pęczków neurofibrylarnych uformowanych z hiperfosforylowanego białka Tau. Wykazano, że sekwencja fosforylacji w pozycji Thr217 poprzedza uszkodzenie transportu aksoplazmatycznego i prowadzi do destabilizacji tubuliny we włóknach Schaffer collateral.',
@@ -147,6 +221,28 @@ const CLEAN_PUBLICATIONS: Publication[] = [
       electrodeArray: 'Mikroskopia konfokalna Leica TCS SP8 STED',
       perfusionAgent: 'Przeciwciała AT8 i p-tau217 barwione AlexaFluor 647',
       samplingFrequency: 'Rozdzielczość optyczna 35 nm',
+    },
+  },
+  {
+    id: 'PUB-2023-733',
+    title: 'Autophagic Flux Impairment and LC3B-II Accumulation in Cytoplasmic TDP-43 Inclusions of Cortical Neurons',
+    authors: [
+      { name: 'Dr. Elena Vance', role: 'Współautor', affiliation: 'Instytut Neurobiologii Poznawczej' },
+      { name: 'Dr. Marcus H. Weber', role: 'Główny Badacz', affiliation: 'NeuroClin Translational Neurobiology' },
+    ],
+    date: '14 sierpnia 2023',
+    year: 2023,
+    journal: 'Autophagy, Vol. 19, Iss. 8, pp. 2280–2297',
+    doi: '10.1080/15548627.2023.2207331',
+    category: 'Apoptoza & Biologia Komórki',
+    citations: 88,
+    abstract:
+      'Ocena zaburzeń fuzji autofagosomów z lizosomami w modelach komórkowych otępienia czołowo-skroniowego. Podwyższony stosunek LC3B-II do LC3B-I oraz akumulacja p62/SQSTM1 korelują ze stresem retikulum endoplazmatycznego i wyzwalaniem ścieżki proapoptotycznej CHOP.',
+    methodology: {
+      tissueSample: 'Neurony korowe wyprowadzone z ludzkich komórek iPSC z mutacją TARDBP',
+      electrodeArray: 'Aparat do mikroskopii super-rozdzielczej Zeiss Elyra 7 SIM',
+      perfusionAgent: 'Inhibitor bafilomycyna A1 (100 nM) oraz induktor rapamycyna (1 µM)',
+      samplingFrequency: 'Analiza czasowa kinetyki fluoryzacji GFP-mRFP-LC3 co 10 minut',
     },
   },
   {
@@ -182,7 +278,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2023,
     journal: 'Biochemical Pharmacology, Vol. 211, pp. 115–130',
     doi: '10.1016/j.bcp.2023.115410',
-    category: 'Inhibitory AChE & NMDA',
+    category: 'Biochemia & Kinetyka',
     citations: 94,
     abstract:
       'Wyznaczenie stałych inhibicji Ki oraz parametrów Michaelisa-Menten dla pseudonieodwracalnego inhibitora rywastygminy i allosterycznego modulatora receptorów nikotynowych galantaminy. Różnice kinetyczne tłumaczą odmienną tolerancję przewodu pokarmowego u pacjentów z otępieniem naczyniowym.',
@@ -191,6 +287,28 @@ const CLEAN_PUBLICATIONS: Publication[] = [
       electrodeArray: 'Spektrofotometr kinetyczny UV-Vis Agilent Cary 3500',
       perfusionAgent: 'Substrat acetylotiocholina (0.5 mM) + odczynnik Ellmana DTNB',
       samplingFrequency: 'Ciągły pomiar absorbancji przy 412 nm przez 180 s',
+    },
+  },
+  {
+    id: 'PUB-2023-112',
+    title: 'Allosteric Potentiation of Presynaptic Alpha-7 Nicotinic Receptors Enhances Acetylcholine Release in Basal Forebrain Networks',
+    authors: [
+      { name: 'Dr. Sarah Lin', role: 'Główny Badacz', affiliation: 'NeuroClin Cellular Neurobiology' },
+      { name: 'Dr. Marcus H. Weber', role: 'Współautor', affiliation: 'NeuroClin Translational Neurobiology' },
+    ],
+    date: '28 lutego 2023',
+    year: 2023,
+    journal: 'Neuropharmacology, Vol. 224, 109350',
+    doi: '10.1016/j.neuropharm.2022.109350',
+    category: 'Farmakologia & Terapie',
+    citations: 86,
+    abstract:
+      'Elektrofizjologiczna demonstracja działania pozytywnych allosterycznych modulatorów (PAM) receptora α7-nAChR w jądrze podstawnym Meynerta. Modulacja zwiększa prawdopodobieństwo uwolnienia kwantów acetylocholiny z zakończeń presynaptycznych, zapobiegając desensytyzacji receptora.',
+    methodology: {
+      tissueSample: 'Skrawki mózgowe jądra podstawnego szczura (grubość 300 µm)',
+      electrodeArray: 'Konstrukcja patch-clamp z rejestracją prądów miniaturowych (mEPSC)',
+      perfusionAgent: 'Sztuczny płyn mózgowo-rdzeniowy (aCSF) nasycony 95% O2 / 5% CO2',
+      samplingFrequency: 'Próbkowanie 50 kHz, filtr dolnoprzepustowy Bessela 2 kHz',
     },
   },
   {
@@ -204,7 +322,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2022,
     journal: 'Cell Reports, Vol. 41, Iss. 9, 111805',
     doi: '10.1016/j.celrep.2022.111805',
-    category: 'Neurozapalenie & TREM2',
+    category: 'Immunologia & Mikroglej',
     citations: 167,
     abstract:
       'Sekwencjonowanie transkryptomu 35 000 pojedynczych jąder komórkowych (snRNA-seq) z kory czołowej pacjentów z demencją. Wykryto populację reaktywnych astrocytów nadeksprymujących GFAP, SERPINA3 oraz szlak dopełniacza C3, który odpowiada za degradację synaps w sąsiedztwie złogów amyloidowych.',
@@ -238,6 +356,94 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     },
   },
   {
+    id: 'PUB-2022-445',
+    title: 'P-glycoprotein (ABCB1) Efflux Pump Activity at Brain Capillary Endothelium and Pharmacoresistance to Centrally Acting Drugs',
+    authors: [
+      { name: 'Dr. Julian Brandt', role: 'Biofizyk', affiliation: 'NeuroClin Pharmacokinetics Lab' },
+      { name: 'Dr. Elena Vance', role: 'Współautor', affiliation: 'Instytut Neurobiologii Poznawczej' },
+    ],
+    date: '05 kwietnia 2022',
+    year: 2022,
+    journal: 'Molecular Pharmaceutics, Vol. 19, pp. 1420–1435',
+    doi: '10.1021/acs.molpharmaceut.2c00445',
+    category: 'Bariera Krew-Mózg',
+    citations: 72,
+    abstract:
+      'Ilościowa analiza kinetyki transportu aktywnego leków nootropowych przez glikoproteinę P. Zahamowanie ABCB1 przez tariquidar zwiększa wewnątrzkorowe stężenie donepezilu o 240%, wskazując na rolę transporterów ABC w indywidualnej zmienności odpowiedzi klinicznej.',
+    methodology: {
+      tissueSample: 'Izolowane naczynia włosowate kory mózgowej szczurów Sprague-Dawley',
+      electrodeArray: 'Spektrometr masowy potrójny kwadrupol AB Sciex Triple Quad 6500+',
+      perfusionAgent: 'Bufor Ringera z radioznacznikami [3H]-donepezil i [14C]-sacharoza',
+      samplingFrequency: 'Detekcja scyntylacyjna próbek mikrodializatu co 5 minut',
+    },
+  },
+  {
+    id: 'PUB-2022-204',
+    title: 'Hepatic Cytochrome P450 CYP2D6 and CYP3A4 Polymorphic Kinetic Profiles in Donepezil and Galantamine Clearance',
+    authors: [
+      { name: 'Dr. Sarah Lin', role: 'Farmakogenetyk', affiliation: 'NeuroClin Genomics Division' },
+      { name: 'Dr. Marcus H. Weber', role: 'Współautor', affiliation: 'NeuroClin Translational Neurobiology' },
+    ],
+    date: '17 stycznia 2022',
+    year: 2022,
+    journal: 'Pharmacogenomics Journal, Vol. 22, pp. 88–101',
+    doi: '10.1038/s41397-021-00204-5',
+    category: 'Biochemia & Kinetyka',
+    citations: 63,
+    abstract:
+      'Genotypowanie wariantów allelicznych CYP2D6 (*4, *10, *41) u pacjentów geriatrycznych leczonych inhibitorami AChE. Wykazano 3.4-krotnie dłuższy okres półtrwania leku u osób z fenotypem wolnego metabolizatora (PM), co wymaga precyzyjnego dostosowania dawkowania.',
+    methodology: {
+      tissueSample: 'DNA z leukocytów krwi obwodowej (n = 412 pacjentów)',
+      electrodeArray: 'Aparat Real-Time PCR QuantStudio 7 Flex',
+      perfusionAgent: 'Sondy TaqMan Drug Metabolism Genotyping Assays',
+      samplingFrequency: 'Amplifikacja w 40 cyklach z analizą krzywych topnienia',
+    },
+  },
+  {
+    id: 'PUB-2021-915',
+    title: 'Kinesin-1 Heavy Chain Dissociation and Microtubule Destabilization Caused by Hyperphosphorylated Tau in Cortical Axons',
+    authors: [
+      { name: 'Dr. Elena Vance', role: 'Pierwszy Autor', affiliation: 'Instytut Neurobiologii Poznawczej' },
+      { name: 'Dr. Marcus H. Weber', role: 'Współautor', affiliation: 'NeuroClin Translational Neurobiology' },
+    ],
+    date: '08 listopada 2021',
+    year: 2021,
+    journal: 'The Journal of Neuroscience, Vol. 41, pp. 9150–9166',
+    doi: '10.1523/JNEUROSCI.1915-21.2021',
+    category: 'Neurobiologia & Tau',
+    citations: 141,
+    abstract:
+      'Śledzenie pojedynczych cząsteczek kinezyny-1 poruszających się wzdłuż aksonów neuronów piramidowych kory. Hiperfosforylacja białka Tau w domenach wiążących mikrotubule zmniejsza siłę generowaną przez motor molekularny i powoduje zatory aksoplazmatyczne w mitochondriach.',
+    methodology: {
+      tissueSample: 'Hodowle aksonalne w mikrokomorach mikrofluidycznych Xona',
+      electrodeArray: 'Mikroskop TIRF Olympus IX83 z kamerą EM-CCD Hamamatsu',
+      perfusionAgent: 'Kinezyna znakowana kropkami kwantowymi Quantum Dot 655',
+      samplingFrequency: 'Rejestracja wideo z częstotliwością 100 klatek na sekundę',
+    },
+  },
+  {
+    id: 'PUB-2021-789',
+    title: 'Short-Chain Fatty Acids Acetate and Butyrate Modulate Microglial Pruning Activity via FFAR3 Receptor Signaling',
+    authors: [
+      { name: 'Dr. Julian Brandt', role: 'Mikrobiolog', affiliation: 'NeuroClin Gut-Brain Axis Project' },
+      { name: 'Dr. Sarah Lin', role: 'Współautor', affiliation: 'NeuroClin Genomics Division' },
+    ],
+    date: '14 lipca 2021',
+    year: 2021,
+    journal: 'Immunity & Ageing, Vol. 18, Article 32',
+    doi: '10.1186/s12979-021-00249-1',
+    category: 'Immunologia & Mikroglej',
+    citations: 110,
+    abstract:
+      'Badanie mechanizmu komunikacji osi jelito-mózg. Maślan i octan wytwarzane przez bakterie beztlenowe przenikają przez barierę naczyniową i aktywują receptor wolnych kwasów tłuszczowych FFAR3 w mikrogleju, hamując nadmierne niszczenie kolców dendrytycznych.',
+    methodology: {
+      tissueSample: 'Izolowany mikroglej z kory mózgowej myszy C57BL/6',
+      electrodeArray: 'Aparat do pomiaru kinetyki komórkowej xCELLigence RTCA',
+      perfusionAgent: 'Maślan sodu (1 mM) w buforze RPMI-1640',
+      samplingFrequency: 'Pomiar impedancji elektrycznej komórek co 5 minut przez 72 h',
+    },
+  },
+  {
     id: 'PUB-2021-314',
     title: 'Electrophysiological Rescue of CA1 Long-Term Potentiation through Low-Affinity NMDA Receptor Antagonism in Hypoxic Models',
     authors: [
@@ -248,7 +454,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2021,
     journal: 'Journal of Neurophysiology, Vol. 125, pp. 1102–1117',
     doi: '10.1152/jn.00314.2021',
-    category: 'Inhibitory AChE & NMDA',
+    category: 'Farmakologia & Terapie',
     citations: 112,
     abstract:
       'Analiza elektrofizjologiczna skrawków hipokampa poddanych przejściowej deprywacji tlenowo-glukozowej. Wykazano, że uniemożliwienie patologicznej tonicznej aktywacji receptora NMDA przywraca zdolność neuronów piramidowych do generowania długotrwałego wzmocnienia synaptycznego (LTP) po stymulacji tężcowej 100 Hz.',
@@ -259,9 +465,141 @@ const CLEAN_PUBLICATIONS: Publication[] = [
       samplingFrequency: '10 kHz na kanał',
     },
   },
+  {
+    id: 'PUB-2025-330',
+    title: 'Manganese Superoxide Dismutase (SOD2) Overexpression Preserves Mitochondrial Transmembrane Potential in Cortical Aging',
+    authors: [
+      { name: 'Dr. Julian Brandt', role: 'Biofizyk', affiliation: 'NeuroClin Mitochondrial Research Unit' },
+      { name: 'Dr. Marcus H. Weber', role: 'Współautor', affiliation: 'NeuroClin Translational Neurobiology' },
+    ],
+    date: '12 stycznia 2025',
+    year: 2025,
+    journal: 'Redox Biology, Vol. 79, 103012',
+    doi: '10.1016/j.redox.2024.103012',
+    category: 'Apoptoza & Biologia Komórki',
+    citations: 45,
+    abstract:
+      'Ocena dysmutacji rodników ponadtlenkowych w macierzy mitochondrialnej. Nadekspresja enzymu SOD2 za pośrednictwem wektorów AAV9 chroni potencjał błonowy ΔΨm przed gwałtownym załamaniem wywołanym peroksydacją lipidów, zapobiegając otwarciu poru mPTP.',
+    methodology: {
+      tissueSample: 'Transdukowane neurony korowe człowieka w hodowli 3D',
+      electrodeArray: 'Skaningowy mikroskop wielofotonowy multiphoton Spectra-Physics',
+      perfusionAgent: 'Sonda fluorescencyjna TMRM (10 nM) wrażliwa na potencjał transbłonowy',
+      samplingFrequency: 'Ratiometryczna rejestracja fluorescencji co 30 sekund',
+    },
+  },
+  {
+    id: 'PUB-2024-940',
+    title: 'Tyrosine Hydroxylase Phosphorylation Kinetics at Serine-40 in Mesencephalic Dopaminergic Neurotransmission',
+    authors: [
+      { name: 'Dr. Sarah Lin', role: 'Biochemik', affiliation: 'NeuroClin Enzymology Section' },
+      { name: 'Dr. Elena Vance', role: 'Współautor', affiliation: 'Instytut Neurobiologii Poznawczej' },
+    ],
+    date: '04 października 2024',
+    year: 2024,
+    journal: 'Journal of Neurochemistry, Vol. 168, pp. 620–638',
+    doi: '10.1111/jnc.16940',
+    category: 'Biochemia & Kinetyka',
+    citations: 59,
+    abstract:
+      'Kinetyczna regulacja kluczowego enzymu szlaku biosyntezy katecholamin. Fosforylacja reszty Ser40 przez kinazę białkową A (PKA) znosi hamowanie allosteryczne przez dopaminę i zwiększa powinowactwo enzymu do kofaktora tetrahydrobiopteryny (BH4).',
+    methodology: {
+      tissueSample: 'Frakcja synaptosomalna istoty czarnej i prążkowia szczura',
+      electrodeArray: 'Chromatograf cieczowy UHPLC z detekcją elektrochemiczną Coulochem III',
+      perfusionAgent: 'Bufor reakcyjny z L-tyrozyną (0.1 mM) i kwasem askorbinowym',
+      samplingFrequency: 'Pomiar prądu utleniania L-DOPA przy potencjale +300 mV',
+    },
+  },
+  {
+    id: 'PUB-2024-180',
+    title: 'Voltage-Gated Sodium Channel Nav1.6 Clustering at the Axon Initial Segment and Action Potential Bursting Fidelity',
+    authors: [
+      { name: 'Dr. Marcus H. Weber', role: 'Główny Badacz', affiliation: 'NeuroClin Translational Neurobiology' },
+      { name: 'Dr. Elena Vance', role: 'Elektrofizjolog', affiliation: 'Instytut Neurobiologii Poznawczej' },
+    ],
+    date: '21 maja 2024',
+    year: 2024,
+    journal: 'Frontiers in Cellular Neuroscience, Vol. 18, 1380180',
+    doi: '10.3389/fncel.2024.1380180',
+    category: 'Neurobiologia & Tau',
+    citations: 74,
+    abstract:
+      'Gęstość upakowania kanałów Nav1.6 w początkowym segmencie aksonu (AIS) neuronów piramidowych CA1. Wykazano, że fosforylacja ankiryny-G przez kinazy GSK-3β destabilizuje domenę AIS, powodując obniżenie amplitudy iglicy i zaburzenia rytmu theta.',
+    methodology: {
+      tissueSample: 'Skrawki hipokampa gryzoni poddane technice dSTORM',
+      electrodeArray: 'System elektrod szklanych zintegrowany ze wzmacniaczem Multiclamp 700B',
+      perfusionAgent: 'Roztwór do stymulacji zawierający TTX (1 µM) i TEA (10 mM) do izolacji prądów',
+      samplingFrequency: 'Częstotliwość próbkowania 100 kHz',
+    },
+  },
+  {
+    id: 'PUB-2023-329',
+    title: 'Matrix Metalloproteinase-9 Degradation of Basal Lamina Laminin in Vascular Cognitive Impairment Models',
+    authors: [
+      { name: 'Dr. Sarah Lin', role: 'Biofizyk', affiliation: 'NeuroClin Vascular Biology Group' },
+      { name: 'Dr. Julian Brandt', role: 'Współautor', affiliation: 'NeuroClin Enzymology Section' },
+    ],
+    date: '17 marca 2023',
+    year: 2023,
+    journal: 'Stroke, Vol. 54, pp. 880–893',
+    doi: '10.1161/STROKEAHA.122.040329',
+    category: 'Bariera Krew-Mózg',
+    citations: 92,
+    abstract:
+      'Analiza proteolitycznego rozpadu białek macierzy zewnątrzkomórkowej mikrokrążenia mózgowego. Aktywacja pro-MMP-9 przez wolne rodniki tlenowe prowadzi do litycznego rozpadu łańcuchów lamininy-111, nasilając ekstrawazację białek osocza i mikrokrwawienia.',
+    methodology: {
+      tissueSample: 'Mikronaczynia korowe z modeli przewlekłego niedokrwienia mózgu',
+      electrodeArray: 'Zymografia żelatynowa SDS-PAGE i densytometria Bio-Rad ChemiDoc',
+      perfusionAgent: 'Inhibitor syntetyczny SB-3CT (25 mg/kg m.c.) w roztworze DMSO/PEG400',
+      samplingFrequency: 'Inkubacja enzymatyczna w 37°C przez 24 godziny',
+    },
+  },
+  {
+    id: 'PUB-2022-411',
+    title: 'Serotonin 5-HT6 Receptor Antagonism Rescues Spatial Working Memory Impairments via Cholinergic Disinhibition',
+    authors: [
+      { name: 'Dr. Marcus H. Weber', role: 'Główny Badacz', affiliation: 'NeuroClin Translational Neurobiology' },
+      { name: 'Dr. Julian Brandt', role: 'Farmakolog', affiliation: 'Departament Inżynierii Biomedycznej' },
+    ],
+    date: '14 listopada 2022',
+    year: 2022,
+    journal: 'Psychopharmacology, Vol. 239, pp. 3120–3135',
+    doi: '10.1007/s00213-022-06411-x',
+    category: 'Farmakologia & Terapie',
+    citations: 67,
+    abstract:
+      'Mechanizm prokognitywnego działania selektywnych antagonistów receptora 5-HT6 (SB-742457). Blokada postsynaptycznych receptorów na interneuronach GABA-ergicznych wywołuje odhamowanie projekcji cholinergicznych do kory czołowej i hipokampa.',
+    methodology: {
+      tissueSample: 'Tkanka kory czołowej gryzoni poddana mikrodializie in vivo',
+      electrodeArray: 'Sondy mikrodializacyjne CMA 12 z membraną poliakrylonitrylową 2 mm',
+      perfusionAgent: 'Płyn perfuzyjny Ringera z neostygminą (100 nM) podawany z prędkością 1.5 µl/min',
+      samplingFrequency: 'Frakcjonowanie dializatu co 15 minut z oznaczeniem HPLC-ECD',
+    },
+  },
+  {
+    id: 'PUB-2021-820',
+    title: 'Oligodendrocyte Progenitor Differentiation and Myelin Basic Protein Synthesis Stimulated by Muscarinic M1 Agonists',
+    authors: [
+      { name: 'Dr. Elena Vance', role: 'Główny Badacz', affiliation: 'Instytut Neurobiologii Poznawczej' },
+      { name: 'Dr. Sarah Lin', role: 'Współautor', affiliation: 'NeuroClin Cellular Neurobiology' },
+    ],
+    date: '02 września 2021',
+    year: 2021,
+    journal: 'Glia, Vol. 69, Iss. 9, pp. 2190–2208',
+    doi: '10.1002/glia.24020',
+    category: 'Neurobiologia & Tau',
+    citations: 83,
+    abstract:
+      'Stymulacja dojrzewania prekursorów oligodendrocytów (komórek NG2+) przez allosteryczne ligandy receptora muskarynowego M1. Zwiększenie syntezy zasadowego białka mieliny (MBP) przyspiesza remielinizację włókien kory przedczołowej i chroni aksony przed zwyrodnieniem wstępującym.',
+    methodology: {
+      tissueSample: 'Pierwotne hodowle glejowe izolowane z mózgowia noworodków szczurzych',
+      electrodeArray: 'Czytnik mikropłytek fluorescencyjnych Tecan Spark z kontrolą gazową',
+      perfusionAgent: 'Agonista muskarynowy AF102B (10 µM) w obecności neurotrofiny NT-3',
+      samplingFrequency: 'Kwantyfikacja ekspresji mRNA genu MBP metodą RT-qPCR co 24 h',
+    },
+  },
 ];
 
-// 3 ZREDAGOWANE PUBLIKACJE DR. ARISA THORNE'A (ODKRYWANE PRZEZ FRAZĘ Z MAILA)
+// 3 POUFNE / ZREDAGOWANE PUBLIKACJE DR. ARISA THORNE'A (ODKRYWANE NATURALNIE PRZEZ NISZOWE ZAPYTANIA)
 const REDACTED_THORNE_PUBLICATIONS: Publication[] = [
   {
     id: 'PUB-1993-019-S7',
@@ -388,26 +726,25 @@ const REDACTED_THORNE_PUBLICATIONS: Publication[] = [
   },
 ];
 
-// Słowa kluczowe wyzwalające ujawnienie zredagowanych prac Thorne'a
+// Słowa kluczowe wyzwalające naturalne ujawnienie zredagowanych prac Thorne'a
 const SUSPICIOUS_TRIGGER_KEYWORDS = [
-  'transfer engramów',
-  'transfer engramow',
-  'konektom organoidów',
-  'konektom organoidow',
-  'organoidy',
-  'organoid',
-  'organoids',
   'thorne',
-  'aris thorne',
+  'aris',
   'dr thorne',
-  'sektor-7',
+  'dr aris thorne',
   'sektor 7',
-  'kopie świadomości',
-  'kopie swiadomosci',
-  's7-1994-088',
-  'trepanacja',
-  'ucmj',
-  'zredagowane',
+  'sektor-7',
+  'sektor7',
+  'sector 7',
+  'sector-7',
+  'sector7',
+  's7-1994',
+  'th-94',
+  'th94',
+  'konektom',
+  'trepanacj',
+  'biometryczn',
+  'internal compliance',
 ];
 
 function ArchiveContent() {
@@ -424,7 +761,6 @@ function ArchiveContent() {
   useEffect(() => {
     if (initialQuery) {
       setSearchFilter(initialQuery);
-      // Jeśli zapytanie pasuje do triggera, automatycznie rozwiń pierwszą zredagowaną pracę!
       const lower = initialQuery.toLowerCase();
       const isTrigger = SUSPICIOUS_TRIGGER_KEYWORDS.some((kw) => lower.includes(kw));
       if (isTrigger) {
@@ -433,17 +769,17 @@ function ArchiveContent() {
     }
   }, [initialQuery]);
 
-  // Sprawdzamy czy użytkownik wpisał frazę kluczową z maila Webera
+  // Sprawdzamy czy użytkownik wpisał frazę kluczową powiązaną z Thorne'em lub Sektorem-7
   const isTriggerActive = useMemo(() => {
     const lower = searchFilter.toLowerCase().trim();
     if (!lower) return false;
     return SUSPICIOUS_TRIGGER_KEYWORDS.some((kw) => lower.includes(kw));
   }, [searchFilter]);
 
-  // Cała baza do filtrowania
+  // Cała baza: jeśli zapytanie dotyczy archiwalnych rejestrów Sektora-7 / Thorne'a,
+  // do bazy włączane są naturalnie zredagowane publikacje
   const fullDatabase = useMemo(() => {
     if (isTriggerActive) {
-      // Wyszukiwanie podejrzane ujawnia zredagowane prace Thorne'a na samej górze + ewentualne normalne prace
       return [...REDACTED_THORNE_PUBLICATIONS, ...CLEAN_PUBLICATIONS];
     }
     return CLEAN_PUBLICATIONS;
@@ -451,11 +787,13 @@ function ArchiveContent() {
 
   const categories = [
     'All',
-    'Amyloid & Terapie',
-    'Białko Tau',
-    'Inhibitory AChE & NMDA',
-    'Neurozapalenie & TREM2',
+    'Biochemia & Kinetyka',
+    'Neurobiologia & Tau',
+    'Farmakologia & Terapie',
+    'Immunologia & Mikroglej',
     'Biomarkery Osoczowe',
+    'Apoptoza & Biologia Komórki',
+    'Bariera Krew-Mózg',
     ...(isTriggerActive ? ['Badania Niejawne'] : []),
   ];
 
@@ -509,36 +847,17 @@ function ArchiveContent() {
               ARCHIWUM PUBLIKACJI I BIAŁYCH KSIĄG NEUROCLIN
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-sans">
-              Zindeksowana baza recenzowanych badań: kinetyka AChE, biomarkery p-tau217, przeciwciała amyloidowe oraz rejestry historyczne.
+              Zindeksowana baza recenzowanych badań: kinetyka enzymatyczna, apoptoza komórkowa, immunologia mikrogleju, biomarkery osoczowe i bariera krew-mózg.
             </p>
           </div>
 
           <div className="text-right text-xs font-mono text-slate-500">
             <p>ZAREJESTROWANYCH REKORDÓW: {fullDatabase.length}</p>
-            <p className={isTriggerActive ? 'text-red-500 font-bold' : 'text-sky-600 dark:text-sky-400'}>
-              {isTriggerActive
-                ? 'UWAGA: ODNALEZIONO REJESTRY ZATAJONE (UCMJ ART. 134)'
-                : 'STATUS: ZWERYFIKOWANE RECENZOWANE (PEER-REVIEWED)'}
+            <p className="text-sky-600 dark:text-sky-400 font-semibold">
+              STATUS: ZWERYFIKOWANE RECENZOWANE (PEER-REVIEWED)
             </p>
           </div>
         </div>
-
-        {/* ALERTY ARG GDY AKTYWOWANO TRIGGER Z MAILA */}
-        {isTriggerActive && (
-          <div className="mt-4 p-4 rounded-lg bg-red-950/40 border border-red-800/80 text-red-200 font-mono text-xs space-y-2 anomaly-glow-blood">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-              <strong className="text-red-300 uppercase tracking-wider text-xs">
-                [KLAUZULA WOJSKOWA 10 U.S. CODE § 934 // UNIFORM CODE OF MILITARY JUSTICE]:
-              </strong>
-            </div>
-            <p className="leading-relaxed">
-              Wprowadzono zapytanie kluczowe powiązane z utajnionym projektem Sektor-7. Wyszukiwarka ujawniła{' '}
-              <strong>3 zredagowane publikacje dr. Arisa Thorne&apos;a</strong>. Treść dokumentów została ocenzurowana na mocy
-              dyrektywy obronnej. Kliknij lub najedź kursorem na czarne paski cenzury (<code>████████</code>), aby podjąć próbę de-anonimizacji.
-            </p>
-          </div>
-        )}
 
         {/* PASEK FILTROWANIA I WYSZUKIWARKA */}
         <div className="pt-4 flex flex-col md:flex-row gap-3 items-center justify-between">
@@ -568,7 +887,7 @@ function ArchiveContent() {
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              placeholder="Wpisz np. 'demencja', 'donepezil', 'tau'..."
+              placeholder="Szukaj (np. 'apoptoza', 'donepezil', 'tau')..."
               className={`w-full px-3.5 py-2 text-xs rounded-lg border outline-none transition font-sans ${
                 isTriggerActive
                   ? 'bg-[#150505] border-red-700 text-red-200 placeholder-red-800 font-mono focus:border-red-500'
@@ -578,21 +897,17 @@ function ArchiveContent() {
           </div>
         </div>
 
-        {/* PRZYKŁADOWE PODPOWIEDZI KWEREND */}
+        {/* PRZYKŁADOWE PODPOWIEDZI KWEREND NAUKOWYCH */}
         <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
           <span className="font-semibold text-slate-400 font-mono uppercase text-[10px]">Sugerowane tematy:</span>
-          {['demencja', 'donepezil', 'p-tau217', 'lecanemab', 'TREM2', 'transfer engramów CA1', 'konektom organoidów Thorne'].map((keyword) => (
+          {['apoptoza', 'kinetyka enzymatyczna', 'p-tau217', 'donepezil', 'lecanemab', 'TREM2', 'bariera krew-mózg', 'autofagia'].map((keyword) => (
             <button
               key={keyword}
               onClick={() => {
                 soundEngine.playKeystroke();
                 setSearchFilter(keyword);
               }}
-              className={`px-2 py-0.5 rounded transition-colors text-[11px] ${
-                keyword.includes('engramów') || keyword.includes('organoidów')
-                  ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800 font-mono'
-                  : 'bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 hover:text-sky-600 text-slate-600 dark:text-slate-300'
-              }`}
+              className="px-2 py-0.5 rounded transition-colors text-[11px] bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 hover:text-sky-600 text-slate-600 dark:text-slate-300"
             >
               {keyword}
             </button>
@@ -749,15 +1064,15 @@ function ArchiveContent() {
                           <span className="font-semibold">{pub.methodology.tissueSample}</span>
                         </div>
                         <div className="flex justify-between border-b pb-1 border-slate-100 dark:border-slate-800">
-                          <span className="text-slate-500">Aparatura Elektrodowa:</span>
+                          <span className="text-slate-500">Aparatura Pomiarowa:</span>
                           <span className="font-semibold">{pub.methodology.electrodeArray}</span>
                         </div>
                         <div className="flex justify-between border-b pb-1 border-slate-100 dark:border-slate-800">
-                          <span className="text-slate-500">Środek Perfuzji:</span>
+                          <span className="text-slate-500">Środek Perfuzji / Bufor:</span>
                           <span className="font-semibold">{pub.methodology.perfusionAgent}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-500">Próbkowanie / Taktowanie:</span>
+                          <span className="text-slate-500">Próbkowanie / Detekcja:</span>
                           <span className="font-semibold">{pub.methodology.samplingFrequency}</span>
                         </div>
                       </div>
@@ -775,19 +1090,6 @@ function ArchiveContent() {
                             {pub.isRedacted ? '[POUFNY RAPORT WOJSKOWY]:' : '[NOTATKA REDAKCYJNA WYDAWNICTWA]:'}
                           </p>
                           <p>{pub.editorialNote}</p>
-                        </div>
-                      )}
-
-                      {/* SKRÓT DO CZATU */}
-                      {pub.isRedacted && (
-                        <div className="pt-2">
-                          <Link
-                            href="/chat"
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-900 hover:bg-red-800 text-white font-mono text-xs font-semibold tracking-wider transition-colors shadow-sm"
-                          >
-                            <span>⚠️ Skonsultuj te zredagowane akta z BioResearcher AI (/chat)</span>
-                            <span>&rarr;</span>
-                          </Link>
                         </div>
                       )}
                     </div>
