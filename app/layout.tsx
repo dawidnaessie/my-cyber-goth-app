@@ -1,11 +1,22 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { ClientShell } from '@/components/ClientShell';
 
 export const metadata: Metadata = {
-  title: 'NULL://ANOMALY // CONTEMPORARY BIO-PHYSICS LAB',
-  description: 'Eksperyment kognitywny z pogranicza neurobiologii, dekoherencji kwantowej w mikrotubulach i manipulacji percepcyjnej. Model AI dotknięty anomalią logiczną napędzany przez Google Gemini.',
-  keywords: ['ai', 'bio-physics', 'quantum-decoherence', 'neurobiology', 'orch-or', 'gemini', 'cognitive-manipulation', 'unhinged-ai'],
-  authors: [{ name: 'ANOMALY_CORE_LAB' }],
+  title: 'BioResearcher AI // BIOLOGY RESEARCH APPLICATION',
+  description:
+    'Rządowy portal badawczy neurobiologii, bio-fizyki komórkowej i konektomiki kognitywnej. Terminal analityczny Departamentu Obrony.',
+  keywords: [
+    'ai',
+    'bio-physics',
+    'cellular-biology',
+    'neurobiology',
+    'connectome',
+    'cognitive-lab',
+    'bioresearcher',
+    'terminal',
+  ],
+  authors: [{ name: 'DOD_BIOLOGICAL_DIVISION' }],
 };
 
 export default function RootLayout({
@@ -15,8 +26,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl" className="dark">
-      <body className="bg-[#070707] text-[#e0e0e0] font-mono antialiased min-h-screen relative selection:bg-[#781414] selection:text-[#f3ede2]">
-        {children}
+      <body className="bg-[#050404] text-[#e0e0e0] font-mono antialiased min-h-screen relative selection:bg-[#781414] selection:text-[#f3ede2]">
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );

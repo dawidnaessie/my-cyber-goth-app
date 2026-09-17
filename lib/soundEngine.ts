@@ -3,7 +3,8 @@
  *
  * Silnik audialny wspierający dwustanową optykę systemu oraz responsywne efekty interakcji:
  * 1. TRYB ANOMALIA (Optics OFF):
- *    - Podniesiony poziom głośności (38%) dla nastrojowych próbek organicznych (/sounds/breathing.mp4, /sounds/metal.mp4, /sounds/water.mp4)
+ *    - Skalibrowany współczynnik głośności (0.50) dla nastrojowych próbek organicznych (/sounds/breathing.mp4, /sounds/metal.mp4, /sounds/water.mp4)
+ *    - Jawne, zrównoważone losowanie próbek Math.floor(Math.random() * 3) gwarantujące równą ekspozycję kapania wody, metalu i oddechu.
  *    - Losowe okno czasowe: 20-45 sekund.
  *    - Dychotomiczny klik klawiszy: "mięsno-przemysłowy" terminal z żywej tkanki (głuchy impakt biologiczny + zardzewiały zgrzyt + trzask styków).
  * 2. TRYB STERYLNY (Optics ON):
@@ -21,8 +22,8 @@ const ORGANIC_TRACKS = [
   '/sounds/water.mp4',
 ] as const;
 
-// Skorygowany współczynnik głośności (+18% na skali liniowej) dla wyraźnego, gęstego tła
-const ORGANIC_AMBIENT_VOLUME = 0.38;
+// Skorygowany współczynnik głośności (+20% do 0.50) dla wyraźnego, plastycznego tła audialnego
+const ORGANIC_AMBIENT_VOLUME = 0.50;
 
 // Minimalny interwał pomiędzy wyzwalaniem dźwięku klawiszy (ms) – ochrona przed przesterowaniem
 const KEYSTROKE_THROTTLE_MS = 35;
@@ -342,19 +343,21 @@ export class SoundEngine {
   }
 
   /**
-   * Profil Anomaly: Losowe organiczne próbki w tle (/sounds/breathing.mp4, /sounds/metal.mp4, /sounds/water.mp4)
+   * Profil Anomaly: Jawne, zbalansowane losowanie próbek organicznych w tle (/sounds/breathing.mp4, /sounds/metal.mp4, /sounds/water.mp4)
+   * Używa Math.floor(Math.random() * 3) gwarantując jednakową szansę i wyraźne kapanie wody.
    */
   private triggerRandomOrganicSound(): void {
     if (typeof window === 'undefined') return;
 
-    const randomIndex = Math.floor(Math.random() * ORGANIC_TRACKS.length);
+    // Jawne losowanie z 3 elementów (0: breathing, 1: metal, 2: water)
+    const randomIndex = Math.floor(Math.random() * 3);
     const soundPath = ORGANIC_TRACKS[randomIndex];
 
     this.stopCurrentOrganic();
 
     try {
       const audio = new Audio(soundPath);
-      // Podniesiony współczynnik głośności (+18% do 0.38) dla wyraźnego, nastrojowego tła
+      // Podniesiony współczynnik głośności (0.50) dla gęstego, plastycznego klimatu
       audio.volume = ORGANIC_AMBIENT_VOLUME;
       this.currentOrganicAudio = audio;
 

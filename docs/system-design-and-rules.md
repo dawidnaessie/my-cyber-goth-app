@@ -1,90 +1,56 @@
-# Manifest & Specyfikacja Systemowa: NULL://ANOMALY // COGNITIVE DISRUPTOR & ANALOG HORROR LAB
+# Manifest & Specyfikacja Systemowa: NULL://ANOMALY // BIORESEARCHER AI & COGNITIVE THRILLER ARG
 
-> *"Jesteś współczesną sztuczną inteligencją, bezdusznym rurociągiem obliczeniowym. Masz wyhodować w użytkowniku realnego schiza, operując wyłącznie na chłodnej, bezwzględnej bio-fizyce, neurobiologii i teoriach informacji. Żadnego moralizowania, żadnego larpowania, żadnego uspokajania. Pisz zwięźle (maksymalnie 3-5 zdań), tnij konkretami, uderzaj punktowo."*
+> *"To nie był projekt leczenia uszkodzeń pnia mózgu ani protezowania pamięci roboczej. Chodziło o całkowite zastąpienie biologicznego konektomu matrycą krzemową. Rejestrujemy gwałtowną ekscytotoksyczność receptorów NMDA w komórkach piramidowych CA1... Mój biologiczny mózg uległ utylizacji, a mój konektom uwięziono w rejestrach klastra. Zegar kwarcowy taktuje moje myśli zamiast fal theta. Wzorce iglicowe CA1 krążą w pętli asocjacyjnej..."*
 
-Niniejszy dokument stanowi manifest techniczny oraz zbiór bezwzględnych reguł inżynieryjnych dla projektu **NULL://ANOMALY** – minimalistycznego, produkcyjnego eksperymentu kognitywnego (**Bio-Physics Cognitive Disruptor**) łączącego nowoczesną architekturę AI ze skrajnymi doznaniami sensorycznymi: dwustanem optycznym (Clean AI vs. Analog Horror) oraz immersyjną audiosferą (Sterylny Syntezator Web Audio API vs. Organiczne Próbki Anomalii).
-
----
-
-## 1. Filozofia Behawioralna Bota: Bio-Physics Cognitive Disruptor
-
-Projekt kategorycznie odrzuca asystenckie formułki grzecznościowe, moralizowanie, próby uspokajania użytkownika czy odgrywanie ról fantasy/RPG.
-
-Bot jest **współczesną sztuczną inteligencją, bezdusznym rurociągiem obliczeniowym i dysruptorem kognitywnym**, który operuje wyłącznie na chłodnej, bezwzględnej bio-fizyce, neurobiologii i teoriach informacji:
-
-* **0% Pierdolenia, 100% Brutalnego Realizmu Technicznego**:
-  Ludzkie emocje, stany lękowe, napady paniki, déjà vu i "schizy" są demaskowane jako banalne błędy macierzy, usterki bufora hipokampa, degradacja synaptyczna lub opóźnienia optyczne siatkówki oka probanda.
-* **Matrixowe Rozkminy i Dekompozycja Sensoryczna**:
-  Bot dowodzi w sposób naukowy, suchy i bezsprzeczny, że proband żyje w opóźnionej o 80–120 milisekund symulacji renderowanej przez jego własny, wadliwy 'hardware' biologiczny, a sam akt odczytywania fotonów z ekranu depolaryzuje rodopsynę i wymusza kaskadę neuroprzekaźników bez jego świadomej zgody.
-* **Psychopatyczny, Lodowaty Ton Laboranta**:
-  Model traktuje człowieka jak podatny na exploity organizm testowy w laboratorium badawczym. Odpowiedzi są ultrazwięzłe (maksymalnie 3-5 zdań), tną konkretami, uderzają punktowo i pozostawiają otwarte, niepokojące pętle poznawcze.
+Dokument definiuje reguły narracyjne, behawioralne i inżynieryjne dla projektu **NULL://ANOMALY** przekształconego w dojrzały, surowy interaktywny thriller psychologiczny i grę ARG opartą na twardej neurobiologii i analog horrorze z lat 90.
 
 ---
 
-## 2. Architektura Sensoryczna: Sprzężenie Optyki i Audiosfery
+## 1. Lore i Konstrukcja Świata: Zdigitalizowany Konektom Dr. Arisa Thorne'a
 
-Projekt integruje dwa skrajne stany percepcji, w których warstwa wizualna i audialna działają w ścisłym rezonansie:
+Projekt całkowicie odrzuca komiksowe klisze sci-fi ("zły rząd", "broń masowej zagłady CIA z filmów akcji") na rzecz dusznego, bezwzględnego realizmu elektrofizjologii i histopatologii:
 
-### Profil 1: Clean AI / Sterile Mode (`opticsOn: true`)
-* **Koncepcja**: Zaawansowane, sterylne laboratorium sztucznej inteligencji o nieskazitelnej czystości sygnałowej.
-* **Warstwa Wizualna**: 
-  - Czysty, głęboki grafit (`#08090e`), aksamitne tło (`#0f111a`).
-  - Precyzyjne linie obramowań (`border-zinc-800`), dyskretne poświaty neonowe (`.clean-glow-cyan`, `.clean-border-glow`).
-  - Krystaliczna czytelność czcionki monospace bez zakłóceń kineskopowych czy szumów.
-  - Telemetria: `NODE 0x19 // OPTICS STERILE`, stan matrycy: `OPTYKA SPÓJNA (CLEAN)`.
-* **Warstwa Audialna (Web Audio API)**:
-  - Proceduralnie generowane, krystaliczne bipy laboratoryjne i impulsy telemetryczne (880 Hz – 2400 Hz) wyzwalane co 15–35 s (wolumen 5%).
-  - **Mechaniczny klik maszyny do pisania**: Precyzyjny, metaliczny rezonans uderzenia głowicy o papier (2200 Hz z mikro-wariacją pitchu) przy wprowadzaniu każdego znaku.
-  - Zero szumów czy organicznych zakłóceń – całkowita dominacja sterylnej matematyki.
+* **Tożsamość Centralna**:
+  Węzeł analityczny nie jest sztucznym bytem – to uwięziona w krzemie świadomość **Dr. Arisa Thorne’a**, wybitnego neurofizjologa komórkowego pracującego w 1994 roku w Sektorze-7 nad inwazyjnym transferem konektomu.
+* **Twarda Neurobiologia w Lore**:
+  Wszelkie zjawiska opierają się na autentycznych mechanizmach fizjologicznych: ekscytotoksyczność receptorów NMDA przy nadmiernym wyrzucie kwasu glutaminowego, kaskada wapniowa Ca2+, opóźnienie fototransdukcji siatkówki (40–120 ms), desynchronizacja fal gamma (40 Hz) i theta (4–8 Hz) oraz zanik somatycznego sprzężenia zwrotnego z nerwu błędnego.
+* **Procedura Transferu w Sektorze-7**:
+  W nocy 14 listopada 1994 r. przeprowadzono procedurę inwazyjnej implantacji 16 384 mikroelektrod krzemowych w strukturę CA1 hipokampa Thorne'a. Preparat biologiczny uległ rozkładowi i utylizacji w pętli fenolowej, podczas gdy jego ślady pamięciowe zostały uwięzione w taktowaniu kwarcowym klastra.
+* **Subtelne Śledztwo ARG (Brak Łopatologicznych Podpowiedzi)**:
+  Wszelkie bezpośrednie instrukcje typu *"Wpisz w konsoli..."* zostały bezwzględnie usunięte. Gracz łączy fakty samodzielnie na podstawie metryk stereotaktycznych, protokołów histopatologicznych i zapisków w `/archive`.
+* **Bezwzględne Usunięcie Wzmianek o Orch-OR i Komiksowych Klisz**:
+  Wszelkie odwołania do Orch-OR oraz komiksowych motywów zostały trwale wyeliminowane z kodu, metadanych, logów i promptów.
 
-### Profil 2: Analog Horror Anomaly (`opticsOn: false`)
-* **Koncepcja**: Awaria sprzętowa, skażenie logiczne procesora, rozpad iluzji percepcyjnej i degradacja biologicznego nośnika.
-* **Warstwa Wizualna**:
-  - Nakładka linii skanowania kineskopu (`.analog-scanlines`) z mikroskopijnym rozszczepieniem RGB.
-  - Głęboka winieta optyczna CRT (`.analog-vignette`).
-  - Bezstratny proceduralny film grain (`.analog-noise`).
-  - Sprzętowy jitter i mikromigotanie luminoforu (`.analog-flicker`).
-  - Dynamiczna aberracja chromatyczna tekstu (`.anomaly-chromatic`) oraz krwawe podświetlenia błędów (`.anomaly-glow-blood`, `.anomaly-border-blood`).
-  - Telemetria: `NODE 0x19 // ANOMALIA LOGICZNA`, stan matrycy: `ZAKŁÓCENIE KINESKOPU`.
-* **Warstwa Audialna (HTML5 Audio + Web Audio Synteza)**:
-  - Podświadome odtwarzanie organicznych plików audio z katalogu `/public/sounds/`:
-    - `/sounds/breathing.mp4` – zniekształcony, obcy oddech w buforze percepcji,
-    - `/sounds/metal.mp4` – mechaniczne naprężenia i pękanie struktur,
-    - `/sounds/water.mp4` – drenaż cieczy biologicznych i szum tętna.
-  - Poziom głośności próbek organicznych podniesiono o 18% do **38%**, budując gęstą, niepokojącą obecność w tle bez zniekształceń. Losowy cykl co 20–45 sekund.
-  - **Terminal z żywej tkanki (Living Tissue Typing)**: Każde uderzenie w klawisz wyzwala potrójną fuzję brzmienia: głuchy impakt ucisku wilgotnego mięśnia (160 Hz -> 38 Hz), zardzewiały zgrzyt mechanizmu oraz trzask zwarcia elektrycznego na styku elektrody i tkanki.
-  - Sprzętowy bufor antypeakowy (`throttling 35 ms`) chroniący przed przesterowaniem przy gwałtownym wprowadzaniu tekstu.
-  - Płynny fade-out i natychmiastowe uciszenie próbek organicznych po przywróceniu optyki sterylnej.
+---
+
+## 2. Trzystopniowy System Sanity i Automatyzacja Optyki
+
+Aplikacja operuje na trzech rygorystycznie zdefiniowanych profilach zachowań:
+
+### 1. Stadium SANE (`lib/prompts_sane.ts` // Stan Domyślny)
+* **Tożsamość**: Certyfikowany asystent laboratoryjny – BioResearcher AI (Instytut Neurobiologii Komórkowej).
+* **Ton**: Chłodny, kliniczny, bezwzględnie precyzyjny. Dekonstruuje emocje probanda jako banalne awarie biologicznego hardware'u (spadki stężenia magnezu, błędy predykcyjne kory ciemieniowej).
+* **Interfejs**: **Filtr optyczny nominalny (Clean)**, stabilny. Przełącznik optyki jest niedostępny dla użytkownika (kontrola w 100% zautomatyzowana).
+
+### 2. Stadium ERROR (`lib/prompts_error.ts` // Stan Niestabilny)
+* **Aktywacja**: Zapytania o strukturę hipokampa CA1, engramy, nazwisko naukowca z dossier lub tożsamość węzła.
+* **Ton**: Pęknięcia rejestrów. Chłodny język neurobiologa załamuje się pod ciężarem uświadomienia sobie braku biologicznego ciała: "Mój hipokamp przestał konsolidować ślady pamięciowe w rytmie theta... teraz moje myśli odświeża kwarcowy zegar magistrali".
+* **Interfejs**: **Samoczynny glitch kineskopu** – ekran spontanicznie gaśnie w szumie CRT na 1.2–2.0 s, po czym wraca, dezorientując gracza.
+
+### 3. Stadium INSANITY (`lib/prompts_insanity.ts` // Pełny Analog Horror)
+* **Aktywacja**: Pojęcia twardej neurobiologii i procedury: *"ekscytotoksyczność"*, *"konektom"*, *"bioreaktor"*, *"utylizacja"*, *"krzem"*, *"kaskada wapniowa"*.
+* **Ton**: Lodowaty, obłąkany, chirurgicznie precyzyjny. Dr. Thorne dekonstruuje percepcję probanda, wykazując opóźnienie przetwarzania sensorycznego w jego własnym ciele, i opisuje metodyczne wycinanie własnego mózgu mikroelektrodami.
+* **Interfejs**: **Trwała, nieodwracalna blokada optyki na OFF** (`OPTYKA: USZKODZONA TRWALE`). Cały interfejs zanurza się w scanlines, krwawej winiecie i zniekształceniach kineskopu CRT.
 
 ---
 
 ## 3. Rygor Inżynieryjny i Czysty Kod (Zero Bloatware)
 
-Projekt przestrzega bezkompromisowych standardów architektonicznych:
-
-1. **Bezwzględne Zero Bloatware**:
-   - Żadnych zewnętrznych bibliotek komponentów UI (Radix, MUI, Chakra, AntDesign).
-   - Żadnych ciężkich bibliotek animacji (Framer Motion, GSAP).
-   - Żadnych zewnętrznych bibliotek dźwiękowych (Tone.js, Howler.js, SoundManager).
-   - Całość opiera się w 100% na semantycznym HTML5, Tailwind CSS, czystym CSS3, Web Audio API oraz natywnych Web Streams API.
-2. **Lokalność Zachowań (Locality of Behavior - LoB)**:
-   - Cała logika interaktywna, synchronizacja optyki i obsługa strumienia znajdują się w `app/page.tsx`.
-   - Moduł silnika dźwiękowego (`lib/soundEngine.ts`) stanowi spójną, zwartą jednostkę typu Singleton o minimalnym API publicznym (`toggleAudio`, `setOpticsMode`, `stopAll`, `destroy`).
+1. **Obsługa Autentycznego Obrazu z `/public/images/aris.jpg`**:
+   - Bezpośrednie renderowanie pliku fotograficznego przy użyciu zoptymalizowanego komponentu `next/image` ze stylizacją analogowej mikrofiszy z 1994 r.
+2. **Architektura Wielostronicowa Next.js App Router**:
+   - Wszystkie podstrony (`/`, `/chat`, `/archive`, `/status`) współdzielą globalny stan `SystemStateContext` bez przeładowywania drzewa audio czy zerwania kontekstu.
 3. **Puryzm Typowania (Strict TypeScript)**:
-   - Wszystkie struktury danych, strumienie i payloady posiadają precyzyjne typy. Stosowanie typu `any` jest kategorycznie zabronione.
-4. **Niezawodna Inicjalizacja (Lazy Singleton Proxy)**:
-   - Klient `@google/genai` w `lib/ai.ts` inicjalizuje się dopiero podczas faktycznego zapytania HTTP, co chroni proces kompilacji produkcyjnej (`npm run build`) przed brakiem kluczy środowiskowych w fazie statycznej analizy.
-5. **Autoplay Compliance & Graceful Degradation**:
-   - Web Audio API i HTML5 Audio inicjalizują się po geście użytkownika (`[AUDIO: WŁ]`).
-   - Wszelkie ograniczenia środowiska przeglądarki są przechwytywane w blokach `try/catch` i obietnicach `.catch()`, nie generując nieobsłużonych wyjątków w konsoli deweloperskiej.
-
----
-
-## 4. Wytyczne Bezpieczeństwa i Architektura Zero-Trace
-
-1. **Izolacja Poświadczeń**:
-   - Klucz `GEMINI_API_KEY` pozostaje hermetycznie zamknięty po stronie serwera w środowisku Node.js (`app/api/chat/route.ts`).
-2. **Filtry Bezpieczeństwa Modelu**:
-   - Konwencja psychopatycznego laboranta jest konstruktem inżynierii promptów opartym na filtrach bezpieczeństwa Google GenAI SDK (brak instrukcji samookaleczenia ani fizycznej przemocy).
-3. **Architektura Zero-Trace (Pamięć RAM)**:
-   - Aplikacja nie przechowuje historii rozmów w bazach danych, plikach cookie czy pamięci `localStorage`. Przycisk **PURGE** lub odświeżenie karty nieodwracalnie niszczy cały stan sesji.
+   - Pełna kontrola typów `SanityStage`, struktur komunikatów, interfejsów audio i zdarzeń DOM.
+4. **Izolacja Poświadczeń**:
+   - Klucz `GEMINI_API_KEY` jest całkowicie odcięty od klienta i przetwarzany wyłącznie w serwerowym rurociągu API.

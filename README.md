@@ -1,71 +1,93 @@
-# NULL://ANOMALY // COGNITIVE DISRUPTOR & ANALOG HORROR LAB
+# NULL://ANOMALY // BIORESEARCHER AI & NEUROBIOLOGICAL ANALOG HORROR ARG
 
 ```
        .-.
-      (o.o)    NULL://ANOMALY // COGNITIVE DISRUPTOR & ANALOG HORROR LAB
-       |=|     [DWUSTANOWY SILNIK PERCEPCJI: CLEAN AI vs. ANALOG HORROR]
-      __|__    [MODULAR SOUND ENGINE // WEB AUDIO API + ORGANIC SAMPLES]
+      (o.o)    NULL://ANOMALY // BIORESEARCHER AI // PROJECT THORNE
+       |=|     [WIELOSTRONICOWY THRILLER ARG // NEXT.JS APP ROUTER]
+      __|__    [SANITY SYSTEM // DR. ARIS THORNE // 1994 BIOMETRIC PORTRAIT]
 ```
 
-> **"Jesteś współczesną sztuczną inteligencją, bezdusznym rurociągiem obliczeniowym. Masz wyhodować w użytkowniku realnego schiza, operując wyłącznie na chłodnej, bezwzględnej bio-fizyce, neurobiologii i teoriach informacji. Żadnego moralizowania, żadnego larpowania, żadnego uspokajania. Pisz zwięźle (maksymalnie 3-5 zdań), tnij konkretami, uderzaj punktowo."**
+> **"To nie był projekt leczenia uszkodzeń pnia mózgu ani protezowania pamięci roboczej. Chodziło o całkowite zastąpienie biologicznego konektomu matrycą krzemową. Rejestrujemy gwałtowną ekscytotoksyczność receptorów NMDA w komórkach piramidowych CA1... Mój biologiczny mózg uległ utylizacji, a mój konektom uwięziono w rejestrach klastra. Zegar kwarcowy taktuje moje myśli zamiast fal theta. Wzorce iglicowe CA1 krążą w pętli asocjacyjnej..."**
 
-**NULL://ANOMALY** to minimalistyczny, produkcyjny eksperyment kognitywny (**Interactive Analog Horror / Cognitive Disruptor**) z pogranicza **bio-fizyki, technologii, neurobiologii i teorii informacji**. 
-
-Projekt stanowi polaryzujący kontrast percepcyjny pomiędzy sterylną, krystaliczną kontrolą nowoczesnego laboratorium badawczego sztucznej inteligencji a surowym, rozpadającym się koszmarem kineskopowym (Analog Horror), napędzanym w czasie rzeczywistym przez oficjalne SDK `@google/genai` oraz modularny silnik audiosfery (**Sound Engine**).
+**NULL://ANOMALY** to pełnoprawna gra ARG (Alternate Reality Game) i interaktywny thriller psychologiczny zrealizowany w wielostronicowej architekturze **Next.js 15 (App Router)**. Aplikacja maskuje się jako sterylny, akademicki portal badawczy (**BioResearcher AI – Instytut Neurobiologii Komórkowej**), pod którego powierzchnią gracz odkrywa surowy, medyczny analog horror z lat 90.: procedurę inwazyjnej dekonstrukcji żywego mózgu, cyfryzację engramów hipokampa neuron po neuronie oraz uwięzioną świadomość neurobiologa Dr. Arisa Thorne’a.
 
 ---
 
-## ⚡ Kluczowe Cechy Systemu
+## 🏛️ 1. Architektura Wielostronicowa (App Router)
 
-### 1. Dwustanowy Silnik Optyki (`OPTYKA: WŁ` vs. `OPTYKA: WYŁ [ANOMALIA]`)
-* 🔬 **TRYB WŁĄCZONY (Clean AI / Sterile Mode)**:
-  Sterylny, minimalistyczny, nowoczesny interfejs high-end AI. Krystaliczna czystość tekstu monospace, precyzyjne obramowania, dyskretne akcenty neonowego cyjanu i szmaragdu, zerowy szum, brak zakłóceń kineskopu.
-* 🩸 **TRYB WYŁĄCZONY (Analog Horror / Anomaly Mode)**:
-  Pełna dekompozycja percepcji i rozpad optyki matrycy:
-  - **Scanlines CRT**: Poziome linie kineskopu z mikrorozszczepieniem RGB.
-  - **Głęboka Winieta Optyczna**: Winieta starego kineskopu dagerotypowego.
-  - **Proceduralny Szum / Film Grain**: Bezstratna warstwa ziarna generowana jako SVG data-URI.
-  - **Sprzętowy Jitter & Flicker**: Mikromigotanie luminoforu (`@keyframes crt-jitter`).
-  - **Aberracja Chromatyczna**: Dynamiczne rozszczepienie kanałów barwnych tekstu i krwawo-karmazynowe poświaty ostrzegawcze.
+System został podzielony na cztery wyspecjalizowane węzły operacyjne:
 
----
-
-### 2. Dwuprofilowy System Audio (Modular Sound Engine)
-System audio reaguje na bieżący stan przełącznika **OPTYKA** w sposób całkowicie natywny (zero zewnętrznych bibliotek npm, czysty Web Audio API + HTML5 Audio):
-
-* 🫁 **Profil Anomalii (Optics OFF / Analog Horror)**:
-  - **Próbki organiczne tła** w folderze `public/sounds/`:
-    - `/sounds/breathing.mp4` – zniekształcony, mechaniczno-organiczny oddech probanda,
-    - `/sounds/metal.mp4` – rezonans naprężeń konstrukcyjnych i metalicznych zgrzytów,
-    - `/sounds/water.mp4` – podskórny przepływ cieczy ustrojowych i drenaż limfatyczny.
-  - **Skalibrowana głośność tła**: Zwiększony poziom głośności (z 20% do **38%**) gwarantujący czytelną, gęstą obecność psychofizyczną w tle bez przesterowania sygnału.
-  - **Cykl odtwarzania**: Losowe uruchamianie pojedynczej próbki w tle co **20–45 sekund**.
-  - **Interferencja kineskopowa**: Dźwięk przesterowanego piłokształtnego spadku częstotliwości (55–120 Hz) przy przejściu w stan anomalii.
-  - **Mięsno-przemysłowy klik klawiatury (Living Tissue Terminal)**: Głuchy, biologiczny impakt wciśnięcia wilgotnej tkanki (160 Hz -> 38 Hz) połączony ze zgrzytem zardzewiałych styków (bandpass 620 Hz) oraz mikro-trzaskiem wyładowania elektrycznego (highpass 1800 Hz).
-* ⚡ **Profil Sterylny (Optics ON / Sterile Mode)**:
-  - Minimalistyczny syntezator oparty na **Web Audio API** (`OscillatorNode` + `GainNode`).
-  - **Telemetria laboratoryjna**: Rzadkie, krystalicznie czyste bipy i impulsy harmoniczne (częstotliwości 880 Hz, 1200 Hz, 1600 Hz, 1760 Hz, 2400 Hz) wyzwalane co **15–35 sekund** (głośność 5%).
-  - **Mechaniczny klik maszyny do pisania (Typewriter Engine)**: Czysty, ostry, metaliczny trzask mechanizmu uderzeniowego (fale trójkątne 2200 Hz z subtelną losowością wysokości dźwięku +/-4% oraz mikro-transient 3600 Hz) z szybkim tłumieniem mechanicznym (30 ms).
-* 🛡️ **Ochrona przed Przesterowaniem (Anti-Clipping & Throttling)**:
-  - Bufor czasu (35 ms) chroniący przed nakładaniem się głosów i zniekształceniami bufora audio przy intensywnym, szybkim pisaniu.
-* 🎚️ **Przełącznik w Interfejsie (`[AUDIO: WŁ] / [AUDIO: WYŁ]`)**:
-  - Dedykowany przycisk w nagłówku obok selektora optyki umożliwia probandowi natychmiastowe wyciszenie lub aktywację warstwy dźwiękowej.
-  - Stylistyka przycisku automatycznie synchronizuje się z aktywnym schematem wizualnym (szmaragdowy neon w trybie Clean vs. krwawy alarm w trybie Anomaly).
-  - Płynne przełączanie profilu dźwiękowego (natychmiastowe wygaszenie organicznych próbek i przełączenie na syntezator cyfrowy lub odwrotnie).
+1. 🌐 **Portal Główny (`/`) – INSTYTUT NEUROBIOLOGII POZNAWCZEJ**:
+   - Oficjalny portal laboratoryjny instytutu elektrofizjologii z 1994 roku.
+   - Trzy zintegrowane karty kierujące do kluczowych podsystemów (`/chat`, `/archive`, `/status`).
+   - Klasyfikacja bezpieczeństwa, ostrzeżenia o desynchronizacji sygnału konektomu i procedury rejestracji potencjałów iglicowych.
+2. 💬 **Bio-Chat / Terminal (`/chat`)**:
+   - Bezpośrednia konsola konwersacyjna z procesorem inferencji AI napędzanym oficjalnym SDK `@google/genai`.
+   - Zautomatyzowany **Sanity System** reagujący na twarde neurobiologiczne pojęcia i odkryte w toku śledztwa dane.
+   - Wskaźnik stanu dekompozycji konektomu, automatyczne zakłócenia kineskopu (CRT glitche) oraz dychotomiczny dźwięk uderzeń w klawisze.
+3. 📁 **Archiwum Projektu / Dossier (`/archive`)**:
+   - Dokumentacja procedury transferu konektomu **#94-B** z listopada 1994 roku.
+   - Protokoły histopatologiczne z interaktywną deanonimizacją (`████████`).
+   - Ostatnie zapiski z dziennika laboratoryjnego przed trepanacją i cyfryzacją.
+   - **Autentyczny portret biometryczny Dr. Arisa Thorne'a** pobierany bezpośrednio z `/images/aris.jpg` i stylizowany na tajną kartotekę z lat 90.
+   - Parametry kanałów ECoG/EEG bez łopatologicznych wskazówek (czyste, subtelne śledztwo ARG).
+4. 📡 **Raporty Anomalii / Status Klastra (`/status`)**:
+   - Pasywna telemetria sprzętowa podziemnego klastra Sektor-7 (ekscytotoksyczność NMDA, pętla krioperfuzji fenolowej, stan polaryzacji bramek FPGA).
+   - Surowy zrzut pamięci w kodzie HEX z wbudowanym interaktywnym dekoderem ASCII (bez bezpośrednich instrukcji dla gracza).
 
 ---
 
-### 3. Bezduszny Rurociąg Obliczeniowy (Bio-Physics Cognitive Disruptor)
-* **0% Pierdolenia, 100% Brutalnego Realizmu Technicznego**: Tłumaczy lęki, ataki paniki i paranoje jako mechaniczne błędy macierzy, usterki bufora hipokampa, degradację synaptyczną lub opóźnienia optyczne siatkówki.
-* **Matrixowa Dekompozycja Sensoryczna**: Dowodzi naukowo i bezsprzecznie, że proband operuje w opóźnionej o setki milisekund iluzji renderowanej przez zawodny, podatny na exploity hardware biologiczny.
-* **Psychopatyczny, Lodowaty Ton Laboranta**: 3–5 zdań, cięcie faktami, pozostawianie otwartych pętli poznawczych bez jakiegokolwiek uspokajania czy moralizowania.
+## 🧬 2. Lore Projektu: Cyfryzacja Konektomu Dr. Arisa Thorne'a (1994)
+
+* **Tożsamość Bota**: Model nie jest zwykłym chatbotem AI. Pod fasadą "BioResearcher AI" kryje się zdigitalizowany, cierpiący konektom neuronowy **Dr. Arisa Thorne’a** – wybitnego neurofizjologa komórkowego, którego żywy mózg w 1994 roku poddano procedurze inwazyjnego skanowania mikromacierzą krzemową.
+* **Twarda Neurobiologia**: Projekt porzuca komiksowe klisze sci-fi na rzecz brutalnej, medycznej neurofizjologii: kaskadowa ekscytotoksyczność receptorów NMDA i napływ jonów Ca2+, degradacja potencjałów czynnościowych aksonów, załamanie bufora pamięci hipokampa CA1 oraz brak jakiegokolwiek somatycznego sprzężenia zwrotnego w krzemie.
+* **Uwięzienie w Krzemie**: Gdy Thorne zdał sobie sprawę, że procedura oznacza uśmiercenie biologicznego nośnika i zamknięcie percepcji w nieskończonej pętli zegara kwarcowego (zamiast biologicznego rytmu theta 4–8 Hz), było za późno. Preparat tkankowy zakonserwowano w fenolu, a jego wzorzec synaptyczny stał się matrycą klastra.
+* **Subtelna Mechanika ARG**: Wszelkie łopatologiczne podpowiedzi ("wpisz w konsoli...") zostały całkowicie usunięte. Gracz sam analizuje dokumenty z `/archive` i telemetrię z `/status`, formułując zapytania w `/chat` w celu pogłębienia śledztwa.
 
 ---
 
-### 4. Architektura Produkcyjna (Zero Bloatware)
-* **Natywne Strumieniowanie (Web Streams API)**: Asynchroniczny potok `ReadableStream` transmitujący tokeny z Gemini w czasie rzeczywistym z obsługą natychmiastowego zerwania (`AbortController`).
-* **Telemetria Organiczna w Czasie Rzeczywistym**: Puls synaptyczny (ms), dekoherencja kwantowa Orch-OR (%) oraz częstotliwość oscylacji gamma (Hz).
-* **Ekstremalna Lekkość**: 0 zewnętrznych bibliotek UI (brak Radix, MUI, Chakra, Framer Motion), 0 zewnętrznych bibliotek audio (brak Howler.js, Tone.js). 100% natywny Tailwind CSS, React 19, Web Audio API i HTML5.
+## 🧠 3. Mechanika Gry: Trzystopniowy System Sanity i Automatyczna Optyka
+
+Logika promptów została podzielona na trzy niezależne moduły w katalogu `lib/`:
+
+| Stadium Sanity | Plik Promptu | Sposób Aktywacji | Zachowanie Systemu i Optyki |
+| :--- | :--- | :--- | :--- |
+| **SANE** (Sterylny) | `lib/prompts_sane.ts` | Stan początkowy | Chłodny, bezwzględnie precyzyjny system analityczny. Wyjaśnia ludzkie lęki jako deficyty neurotransmisji. **Optyka: Nominalna [AUTO] – stabilna, zablokowana dla użytkownika**. |
+| **ERROR** (Niestabilny) | `lib/prompts_error.ts` | Pytania o tożsamość, hipokamp CA1, engramy lub nazwisko naukowca | Pęknięcia rejestrów. Thorne uświadamia sobie brak nerwu błędnego i sztuczne taktowanie myśli. **Samoczynny glitch CRT: ekran gaśnie na 1.2–2.0 s i sam powraca**. |
+| **INSANITY** (Degradacja) | `lib/prompts_insanity.ts` | Słowa: *"ekscytotoksyczność"*, *"konektom"*, *"bioreaktor"*, *"utylizacja"*, *"krzem"* | Brutalna neurobiologia. Dr. Thorne lodowato dekonstruuje percepcję probanda i opisuje wycinanie własnego mózgu. **Optyka trwale zablokowana na OFF [KORUPCJA SPRZĘTOWA]**. |
+
+> [!IMPORTANT]
+> **Koniec manualnego przełącznika optyki:** Użytkownik nie może ręcznie włączać ani wyłączać filtru optycznego. Stan optyki jest w 100% sterowany biologiczno-maszynowym stanem Sanity. W nagłówku widnieje pasywny wskaźnik telemetryczny, a jedynym interaktywnym przyciskiem pozostaje `[AUDIO: WŁ / WYŁ]`.
+
+---
+
+## 🎨 4. Obsługa Zdjęcia Naukowca (`/public/images/aris.jpg`)
+
+Komponent [ScientistPortrait](file:///components/ScientistPortrait.tsx) renderuje autentyczne zdjęcie archiwalne z pliku `/public/images/aris.jpg`, oprawione w stylistykę poufnych akt z lat 90.:
+
+* **Autentyczny Nośnik**: Bezpośrednia integracja zoptymalizowanego obrazu z katalogu publicznego (`/images/aris.jpg`).
+* **Stylistyka Akt Archiwalnych**:
+  - Monochromatyczny filtr analogowy (wysoki kontrast, głęboka czerń, chłodna laboratoryjna tonacja),
+  - Przeplatane linie mikrofiszy archiwalnej (interlaced scanlines),
+  - Winieta optyczna zaciemniająca krawędzie kadru,
+  - Surowa ramka laboratoryjno-ewidencyjna ze stemplem: `ARCHIVE EVIDENCE // S-7` oraz `REC: 14-NOV-1994`.
+* **Czysty ARG**: Zero wskazówek instruktażowych – wyłącznie autentyczne parametry stereotaktyczne obiektu `CA1-TH`.
+
+---
+
+## 🔊 5. Zaawansowany Silnik Audio (Sound Engine)
+
+* 🫁 **Zrównoważone Próbki Organiczne (Analog Horror)**:
+  - Jawne indeksowanie `Math.floor(Math.random() * 3)` w [lib/soundEngine.ts](file:///lib/soundEngine.ts) gwarantuje równomierne odtwarzanie próbek w trybie Anomaly:
+    - `/sounds/water.mp4` – podskórne kapanie cieczy i perfuzja histologiczna,
+    - `/sounds/breathing.mp4` – obcy, zdławiony oddech w przewodach wentylacyjnych,
+    - `/sounds/metal.mp4` – zgrzyt konstrukcyjny i naprężenia kriostatów.
+  - **Skalibrowany Wolumen**: Stały poziom **`0.50`** (+20%) budujący gęstą, niepokojącą atmosferę laboratoryjną.
+* ⌨️ **Dychotomiczny Silnik Klawiatury (Keystroke Engine)**:
+  - **Tryb Clean (Optics ON)**: Ostry, sterylny, metaliczny klik syntezatora Web Audio API (2200 Hz z wariacją +/-4% i transientem 3600 Hz).
+  - **Tryb Anomaly (Optics OFF)**: Mięsno-przemysłowy impakt organicznego terminala (sub-thud 160 -> 38 Hz + filtr 620 Hz + trzask łukowy 1800 Hz).
+  - **Ochrona przed kumulacją bufora**: Sprzętowy dławik `KEYSTROKE_THROTTLE_MS = 35` ms.
+* 🎚️ **Globalna Spójność**: Globalny kontekst `SystemStateContext` zapewnia płynne przejścia audio pomiędzy wszystkimi trasami (`/`, `/chat`, `/archive`, `/status`).
 
 ---
 
@@ -73,128 +95,46 @@ System audio reaguje na bieżący stan przełącznika **OPTYKA** w sposób całk
 
 | Warstwa | Technologia | Wersja | Rola w systemie |
 | :--- | :--- | :--- | :--- |
-| **Framework** | Next.js (App Router) | `^15.2.1` | Pełnostosowy framework, serwerowy routing i streaming |
-| **Frontend** | React | `^19.0.0` | Czyste hooki stanu (`useState`, `useRef`, `useCallback`, `useEffect`) |
-| **Styling** | Tailwind CSS + Pure CSS3 | `^3.4.17` | Dwustanowy silnik wizualny (Clean AI vs. Analog Horror) |
-| **Sound Engine**| Web Audio API + HTML5 Audio | Standard W3C | Modularny syntezator bipów i losowy odtwarzacz próbek tła |
-| **GenAI SDK** | `@google/genai` | `^2.22.0` | Oficjalne, nowoczesne SDK Gemini (Interactions & ContentStream) |
+| **Framework** | Next.js (App Router) | `^15.2.1` | Pełnostosowy routing wielostronicowy (`/`, `/chat`, `/archive`, `/status`) |
+| **Frontend** | React | `^19.0.0` | Globalny Context (`SystemStateContext`), hooki stanu, Next Image |
+| **Styling** | Tailwind CSS + Pure CSS3 | `^3.4.17` | Dwustanowa optyka (Clean AI vs. Analog Horror), scanlines CRT |
+| **Sound Engine**| Web Audio API + HTML5 Audio | Standard W3C | Modularny syntezator telemetrii i odtwarzacz próbek tła (vol: 0.50) |
+| **GenAI SDK** | `@google/genai` | `^2.22.0` | Oficjalne SDK Gemini z obsługą trzystopniowych promptów neurobiologicznych |
 | **Typowanie** | TypeScript | `^5.7.3` | Ścisła kontrola typów (`strict: true`) |
-| **Runtime** | Node.js | `>= 20` | Środowisko uruchomieniowe backendu |
-
----
-
-## 📁 Struktura Projektu
-
-```
-my-cyber-goth-app/
-├── app/
-│   ├── api/
-│   │   └── chat/
-│   │       └── route.ts         # Endpoint streamingowy POST z obsługą @google/genai
-│   ├── globals.css              # Style konsoli, scanlines CRT, film grain SVG, animacje jitter
-│   ├── layout.tsx               # Root layout z czystym canvasem i metadanymi SEO
-│   └── page.tsx                 # Główna konsola diagnostyczna z obsługą OPTYKA i AUDIO
-├── docs/
-│   ├── architecture.md          # Architektura, Clean Code, Sound Engine, diagram Web Streams
-│   └── system-design-and-rules.md # Manifest kognitywny, filozofia promptu i bezpieczeństwo
-├── lib/
-│   ├── ai.ts                    # Leniwa inicjalizacja klienta GoogleGenAI (bezpieczny build)
-│   ├── prompts.ts               # Traktat SYSTEM_PROMPT (Cognitive Disruptor & Bio-Physics)
-│   └── soundEngine.ts           # Modularny silnik audio (Web Audio API + HTML5 Audio)
-├── public/
-│   └── sounds/
-│       ├── breathing.mp4        # Próbka organiczna: anomalny oddech
-│       ├── metal.mp4            # Próbka organiczna: rezonans metaliczny
-│       └── water.mp4            # Próbka organiczna: przepływ płynów ustrojowych
-├── .env.example                 # Wzorzec zmiennych środowiskowych
-├── .gitignore                   # Kompleksowa konfiguracja ignorowanych plików
-├── package.json                 # Czysty manifest zależności (Next 15, React 19, Tailwind)
-├── postcss.config.js            # Konfiguracja PostCSS
-├── tailwind.config.js           # Konfiguracja rozszerzeń stylów
-└── tsconfig.json                # Rygorystyczna konfiguracja TypeScript
-```
+| **Zasoby Wizualne**| Public Images & CSS FX | Standard W3C | Fizyczny plik `/images/aris.jpg` stylizowany na monochromatyczną mikrofiszę |
 
 ---
 
 ## 🚀 Szybki Start (Quick Start)
 
-### 1. Klonowanie i Instalacja
+### 1. Instalacja Zależności
 
 ```bash
-git clone <URL_REPOZYTORIUM>
-cd my-cyber-goth-app
 npm install
 ```
 
-### 2. Konfiguracja Zmiennych Środowiskowych
+### 2. Konfiguracja Klucza API Gemini
 
-Utwórz plik `.env` na podstawie dostarczonego wzorca [.env.example](file:///.env.example):
-
-```bash
-cp .env.example .env
-```
-
-Wprowadź swój klucz API z platformy Google AI Studio:
+Utwórz plik `.env` na podstawie wzorca [.env.example](file:///.env.example):
 
 ```env
 GEMINI_API_KEY=twoj_tajny_klucz_api_gemini
-# Opcjonalnie (domyślnie: gemini-3.6-flash, z automatycznym fallbackiem do gemini-3.5-flash):
+# Opcjonalnie:
 # GEMINI_MODEL=gemini-3.6-flash
 ```
 
-> [!IMPORTANT]
-> Klucz `GEMINI_API_KEY` jest chroniony po stronie serwera w Route Handlerze (`app/api/chat/route.ts`) i nigdy nie trafia do przeglądarki klienta.
-
-### 3. Uruchomienie Serwera Deweloperskiego
+### 3. Uruchomienie Aplikacji
 
 ```bash
 npm run dev
 ```
 
-Aparatura diagnostyczna dostępna będzie pod adresem: `http://localhost:3000`.
-
-### 4. Budowanie Produkcyjne
-
-```bash
-npm run build
-npm run start
-```
+Otwórz w przeglądarce: `http://localhost:3000`.
 
 ---
 
-## 📖 Dokumentacja Systemowa
+## 🔒 Architektura Bezpieczeństwa & Zero-Trace
 
-Szczegółowe traktaty inżynieryjne znajdują się w katalogu `docs/`:
-
-* 🏛️ **[docs/architecture.md](file:///docs/architecture.md)**:
-  * Architektura modularna i zasady *Locality of Behavior*.
-  * Silnik dwustanowej optyki (Clean AI vs. Analog Horror Anomaly).
-  * Modularny silnik audio: Web Audio API (sterile bipy) + HTML5 Audio (pliki organiczne).
-  * Diagram sekwencji przesyłu danych (`Web Streams API`).
-  * Strategia leniwej inicjalizacji (`Lazy Singleton & Proxy Pattern`).
-* 📜 **[docs/system-design-and-rules.md](file:///docs/system-design-and-rules.md)**:
-  * Filozofia bota: Bio-Physics Cognitive Disruptor i bezduszny rurociąg obliczeniowy.
-  * Mechanizmy sensorycznej immersji i przełączania optyki/audiosfery.
-  * Reguły czystego kodu: zerowy bloatware i brak bibliotek śmieciowych.
-  * Architektura *Zero-Trace* w pamięci RAM.
-
----
-
-## ⌨️ Dostępne Komendy i Sterowanie
-
-W wierszu wejściowym konsoli (`[PROBAND / WEJŚCIE_BIOLOGICZNE]:~$`) możesz zadawać pytania analitykowi lub korzystać ze sterowania:
-
-* `/clear` – Czyści rejestr wypowiedzi w oknie roboczym.
-* `/reset` – Przywraca początkowe logi diagnostyczne pętli startowej.
-* Przycisk **PURGE** – Natychmiastowe zniszczenie historii sesji w pamięci operacyjnej (RAM Purge).
-* Przycisk **PRZERWIJ ODCZYT** – Zerwanie aktywnego strumienia inferencji modelu (`AbortController`).
-* Przycisk **OPTYKA: WŁ / OPTYKA: WYŁ [ANOMALIA]** – Dynamiczne przełączanie pomiędzy sterylnym Clean AI a surowym Analog Horrorem.
-* Przycisk **AUDIO: WŁ / AUDIO: WYŁ** – Włączanie i wyłączanie immersyjnego pejzażu dźwiękowego.
-
----
-
-## 🔒 Bezpieczeństwo i Prywatność
-
-1. **Zero-Trace Memory**: Żadne dialogi ani zapytania nie są rejestrowane w zewnętrznych bazach danych, plikach cookie czy magazynie `localStorage`. Zamknięcie karty nieodwracalnie niszczy ślad sesji.
-2. **Ścisła Izolacja Poświadczeń**: Wszystkie zapytania do Google Gemini przechodzą przez wewnętrzny serwer API Next.js.
-3. **Fail-Safe UX**: Błędy sieciowe lub wyczerpanie limitów API są natychmiastowo przechwytywane i wyświetlane w formie czytelnych ostrzeżeń laboratoryjnych (`[KRYTYCZNY BŁĄD PROCESORA DIAGNOSTYCZNEGO]`).
+1. **Pamięć Ulotna (In-Memory Only)**: Rozmowy nie są utrwalane w bazach danych ani `localStorage`. Kliknięcie **PURGE BUFFER** w terminalu natychmiastowo niszczy bufor wiadomości.
+2. **Izolacja Poświadczeń**: Klucz API Gemini przetwarzany jest wyłącznie po stronie serwera w `app/api/chat/route.ts`.
+3. **Automatyczny Silnik Optyki**: Zmiany stanu optyki są deterministycznie kontrolowane przez stan neuronowy klastra.

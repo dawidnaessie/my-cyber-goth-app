@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ai } from '@/lib/ai';
-import { SYSTEM_PROMPT } from '@/lib/prompts';
+import { getSystemPromptByStage, SanityStage } from '@/lib/prompts';
+import { calculateSanityMetrics } from '@/lib/sanityEngine';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -13,12 +14,35 @@ interface ChatMessage {
 interface ChatRequestBody {
   messages?: ChatMessage[];
   prompt?: string;
+  sanityStage?: SanityStage;
+}
+
+function resolveSanityStage(
+  currentStage: SanityStage | undefined,
+  rawList: Array<{ role: 'user' | 'model'; text: string }>
+): SanityStage {
+  // Analizujemy WYŁĄCZNIE wypowiedzi użytkownika – wykluczamy logi startowe i odpowiedzi asystenta
+  const userTexts = rawList
+    .filter((msg) => msg.role === 'user')
+    .map((msg) => msg.text);
+
+  const metrics = calculateSanityMetrics(userTexts);
+
+  // Nigdy nie obniżamy stadium, jeśli stan trwały 'insanity' został już osiągnięty
+  if (currentStage === 'insanity' || metrics.stage === 'insanity') {
+    return 'insanity';
+  }
+  if (currentStage === 'error' || metrics.stage === 'error') {
+    return 'error';
+  }
+
+  return 'sane';
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as ChatRequestBody;
-    const { messages, prompt } = body;
+    const { messages, prompt, sanityStage } = body;
 
     const rawList: Array<{ role: 'user' | 'model'; text: string }> = [];
 
@@ -39,6 +63,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Wyznaczanie stadium Sanity System (Sane -> Error -> Insanity)
+    const effectiveStage = resolveSanityStage(sanityStage, rawList);
+    const selectedSystemPrompt = getSystemPromptByStage(effectiveStage);
 
     // Pomijamy początkowe komunikaty 'model' (np. logi bootowania terminala UI),
     // aby historia konwersacji w Gemini zawsze zaczynała się od roli 'user'
@@ -73,8 +101,8 @@ export async function POST(req: NextRequest) {
         model: primaryModel,
         contents,
         config: {
-          systemInstruction: SYSTEM_PROMPT,
-          temperature: 0.85,
+          systemInstruction: selectedSystemPrompt,
+          temperature: effectiveStage === 'insanity' ? 0.95 : effectiveStage === 'error' ? 0.9 : 0.7,
         },
       });
     } catch (primaryError: unknown) {
@@ -85,8 +113,8 @@ export async function POST(req: NextRequest) {
             model: fallbackModel,
             contents,
             config: {
-              systemInstruction: SYSTEM_PROMPT,
-              temperature: 0.85,
+              systemInstruction: selectedSystemPrompt,
+              temperature: effectiveStage === 'insanity' ? 0.95 : effectiveStage === 'error' ? 0.9 : 0.7,
             },
           });
         } catch {
@@ -129,6 +157,7 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache, no-transform',
         'Connection': 'keep-alive',
+        'x-sanity-stage': effectiveStage,
       },
     });
   } catch (error: unknown) {
