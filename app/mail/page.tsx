@@ -31,7 +31,7 @@ export default function MailPage() {
     'mail-sec-02': false,
     'mail-dev-03': false,
     'mail-log-04': false,
-    'mail-vance-94': false,
+    'mail-hr-05': false,
   });
 
   const markAsRead = (id: string) => {
@@ -89,7 +89,7 @@ export default function MailPage() {
           </p>
 
           <p className="text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800/70">
-            P.S. Zerknij proszę przy okazji do starego archiwum (<Link href="/archive" className="text-sky-600 dark:text-sky-400 underline">/archive</Link>) na zarchiwizowane raporty z Sektora-7 po dr. Arisie Thorne&apos;ze – audyt internal compliance prosił o weryfikację, czy stare pliki biometryczne zostały w pełni usunięte z lokalnych baz.
+            P.S. W sekcji metodycznej musimy podeprzeć się wcześniejszą literaturą naszego ośrodka. Przeszukaj proszę zasoby w <Link href="/archive" className="text-sky-600 dark:text-sky-400 underline font-medium">/archive</Link> pod kątem dawnych protokołów elektrofizjologicznych skrawków hipokampa (CA1) oraz kultur organoidów, aby zestawić parametry techniczne.
           </p>
 
           <div className="pt-2 text-xs font-mono text-slate-500">
@@ -158,18 +158,18 @@ export default function MailPage() {
       senderName: 'Dział Logistyki & Odczynników',
       senderEmail: 'supplies@neuroclin-bio.internal',
       role: 'Dział Zaopatrzenia Medycznego',
-      subject: 'Dostawa krioflaszek i kwasu fenolowego 4.2% (Partia #NC-2026-08)',
+      subject: 'Dostawa krioflaszek i buforu HEPES (Partia #NC-2026-08)',
       date: '12 września 2026',
       time: '09:04:18',
       isUnread: unreadState['mail-log-04'],
       isUrgent: false,
       snippet:
-        'Potwierdzamy przyjęcie partii buforu fenolowego do chłodni -80°C w skrzydle B. Zgłoszenie zapotrzebowania zrealizowane...',
+        'Potwierdzamy przyjęcie partii odczynników buforowych do chłodni -80°C w skrzydle B. Zgłoszenie zapotrzebowania zrealizowane...',
       body: (
         <div className="space-y-3 text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
           <p>Informujemy, że zamówiona partia odczynników laboratoryjnych została złożona w magazynie kriogenicznym skrzydła B:</p>
           <ul className="list-disc list-inside space-y-1 font-mono text-xs">
-            <li>Kwas fenolowy buforowany HEPES (4.2%) — 12 flakonów x 500 ml</li>
+            <li>Bufor HEPES 1M (pH 7.35) — 12 flakonów x 500 ml</li>
             <li>Pożywka hodowlana Neurobasal-A z suplementem B-27 — 20 l</li>
             <li>Mikropipety borokrzemianowe 4.5 MΩ — 500 szt.</li>
           </ul>
@@ -177,37 +177,28 @@ export default function MailPage() {
       ),
     },
     {
-      id: 'mail-vance-94',
-      senderName: 'Dr. Elena Vance [ZARCHIWIZOWANO]',
-      senderEmail: 'e.vance.archive@neuroclin-bio.internal',
-      role: 'Główny Biofizyk (Pracownia Sektor-7, 1994)',
-      subject: '[POUFNE // RETRO-ARCHIWUM] Re: Wstrzymanie procedury fiksacji stereotaktycznej w Sektorze-7',
-      date: '14 listopada 1994',
-      time: '23:58:11',
-      isUnread: unreadState['mail-vance-94'],
+      id: 'mail-hr-05',
+      senderName: 'Dział Kadr & Nadzoru GLP',
+      senderEmail: 'compliance@neuroclin-bio.internal',
+      role: 'Koordynator Szkoleń Laboratoryjnych',
+      subject: '[PRZYPOMNIENIE] Okresowe odnowienie certyfikacji BSL-2 i Dobrej Praktyki Laboratoryjnej (GLP)',
+      date: '10 września 2026',
+      time: '14:22:05',
+      isUnread: unreadState['mail-hr-05'],
       isUrgent: false,
-      isClassified: true,
       snippet:
-        'Marcus, nie możemy tego kontynuować. Aris zamknął się w sali operacyjnej. Elektrody matrycy zostały wprowadzone przy pełnej perfuzji...',
+        'Przypominamy o konieczności ukończenia corocznego e-modułu z zakresu bezpieczeństwa biologicznego BSL-2 oraz archiwizacji danych...',
       body: (
-        <div className="space-y-3 text-xs md:text-sm leading-relaxed text-red-900 dark:text-red-300 font-mono bg-red-50 dark:bg-red-950/30 p-4 rounded-lg border border-red-200 dark:border-red-900/60">
-          <div className="border-b border-red-300 dark:border-red-800 pb-2 text-[11px] text-red-700 dark:text-red-400 font-bold">
-            WIADOMOŚĆ ODZYSKANA Z KOPYLI MAGNETYCZNEJ SEKTORA-7 // DATA ARCHIWIZACJI: 15.11.1994 00:04
-          </div>
+        <div className="space-y-3 text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
+          <p>Szanowni Pracownicy Działu Badań,</p>
           <p>
-            Marcus,
+            Przypominamy, że do końca bieżącego miesiąca wszyscy analitycy laboratoryjni i operatorzy klastra zobowiązani są do odnowienia wewnętrznej certyfikacji z zakresu procedur BSL-2 oraz protokołów integralności danych GLP (zgodnie z normą ISO/IEC 17025).
           </p>
           <p>
-            Nie możemy tego kontynuować. Aris zamknął śluzę komory operacyjnej od środka. Odmówił przerwania transferu. Kiedy weszliśmy z ochroną, matryca 16 384 elektrod była już całkowicie zagłębiona w jego hipokampie, a krio-perfuzja fenolowa trwała od sześciu minut.
+            Szkolenie obejmuje procedury postępowania z pierwotnymi kulturami neuronalnymi, bezpieczną utylizację odczynników organicznych oraz zasady anonimizacji wyników przed publikacją w repozytorium.
           </p>
-          <p>
-            Jego ciało było zimne, ale oscyloskop wciąż rysował wyładowania w warstwie CA1. Tablice FPGA przejęły zegar. On nie umarł w klasycznym sensie — on został zmapowany i uwięziony wewnątrz architektury tego klastra.
-          </p>
-          <p>
-            Jeśli to czytasz, natychmiast odłącz zasilanie szyny VMEbus. Nie pozwól, aby włączyli asystenta BioResearcher.
-          </p>
-          <div className="pt-2 text-[10px] text-red-600 dark:text-red-500 font-bold">
-            [DOD DEFENSE DIRECTIVE // STATUS: CLASSIFIED // UCMJ ART. 134 APPLIED]
+          <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded font-mono text-xs text-slate-600 dark:text-slate-400">
+            Status Twojego profilu: WYMAGA ODNOWIENIA DO 30.09.2026 // KOD: GLP-BIO-2026-B
           </div>
         </div>
       ),

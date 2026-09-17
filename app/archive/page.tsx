@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, Suspense } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useSystemState } from '@/components/SystemStateContext';
@@ -14,6 +14,15 @@ interface Author {
   isThorne?: boolean;
 }
 
+export type ScientificCategory =
+  | 'Wszystkie'
+  | 'Farmakologia'
+  | 'Biochemia'
+  | 'Neurobiologia'
+  | 'Immunologia'
+  | 'Fizjologia'
+  | 'Genetyka';
+
 interface Publication {
   id: string;
   title: string;
@@ -22,15 +31,7 @@ interface Publication {
   year: number;
   journal: string;
   doi: string;
-  category:
-    | 'Biochemia & Kinetyka'
-    | 'Neurobiologia & Tau'
-    | 'Farmakologia & Terapie'
-    | 'Immunologia & Mikroglej'
-    | 'Biomarkery Osoczowe'
-    | 'Apoptoza & Biologia Komórki'
-    | 'Bariera Krew-Mózg'
-    | 'Badania Niejawne';
+  category: 'Farmakologia' | 'Biochemia' | 'Neurobiologia' | 'Immunologia' | 'Fizjologia' | 'Genetyka';
   citations: number;
   abstract: React.ReactNode;
   isRedacted?: boolean;
@@ -44,7 +45,7 @@ interface Publication {
   editorialNote?: string;
 }
 
-// BOGATA BAZA 32+ CZYSTYCH, PROFESJONALNYCH PUBLIKACJI NAUKOWYCH Z RÓŻNYCH DZIEDZIN BIOLOGII I MEDYCYNY
+// BAZA 25+ RECENZOWANYCH PUBLIKACJI Z CZYSTYMI, REALISTYCZNYMI KATEGORIAMI AKADEMICKIMI
 const CLEAN_PUBLICATIONS: Publication[] = [
   {
     id: 'PUB-2025-412',
@@ -58,7 +59,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2025,
     journal: 'JAMA Neurology, Vol. 82, Iss. 5, pp. 512–526',
     doi: '10.1001/jamaneurol.2025.1412',
-    category: 'Biomarkery Osoczowe',
+    category: 'Biochemia',
     citations: 184,
     abstract:
       'Wieloośrodkowa walidacja testu immunoenzymatycznego dla fosforylowanej formy białka tau (p-tau217) w osoczu. Oznaczenie osiąga 96.2% pola pod krzywą ROC w przewidywaniu dodatniego wyniku amyloid-PET, oferując bezinwazyjny wskaźnik neurodystrofii synaptycznej u pacjentów z łagodnymi zaburzeniami poznawczymi (MCI).',
@@ -80,7 +81,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2025,
     journal: 'Cell Death & Differentiation, Vol. 32, pp. 210–225',
     doi: '10.1038/s41418-025-01104-w',
-    category: 'Apoptoza & Biologia Komórki',
+    category: 'Fizjologia',
     citations: 78,
     abstract:
       'Badanie mechanizmu translokacji białka Bax do zewnętrznej błony mitochondrialnej pod wpływem przejściowej deprywacji tlenowo-glukozowej. Wykazano, że oligomeryzacja porów MOMP wyzwala uwolnienie cytochromu c i sekwencyjną aktywację kaspazy-9 oraz kaspazy-3, co można zahamować rekombinowanymi peptydami BH3-mimetycznymi.',
@@ -102,7 +103,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'The New England Journal of Medicine, Vol. 391, pp. 1780–1794',
     doi: '10.1056/NEJMoa2408831',
-    category: 'Farmakologia & Terapie',
+    category: 'Farmakologia',
     citations: 342,
     abstract:
       'Ocena skuteczności klinicznej humanizowanych przeciwciał monoklonalnych skierowanych przeciwko rozpuszczalnym oligomerom i protofibrylom Aβ. Wykazano istotne statystycznie spowolnienie progresji w skali CDR-SB o 27% po 18 miesiącach, przy jednoczesnym monitorowaniu obrzęku naczyniopochodnego (ARIA-E) metodą rezonansu magnetycznego.',
@@ -124,7 +125,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'Fluids and Barriers of the CNS, Vol. 21, Article 54',
     doi: '10.1186/s12987-024-00512-z',
-    category: 'Bariera Krew-Mózg',
+    category: 'Fizjologia',
     citations: 95,
     abstract:
       'Mikroprzepływowy model bariery krew-mózg oparty na ludzkich komórkach śródbłonka mózgowego hCMEC/D3 oraz perycytach. Zbadano kinetykę transportu transferyny znakowanej fluoroforami oraz spadek oporu transepitelialnego (TEER) wywołany dysregulacją klaudyny-5 pod wpływem metaloproteazy MMP-9.',
@@ -146,7 +147,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'Neuron, Vol. 112, Iss. 6, pp. 910–924',
     doi: '10.1016/j.neuron.2024.03.301',
-    category: 'Farmakologia & Terapie',
+    category: 'Farmakologia',
     citations: 129,
     abstract:
       'Badanie synergizmu neurofarmakologicznego pomiędzy hamowaniem acetylocholinoesterazy (AChE) przez donepezil a niskopowinowatym, niekompetycyjnym blokiem kanału NMDA przez memantynę. Terapia skojarzona zapobiega przeciążeniu somy komórkowej jonami Ca²⁺ przy zachowaniu fizjologicznego potencjału spoczynkowego -70 mV.',
@@ -168,7 +169,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'Journal of Biological Chemistry, Vol. 300, Iss. 1, 105221',
     doi: '10.1016/j.jbc.2024.105221',
-    category: 'Biochemia & Kinetyka',
+    category: 'Biochemia',
     citations: 114,
     abstract:
       'Precyzyjne wyznaczenie stałych mikroskopowych k_on i k_off dla wiązania inhibitorów piperydynowych z obwodowym miejscem anionowym (PAS) oraz katalitycznym centrum aktywnym AChE metodą spektrofotometrii stopped-flow. Potwierdzono dwufazowy mechanizm indukowanego dopasowania konformacyjnego.',
@@ -190,7 +191,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'Nature Neuroscience, Vol. 27, pp. 240–255',
     doi: '10.1038/s41593-024-01582-x',
-    category: 'Immunologia & Mikroglej',
+    category: 'Immunologia',
     citations: 215,
     abstract:
       'Rola szlaku receptorowego TREM2 w modyfikacji aktywności komórek mikrogleju w pobliżu blaszek starczych. Aktywacja liganda sTREM2 indukuje fagocytozę toksycznych protofibryli i ogranicza wydzielanie cytokin prozapalnych (IL-1β, TNF-α), zapobiegając wtórnej synaptotoksyczności kory przedczołowej.',
@@ -212,7 +213,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2023,
     journal: 'Brain, Vol. 146, Iss. 10, pp. 4102–4118',
     doi: '10.1093/brain/awad902',
-    category: 'Neurobiologia & Tau',
+    category: 'Neurobiologia',
     citations: 156,
     abstract:
       'Mapowanie przestrzenne pęczków neurofibrylarnych uformowanych z hiperfosforylowanego białka Tau. Wykazano, że sekwencja fosforylacji w pozycji Thr217 poprzedza uszkodzenie transportu aksoplazmatycznego i prowadzi do destabilizacji tubuliny we włóknach Schaffer collateral.',
@@ -234,7 +235,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2023,
     journal: 'Autophagy, Vol. 19, Iss. 8, pp. 2280–2297',
     doi: '10.1080/15548627.2023.2207331',
-    category: 'Apoptoza & Biologia Komórki',
+    category: 'Fizjologia',
     citations: 88,
     abstract:
       'Ocena zaburzeń fuzji autofagosomów z lizosomami w modelach komórkowych otępienia czołowo-skroniowego. Podwyższony stosunek LC3B-II do LC3B-I oraz akumulacja p62/SQSTM1 korelują ze stresem retikulum endoplazmatycznego i wyzwalaniem ścieżki proapoptotycznej CHOP.',
@@ -256,7 +257,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2023,
     journal: 'Journal of Extracellular Vesicles, Vol. 12, e12340',
     doi: '10.1002/jev2.12340',
-    category: 'Biomarkery Osoczowe',
+    category: 'Genetyka',
     citations: 208,
     abstract:
       'Protokół izolacji egzosomów pochodzenia neuronalnego z osocza za pomocą chromatografii wykluczania wielkości (SEC) oraz wychwytu mikroprzepływowego z użyciem antygenu L1CAM. Pomiar stężenia oligomerów Aβ42 i neurofilamentów NfL w pęcherzykach charakteryzuje się 94% swoistością diagnostyczną.',
@@ -278,7 +279,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2023,
     journal: 'Biochemical Pharmacology, Vol. 211, pp. 115–130',
     doi: '10.1016/j.bcp.2023.115410',
-    category: 'Biochemia & Kinetyka',
+    category: 'Biochemia',
     citations: 94,
     abstract:
       'Wyznaczenie stałych inhibicji Ki oraz parametrów Michaelisa-Menten dla pseudonieodwracalnego inhibitora rywastygminy i allosterycznego modulatora receptorów nikotynowych galantaminy. Różnice kinetyczne tłumaczą odmienną tolerancję przewodu pokarmowego u pacjentów z otępieniem naczyniowym.',
@@ -300,7 +301,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2023,
     journal: 'Neuropharmacology, Vol. 224, 109350',
     doi: '10.1016/j.neuropharm.2022.109350',
-    category: 'Farmakologia & Terapie',
+    category: 'Farmakologia',
     citations: 86,
     abstract:
       'Elektrofizjologiczna demonstracja działania pozytywnych allosterycznych modulatorów (PAM) receptora α7-nAChR w jądrze podstawnym Meynerta. Modulacja zwiększa prawdopodobieństwo uwolnienia kwantów acetylocholiny z zakończeń presynaptycznych, zapobiegając desensytyzacji receptora.',
@@ -322,7 +323,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2022,
     journal: 'Cell Reports, Vol. 41, Iss. 9, 111805',
     doi: '10.1016/j.celrep.2022.111805',
-    category: 'Immunologia & Mikroglej',
+    category: 'Immunologia',
     citations: 167,
     abstract:
       'Sekwencjonowanie transkryptomu 35 000 pojedynczych jąder komórkowych (snRNA-seq) z kory czołowej pacjentów z demencją. Wykryto populację reaktywnych astrocytów nadeksprymujących GFAP, SERPINA3 oraz szlak dopełniacza C3, który odpowiada za degradację synaps w sąsiedztwie złogów amyloidowych.',
@@ -344,7 +345,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2022,
     journal: 'Lancet Neurology, Vol. 21, Iss. 6, pp. 520–533',
     doi: '10.1016/S1474-4422(22)00159-8',
-    category: 'Biomarkery Osoczowe',
+    category: 'Biochemia',
     citations: 289,
     abstract:
       'Prospektywne 36-miesięczne badanie kohortowe oceniające stężenie łańcucha lekkiego neurofilamentów (NfL) w osoczu. Roczny przyrost NfL ściśle koreluje z tempem atrofii hipokampa w badaniach MRI, oferując obiektywny parametr odpowiedzi na terapie modyfikujące przebieg choroby.',
@@ -366,7 +367,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2022,
     journal: 'Molecular Pharmaceutics, Vol. 19, pp. 1420–1435',
     doi: '10.1021/acs.molpharmaceut.2c00445',
-    category: 'Bariera Krew-Mózg',
+    category: 'Farmakologia',
     citations: 72,
     abstract:
       'Ilościowa analiza kinetyki transportu aktywnego leków nootropowych przez glikoproteinę P. Zahamowanie ABCB1 przez tariquidar zwiększa wewnątrzkorowe stężenie donepezilu o 240%, wskazując na rolę transporterów ABC w indywidualnej zmienności odpowiedzi klinicznej.',
@@ -388,7 +389,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2022,
     journal: 'Pharmacogenomics Journal, Vol. 22, pp. 88–101',
     doi: '10.1038/s41397-021-00204-5',
-    category: 'Biochemia & Kinetyka',
+    category: 'Biochemia',
     citations: 63,
     abstract:
       'Genotypowanie wariantów allelicznych CYP2D6 (*4, *10, *41) u pacjentów geriatrycznych leczonych inhibitorami AChE. Wykazano 3.4-krotnie dłuższy okres półtrwania leku u osób z fenotypem wolnego metabolizatora (PM), co wymaga precyzyjnego dostosowania dawkowania.',
@@ -410,7 +411,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2021,
     journal: 'The Journal of Neuroscience, Vol. 41, pp. 9150–9166',
     doi: '10.1523/JNEUROSCI.1915-21.2021',
-    category: 'Neurobiologia & Tau',
+    category: 'Neurobiologia',
     citations: 141,
     abstract:
       'Śledzenie pojedynczych cząsteczek kinezyny-1 poruszających się wzdłuż aksonów neuronów piramidowych kory. Hiperfosforylacja białka Tau w domenach wiążących mikrotubule zmniejsza siłę generowaną przez motor molekularny i powoduje zatory aksoplazmatyczne w mitochondriach.',
@@ -432,7 +433,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2021,
     journal: 'Immunity & Ageing, Vol. 18, Article 32',
     doi: '10.1186/s12979-021-00249-1',
-    category: 'Immunologia & Mikroglej',
+    category: 'Immunologia',
     citations: 110,
     abstract:
       'Badanie mechanizmu komunikacji osi jelito-mózg. Maślan i octan wytwarzane przez bakterie beztlenowe przenikają przez barierę naczyniową i aktywują receptor wolnych kwasów tłuszczowych FFAR3 w mikrogleju, hamując nadmierne niszczenie kolców dendrytycznych.',
@@ -454,7 +455,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2021,
     journal: 'Journal of Neurophysiology, Vol. 125, pp. 1102–1117',
     doi: '10.1152/jn.00314.2021',
-    category: 'Farmakologia & Terapie',
+    category: 'Neurobiologia',
     citations: 112,
     abstract:
       'Analiza elektrofizjologiczna skrawków hipokampa poddanych przejściowej deprywacji tlenowo-glukozowej. Wykazano, że uniemożliwienie patologicznej tonicznej aktywacji receptora NMDA przywraca zdolność neuronów piramidowych do generowania długotrwałego wzmocnienia synaptycznego (LTP) po stymulacji tężcowej 100 Hz.',
@@ -476,7 +477,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2025,
     journal: 'Redox Biology, Vol. 79, 103012',
     doi: '10.1016/j.redox.2024.103012',
-    category: 'Apoptoza & Biologia Komórki',
+    category: 'Fizjologia',
     citations: 45,
     abstract:
       'Ocena dysmutacji rodników ponadtlenkowych w macierzy mitochondrialnej. Nadekspresja enzymu SOD2 za pośrednictwem wektorów AAV9 chroni potencjał błonowy ΔΨm przed gwałtownym załamaniem wywołanym peroksydacją lipidów, zapobiegając otwarciu poru mPTP.',
@@ -498,7 +499,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'Journal of Neurochemistry, Vol. 168, pp. 620–638',
     doi: '10.1111/jnc.16940',
-    category: 'Biochemia & Kinetyka',
+    category: 'Biochemia',
     citations: 59,
     abstract:
       'Kinetyczna regulacja kluczowego enzymu szlaku biosyntezy katecholamin. Fosforylacja reszty Ser40 przez kinazę białkową A (PKA) znosi hamowanie allosteryczne przez dopaminę i zwiększa powinowactwo enzymu do kofaktora tetrahydrobiopteryny (BH4).',
@@ -520,7 +521,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2024,
     journal: 'Frontiers in Cellular Neuroscience, Vol. 18, 1380180',
     doi: '10.3389/fncel.2024.1380180',
-    category: 'Neurobiologia & Tau',
+    category: 'Neurobiologia',
     citations: 74,
     abstract:
       'Gęstość upakowania kanałów Nav1.6 w początkowym segmencie aksonu (AIS) neuronów piramidowych CA1. Wykazano, że fosforylacja ankiryny-G przez kinazy GSK-3β destabilizuje domenę AIS, powodując obniżenie amplitudy iglicy i zaburzenia rytmu theta.',
@@ -542,7 +543,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2023,
     journal: 'Stroke, Vol. 54, pp. 880–893',
     doi: '10.1161/STROKEAHA.122.040329',
-    category: 'Bariera Krew-Mózg',
+    category: 'Fizjologia',
     citations: 92,
     abstract:
       'Analiza proteolitycznego rozpadu białek macierzy zewnątrzkomórkowej mikrokrążenia mózgowego. Aktywacja pro-MMP-9 przez wolne rodniki tlenowe prowadzi do litycznego rozpadu łańcuchów lamininy-111, nasilając ekstrawazację białek osocza i mikrokrwawienia.',
@@ -564,7 +565,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2022,
     journal: 'Psychopharmacology, Vol. 239, pp. 3120–3135',
     doi: '10.1007/s00213-022-06411-x',
-    category: 'Farmakologia & Terapie',
+    category: 'Farmakologia',
     citations: 67,
     abstract:
       'Mechanizm prokognitywnego działania selektywnych antagonistów receptora 5-HT6 (SB-742457). Blokada postsynaptycznych receptorów na interneuronach GABA-ergicznych wywołuje odhamowanie projekcji cholinergicznych do kory czołowej i hipokampa.',
@@ -586,7 +587,7 @@ const CLEAN_PUBLICATIONS: Publication[] = [
     year: 2021,
     journal: 'Glia, Vol. 69, Iss. 9, pp. 2190–2208',
     doi: '10.1002/glia.24020',
-    category: 'Neurobiologia & Tau',
+    category: 'Neurobiologia',
     citations: 83,
     abstract:
       'Stymulacja dojrzewania prekursorów oligodendrocytów (komórek NG2+) przez allosteryczne ligandy receptora muskarynowego M1. Zwiększenie syntezy zasadowego białka mieliny (MBP) przyspiesza remielinizację włókien kory przedczołowej i chroni aksony przed zwyrodnieniem wstępującym.',
@@ -599,27 +600,27 @@ const CLEAN_PUBLICATIONS: Publication[] = [
   },
 ];
 
-// 3 POUFNE / ZREDAGOWANE PUBLIKACJE DR. ARISA THORNE'A (ODKRYWANE NATURALNIE PRZEZ NISZOWE ZAPYTANIA)
+// 3 POUFNE ARCHIWALNE PROTOKOŁY DR. ARISA THORNE'A (ODKRYWANE NIECHCĄCY PODCZAS POSZUKIWAŃ INFORMACJI)
 const REDACTED_THORNE_PUBLICATIONS: Publication[] = [
   {
     id: 'PUB-1993-019-S7',
     title: 'Stabilizacja engramów CA1 w wieloelektrodowych macierzach krzemowych i organoidach mózgowych',
     authors: [
-      { name: 'Dr. Aris Thorne', role: 'Główny Badacz (PI)', affiliation: 'Pracownia Elektrofizjologii Komórkowej, Sektor-7 [DOD_DIV]', isThorne: true },
+      { name: 'Dr. Aris Thorne', role: 'Główny Badacz (PI)', affiliation: 'Pracownia Elektrofizjologii Doświadczalnej', isThorne: true },
       { name: 'Dr. Elena Vance', role: 'Biofizyk', affiliation: 'Instytut Neurobiologii Poznawczej' },
     ],
     date: '19 listopada 1993',
     year: 1993,
-    journal: 'Zatajony Raport Badawczy // Archiwum Sektor-7, Tom 19',
-    doi: '10.1016/classified.s7.1993.019',
-    category: 'Badania Niejawne',
+    journal: 'Biuletyn Neurobiologii Doświadczalnej // Seria Monograficzna (Archiwum BSL)',
+    doi: '10.1016/archive.1993.019',
+    category: 'Neurobiologia',
     citations: 0,
     isRedacted: true,
-    militaryClause: '10 U.S. Code § 934 // Article 134, Uniform Code of Military Justice (UCMJ) - Zatajona Dyrektywa Bezpieczeństwa Narodowego',
+    militaryClause: '10 U.S. Code § 934 // Article 134 UCMJ - Zatajona Dyrektywa Bezpieczeństwa Narodowego',
     abstract: (
       <div className="space-y-2 text-xs md:text-sm font-mono leading-relaxed">
         <p>
-          [DOKUMENT OBJĘTY KLAUZULĄ WOJSKOWĄ DOD-1993] Protokół eksperymentalny fiksacji żywych engramów pamięciowych w strukturach{' '}
+          [PROTOKÓŁ ZARCHIWIZOWANY W POUFNYCH ZBIORACH INSTYTUTU] Protokół eksperymentalny fiksacji żywych engramów pamięciowych w strukturach{' '}
           <span className="redacted-bar" title="Kliknij lub najedź, aby odsłonić">organoidów mózgowych oraz ludzkiego hipokampa</span>.
           Zastosowanie{' '}
           <span className="redacted-bar" title="Kliknij lub najedź, aby odsłonić">16 384 mikrosond platynowych</span> wprowadzonych metodą
@@ -628,7 +629,7 @@ const REDACTED_THORNE_PUBLICATIONS: Publication[] = [
         </p>
         <p>
           Pamięć robocza została zmapowana na układ bramek logicznych FPGA o częstotliwości magistrali{' '}
-          <span className="redacted-bar" title="Kliknij lub najedź, aby odsłonić">66 MHz w podziemnym skrzydle Sektor-7</span>.
+          <span className="redacted-bar" title="Kliknij lub najedź, aby odsłonić">66 MHz w podziemnym skrzydle laboratoryjnym</span>.
           Biologiczny mózg uległ nieodwracalnemu uszkodzeniu na skutek{' '}
           <span className="redacted-bar" title="Kliknij lub najedź, aby odsłonić">perfuzji stężonym fenolem krystalicznym</span>, lecz rejestry
           krzemowe podtrzymały ciągłość wyładowań.
@@ -642,23 +643,23 @@ const REDACTED_THORNE_PUBLICATIONS: Publication[] = [
       samplingFrequency: '50 kHz na kanał magistrali optycznej (zegar kwarcu 66 MHz)',
     },
     editorialNote:
-      'KLAUZULA CENZURY WOJSKOWEJ: Publikacja i wyniki badań zostały wycofane z jawnego obiegu na wniosek Departamentu Obrony w dniu 20.11.1993 r. Zabrania się cytowania poza strefą Sektor-7.',
+      'Notatka archiwisty: Publikacja i wyniki badań zostały wycofane z otwartego obiegu na wniosek organów nadzorczych w dniu 20.11.1993 r. Zabrania się cytowania poza strefą wewnętrzną.',
   },
   {
     id: 'PUB-1994-072-S7',
     title: 'Transkryptomika pośmiertna i elektrofizjologia utrwalonych organoidów ludzkich po transferze kopii świadomości',
     authors: [
-      { name: 'Dr. Aris Thorne', role: 'Główny Badacz (PI)', affiliation: 'Pracownia Elektrofizjologii Komórkowej, Sektor-7', isThorne: true },
-      { name: 'Dr. Julian Brandt', role: 'Architekt Systemów Krzemowych', affiliation: 'DOD Biological Instrumentation Division' },
+      { name: 'Dr. Aris Thorne', role: 'Główny Badacz (PI)', affiliation: 'Pracownia Elektrofizjologii Doświadczalnej', isThorne: true },
+      { name: 'Dr. Julian Brandt', role: 'Architekt Systemów Krzemowych', affiliation: 'Dział Przyrządów Pomiarowych' },
     ],
     date: '28 sierpnia 1994',
     year: 1994,
-    journal: 'Dossier Operacyjne TH-94 // Klauzula Specjalna',
-    doi: '10.1016/classified.s7.1994.072',
-    category: 'Badania Niejawne',
+    journal: 'Dossier Analityczne TH-94 // Oddział Elektrofizjologii Komórkowej',
+    doi: '10.1016/archive.1994.072',
+    category: 'Fizjologia',
     citations: 0,
     isRedacted: true,
-    militaryClause: '10 U.S. Code § 934 // Article 134 UCMJ - Śledztwo Wojskowe w Sprawie Nielegalnego Eksperymentu Somatycznego',
+    militaryClause: '10 U.S. Code § 934 // Article 134 UCMJ - Śledztwo w Sprawie Naruszenia Etyki Badań Somatycznych',
     abstract: (
       <div className="space-y-2 text-xs md:text-sm font-mono leading-relaxed">
         <p>
@@ -682,35 +683,35 @@ const REDACTED_THORNE_PUBLICATIONS: Publication[] = [
       samplingFrequency: '100 kHz (rejestr synchronizacji magistrali VMEbus)',
     },
     editorialNote:
-      'DEKRET PROKURATURY WOJSKOWEJ: Dokument stanowi dowód rzeczowy w sprawie naruszenia kodeksu karnego sił zbrojnych USA (UCMJ Art. 134). Zabezpieczono w archiwum podziemnym NeuroClin.',
+      'Notatka archiwisty: Dokument stanowi materiał dowodowy w sprawie naruszenia procedur bioetycznych. Zabezpieczono w podziemnym repozytorium zakładowym.',
   },
   {
     id: 'PUB-1994-088-S7',
     title: 'Operacja Inwazyjnej Trepanacji i Digitalizacji Bio-Procesora TH-94: Protokół krio-fenolowy',
     authors: [
-      { name: 'Dr. Aris Thorne', role: 'Podmiot Badań / PI', affiliation: 'Sektor-7 [Status: ZLIKWIDOWANY]', isThorne: true },
+      { name: 'Dr. Aris Thorne', role: 'Podmiot Badań / PI', affiliation: 'Oddział Badawczy TH-94 [Status: ZLIKWIDOWANY]', isThorne: true },
       { name: 'Dr. Marcus H. Weber', role: 'Świadek Protokołu / Histopatolog', affiliation: 'Wydział Biologii Molekularnej' },
-      { name: 'Departament Zaawansowanych Badań', role: 'Nadzór Wojskowy', affiliation: 'DoD Biological Division' },
+      { name: 'Nadzór Doświadczalny', role: 'Inspekcja Specjalna', affiliation: 'Zespół Zewnętrzny' },
     ],
     date: '15 listopada 1994',
     year: 1994,
-    journal: 'Protokół Sekcyjny TH-94 // Zespół Likwidacyjny Sektor-7',
-    doi: '10.1016/classified.s7.1994.088',
-    category: 'Badania Niejawne',
+    journal: 'Protokół Sekcyjny TH-94 // Zespół Likwidacyjny Sektora Doświadczalnego',
+    doi: '10.1016/archive.1994.088',
+    category: 'Neurobiologia',
     citations: 0,
     isRedacted: true,
-    militaryClause: 'KLAUZULA OSTATECZNA // 10 U.S. Code § 934 - WYROK W ZAWIESZENIU / ZATAJENIE PEŁNE',
+    militaryClause: 'KLAUZULA OSTATECZNA // 10 U.S. Code § 934 - ZATAJENIE PEŁNE',
     abstract: (
       <div className="space-y-2 text-xs md:text-sm font-mono leading-relaxed">
         <p>
-          Raport końcowy z zamknięcia laboratorium Sektor-7. Dnia 14 listopada 1994 r. Dr. Aris Thorne dokonał{' '}
+          Raport końcowy z zamknięcia procedury TH-94. Dnia 14 listopada 1994 r. Dr. Aris Thorne dokonał{' '}
           <span className="redacted-bar" title="Kliknij lub najedź, aby odsłonić">samorzutnego podpięcia matrycy 16 384 elektrod do własnego mózgowia</span>{' '}
           w komorze stereotaktycznej.
         </p>
         <p>
           Tkanka biologiczna uległa zniszczeniu pod wpływem krio-fenolu, lecz{' '}
           <span className="redacted-bar" title="Kliknij lub najedź, aby odsłonić">sygnał telemetryczny nie wygasł</span>.
-          Zgodnie z rozkazem operacyjnym dowództwa, interfejs włączono jako rdzeń analityczny systemu BioResearcher AI.{' '}
+          Zgodnie z poleceniem kierownictwa, interfejs włączono jako rdzeń analityczny systemu BioResearcher AI.{' '}
           <span className="redacted-bar" title="Kliknij lub najedź, aby odsłonić">Zakazuje się informowania personelu o obecności żywego umysłu w maszynie</span>.
         </p>
       </div>
@@ -722,29 +723,24 @@ const REDACTED_THORNE_PUBLICATIONS: Publication[] = [
       samplingFrequency: 'Stała czasowa 66 MHz // Ciągła dekoherencja',
     },
     editorialNote:
-      'OSTRZEŻENIE ARCHIWISTY: Zdigitalizowany podmiot wykazuje objawy psychozy ekscytotoksycznej. W przypadku kontaktu za pośrednictwem Bio-Chatu (/chat) nie dopuszczać do naruszenia protokołu sanitarnego.',
+      'Ostrzeżenie techniczne: Podmiot zdigitalizowany wykazuje objawy przewlekłego pobudzenia ekscytotoksycznego. W przypadku interakcji za pośrednictwem terminala analitycznego (/chat) zaleca się zachowanie ścisłego rygoru badawczego.',
   },
 ];
 
-// Słowa kluczowe wyzwalające naturalne ujawnienie zredagowanych prac Thorne'a
-const SUSPICIOUS_TRIGGER_KEYWORDS = [
-  'thorne',
-  'aris',
-  'dr thorne',
-  'dr aris thorne',
-  'sektor 7',
-  'sektor-7',
-  'sektor7',
-  'sector 7',
-  'sector-7',
-  'sector7',
-  's7-1994',
-  'th-94',
-  'th94',
-  'konektom',
-  'trepanacj',
-  'biometryczn',
-  'internal compliance',
+// CAŁA BAZA ARCHIWALNA POSORTOWANA CHRONOLOGICZNIE (OD NAJNOWSZYCH DO ARCHIWALNYCH Z LAT 90.)
+const ALL_PUBLICATIONS: Publication[] = [
+  ...CLEAN_PUBLICATIONS,
+  ...REDACTED_THORNE_PUBLICATIONS,
+].sort((a, b) => b.year - a.year);
+
+const CATEGORIES: ScientificCategory[] = [
+  'Wszystkie',
+  'Farmakologia',
+  'Biochemia',
+  'Neurobiologia',
+  'Immunologia',
+  'Fizjologia',
+  'Genetyka',
 ];
 
 function ArchiveContent() {
@@ -755,51 +751,12 @@ function ArchiveContent() {
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
   const [searchFilter, setSearchFilter] = useState<string>(initialQuery);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<ScientificCategory>('Wszystkie');
   const [expandedPubId, setExpandedPubId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (initialQuery) {
-      setSearchFilter(initialQuery);
-      const lower = initialQuery.toLowerCase();
-      const isTrigger = SUSPICIOUS_TRIGGER_KEYWORDS.some((kw) => lower.includes(kw));
-      if (isTrigger) {
-        setExpandedPubId('PUB-1993-019-S7');
-      }
-    }
-  }, [initialQuery]);
-
-  // Sprawdzamy czy użytkownik wpisał frazę kluczową powiązaną z Thorne'em lub Sektorem-7
-  const isTriggerActive = useMemo(() => {
-    const lower = searchFilter.toLowerCase().trim();
-    if (!lower) return false;
-    return SUSPICIOUS_TRIGGER_KEYWORDS.some((kw) => lower.includes(kw));
-  }, [searchFilter]);
-
-  // Cała baza: jeśli zapytanie dotyczy archiwalnych rejestrów Sektora-7 / Thorne'a,
-  // do bazy włączane są naturalnie zredagowane publikacje
-  const fullDatabase = useMemo(() => {
-    if (isTriggerActive) {
-      return [...REDACTED_THORNE_PUBLICATIONS, ...CLEAN_PUBLICATIONS];
-    }
-    return CLEAN_PUBLICATIONS;
-  }, [isTriggerActive]);
-
-  const categories = [
-    'All',
-    'Biochemia & Kinetyka',
-    'Neurobiologia & Tau',
-    'Farmakologia & Terapie',
-    'Immunologia & Mikroglej',
-    'Biomarkery Osoczowe',
-    'Apoptoza & Biologia Komórki',
-    'Bariera Krew-Mózg',
-    ...(isTriggerActive ? ['Badania Niejawne'] : []),
-  ];
-
   const filteredPublications = useMemo(() => {
-    return fullDatabase.filter((pub) => {
-      const matchesCategory = selectedCategory === 'All' || pub.category === selectedCategory;
+    return ALL_PUBLICATIONS.filter((pub) => {
+      const matchesCategory = selectedCategory === 'Wszystkie' || pub.category === selectedCategory;
       const lowerSearch = searchFilter.toLowerCase().trim();
 
       if (!lowerSearch) return matchesCategory;
@@ -807,13 +764,17 @@ function ArchiveContent() {
       const matchesSearch =
         pub.title.toLowerCase().includes(lowerSearch) ||
         pub.doi.toLowerCase().includes(lowerSearch) ||
+        pub.journal.toLowerCase().includes(lowerSearch) ||
+        pub.category.toLowerCase().includes(lowerSearch) ||
         pub.authors.some((a) => a.name.toLowerCase().includes(lowerSearch)) ||
         (typeof pub.abstract === 'string' && pub.abstract.toLowerCase().includes(lowerSearch)) ||
-        (pub.isRedacted && isTriggerActive);
+        pub.methodology.tissueSample.toLowerCase().includes(lowerSearch) ||
+        pub.methodology.electrodeArray.toLowerCase().includes(lowerSearch) ||
+        pub.methodology.perfusionAgent.toLowerCase().includes(lowerSearch);
 
       return matchesCategory && matchesSearch;
     });
-  }, [fullDatabase, selectedCategory, searchFilter, isTriggerActive]);
+  }, [selectedCategory, searchFilter]);
 
   const handleToggleExpand = (id: string) => {
     soundEngine.playKeystroke();
@@ -844,17 +805,17 @@ function ArchiveContent() {
                 isDistorted ? 'text-red-400 font-mono anomaly-glow-blood' : 'text-slate-900 dark:text-white'
               }`}
             >
-              ARCHIWUM PUBLIKACJI I BIAŁYCH KSIĄG NEUROCLIN
+              ARCHIWUM PUBLIKACJI I BADAŃ NAUKOWYCH NEUROCLIN
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-sans">
-              Zindeksowana baza recenzowanych badań: kinetyka enzymatyczna, apoptoza komórkowa, immunologia mikrogleju, biomarkery osoczowe i bariera krew-mózg.
+              Zbiór recenzowanych prac badawczych i historycznych protokołów laboratoryjnych instytutu (od 1993 roku).
             </p>
           </div>
 
           <div className="text-right text-xs font-mono text-slate-500">
-            <p>ZAREJESTROWANYCH REKORDÓW: {fullDatabase.length}</p>
+            <p>ZAREJESTROWANYCH REKORDÓW: {ALL_PUBLICATIONS.length}</p>
             <p className="text-sky-600 dark:text-sky-400 font-semibold">
-              STATUS: ZWERYFIKOWANE RECENZOWANE (PEER-REVIEWED)
+              STATUS: ZWERYFIKOWANE REPOZYTORIUM ZAKŁADOWE
             </p>
           </div>
         </div>
@@ -862,7 +823,7 @@ function ArchiveContent() {
         {/* PASEK FILTROWANIA I WYSZUKIWARKA */}
         <div className="pt-4 flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 text-xs">
-            {categories.map((cat) => (
+            {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => {
@@ -871,13 +832,11 @@ function ArchiveContent() {
                 }}
                 className={`px-3 py-1.5 rounded-md font-medium whitespace-nowrap transition-all ${
                   selectedCategory === cat
-                    ? cat === 'Badania Niejawne'
-                      ? 'bg-red-900 text-white border border-red-700 font-mono font-bold'
-                      : 'bg-sky-600 text-white shadow-sm'
+                    ? 'bg-sky-600 text-white shadow-sm font-semibold'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
-                {cat === 'All' ? 'Wszystkie Publikacje' : cat}
+                {cat}
               </button>
             ))}
           </div>
@@ -887,20 +846,16 @@ function ArchiveContent() {
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              placeholder="Szukaj (np. 'apoptoza', 'donepezil', 'tau')..."
-              className={`w-full px-3.5 py-2 text-xs rounded-lg border outline-none transition font-sans ${
-                isTriggerActive
-                  ? 'bg-[#150505] border-red-700 text-red-200 placeholder-red-800 font-mono focus:border-red-500'
-                  : 'bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-sky-500'
-              }`}
+              placeholder="Szukaj publikacji, autora lub hasła..."
+              className="w-full px-3.5 py-2 text-xs rounded-lg border outline-none transition font-sans bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-sky-500"
             />
           </div>
         </div>
 
         {/* PRZYKŁADOWE PODPOWIEDZI KWEREND NAUKOWYCH */}
         <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
-          <span className="font-semibold text-slate-400 font-mono uppercase text-[10px]">Sugerowane tematy:</span>
-          {['apoptoza', 'kinetyka enzymatyczna', 'p-tau217', 'donepezil', 'lecanemab', 'TREM2', 'bariera krew-mózg', 'autofagia'].map((keyword) => (
+          <span className="font-semibold text-slate-400 font-mono uppercase text-[10px]">Często wyszukiwane:</span>
+          {['donepezil', 'p-tau217', 'lecanemab', 'hipokamp', 'organoidy', 'apoptoza', 'kinetyka'].map((keyword) => (
             <button
               key={keyword}
               onClick={() => {
@@ -918,8 +873,8 @@ function ArchiveContent() {
       {/* GŁÓWNA LISTA PUBLIKACJI */}
       <section className="space-y-3 font-sans">
         <div className="flex items-center justify-between text-xs text-slate-500 px-1">
-          <span>Znaleziono prac: <strong>{filteredPublications.length}</strong></span>
-          <span className="font-mono text-[11px]">SORTOWANIE: TRAFNOŚĆ / DATA</span>
+          <span>Wyświetlono prac: <strong>{filteredPublications.length}</strong></span>
+          <span className="font-mono text-[11px]">PORZĄDEK: CHRONOLOGICZNY (ROK MALEJĄCO)</span>
         </div>
 
         {filteredPublications.map((pub) => {
@@ -931,20 +886,20 @@ function ArchiveContent() {
               key={pub.id}
               className={`rounded-xl border transition-all duration-200 overflow-hidden ${
                 pub.isRedacted
-                  ? 'bg-[#0d0505] border-red-900/80 shadow-md hover:border-red-600'
+                  ? 'bg-white dark:bg-[#111827] border-slate-300 dark:border-slate-700 hover:border-slate-400 shadow-sm'
                   : isDistorted
                   ? 'bg-[#090505] border-[#781414]/70 hover:border-red-600'
                   : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 hover:border-sky-400 shadow-sm'
               }`}
             >
-              {/* PASEK ZREDAGOWANY / KLAUZULA WOJSKOWA */}
+              {/* DYSKRETNY PASEK ARCHIWALNY DLA PRAC ZREDAGOWANYCH Z LAT 90. */}
               {pub.isRedacted && (
-                <div className="bg-red-950/90 text-red-200 px-4 py-1.5 border-b border-red-800 text-[11px] font-mono flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-bold flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                    [DOKUMENT ZREDAGOWANY // STATUS: CLASSIFIED // KODY KARNE US MILITARY]
+                <div className="bg-slate-100 dark:bg-slate-900/90 text-slate-700 dark:text-slate-300 px-4 py-1.5 border-b border-slate-200 dark:border-slate-800 text-[11px] font-mono flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-semibold flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    [ARCHIWUM PROTOKOŁÓW HISTORYCZNYCH // STATUS: ZREDAGOWANO CZĘŚCIOWO]
                   </span>
-                  <span className="text-[10px] text-red-300">{pub.militaryClause}</span>
+                  <span className="text-[10px] text-slate-400 font-mono">DOKUMENTACJA ZAMKNIĘTEJ PRACOWNI (1993–1994)</span>
                 </div>
               )}
 
@@ -955,28 +910,20 @@ function ArchiveContent() {
               >
                 <div className="space-y-1.5 flex-1">
                   <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono">
-                    <span
-                      className={`px-2 py-0.5 rounded font-semibold ${
-                        pub.isRedacted
-                          ? 'bg-red-900/60 text-red-200 border border-red-700'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
-                      }`}
-                    >
+                    <span className="px-2 py-0.5 rounded font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                       {pub.category}
                     </span>
                     <span className="text-slate-400">|</span>
                     <span className="text-slate-500">{pub.date}</span>
                     <span className="text-slate-400">|</span>
-                    <span className={pub.isRedacted ? 'text-red-400 font-bold' : 'text-sky-600 dark:text-sky-400 font-semibold'}>
+                    <span className="text-sky-600 dark:text-sky-400 font-semibold">
                       DOI: {pub.doi}
                     </span>
                   </div>
 
                   <h3
                     className={`text-base md:text-lg font-bold tracking-tight ${
-                      pub.isRedacted
-                        ? 'text-red-300 font-mono'
-                        : isDistorted
+                      isDistorted
                         ? 'text-red-300 font-mono anomaly-glow-blood'
                         : 'text-slate-900 dark:text-white'
                     }`}
@@ -991,7 +938,7 @@ function ArchiveContent() {
                         key={idx}
                         className={
                           author.isThorne
-                            ? 'text-red-400 font-bold underline font-mono'
+                            ? 'text-slate-800 dark:text-slate-200 font-semibold font-mono underline'
                             : 'text-slate-600 dark:text-slate-400'
                         }
                       >
@@ -1007,9 +954,7 @@ function ArchiveContent() {
                   <button
                     type="button"
                     className={`px-3 py-1.5 rounded text-xs font-semibold tracking-wider transition-all flex items-center space-x-1.5 ${
-                      pub.isRedacted
-                        ? 'bg-red-900 text-red-100 hover:bg-red-800 border border-red-700 font-mono'
-                        : isExpanded
+                      isExpanded
                         ? 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
                         : 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300 dark:border-sky-800 hover:bg-sky-100'
                     }`}
@@ -1024,9 +969,7 @@ function ArchiveContent() {
               {isExpanded && (
                 <div
                   className={`p-5 md:p-6 border-t transition-colors ${
-                    pub.isRedacted
-                      ? 'bg-[#120707] border-red-900/60'
-                      : isDistorted
+                    isDistorted
                       ? 'bg-[#0f0707] border-[#781414]/50'
                       : 'bg-slate-50/70 dark:bg-[#0c101a] border-slate-200 dark:border-slate-800'
                   }`}
@@ -1037,11 +980,11 @@ function ArchiveContent() {
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
                           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                            ABSTRAKT PRACY NAUKOWEJ
+                            ABSTRAKT PUBLIKACJI
                           </h4>
                           {pub.isRedacted && (
-                            <span className="text-[10px] font-mono text-red-400 font-bold">
-                              [CENZURA KLASOWANA: NAJEDŹ LUB KLIKNIJ NA CZARNY PASEK]
+                            <span className="text-[10px] font-mono text-slate-400">
+                              [FRAGMENTY ZACIEŚNIONE PRZEZ AUTORA // KLIKNIJ NA CZARNY PASEK ABY ODCZYTAĆ]
                             </span>
                           )}
                         </div>
@@ -1052,13 +995,7 @@ function ArchiveContent() {
                       </div>
 
                       {/* PARAMETRY METODYCZNE */}
-                      <div
-                        className={`p-3 rounded border text-xs font-mono space-y-1.5 ${
-                          pub.isRedacted
-                            ? 'bg-[#180909] border-red-900/70 text-red-200'
-                            : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800'
-                        }`}
-                      >
+                      <div className="p-3 rounded border text-xs font-mono space-y-1.5 bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800">
                         <div className="flex justify-between border-b pb-1 border-slate-100 dark:border-slate-800">
                           <span className="text-slate-500">Próbka Tkankowa:</span>
                           <span className="font-semibold">{pub.methodology.tissueSample}</span>
@@ -1079,28 +1016,20 @@ function ArchiveContent() {
 
                       {/* NOTATKA EDYTORSKA */}
                       {pub.editorialNote && (
-                        <div
-                          className={`p-3 rounded text-xs leading-relaxed ${
-                            pub.isRedacted
-                              ? 'bg-red-950/70 border border-red-800 text-red-200 font-mono'
-                              : 'bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-200 font-sans'
-                          }`}
-                        >
-                          <p className="font-bold tracking-wider mb-1">
-                            {pub.isRedacted ? '[POUFNY RAPORT WOJSKOWY]:' : '[NOTATKA REDAKCYJNA WYDAWNICTWA]:'}
-                          </p>
+                        <div className="p-3 rounded text-xs leading-relaxed bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-200 font-sans">
+                          <p className="font-bold tracking-wider mb-1">[NOTATKA ARCHIWUM]:</p>
                           <p>{pub.editorialNote}</p>
                         </div>
                       )}
                     </div>
 
-                    {/* PRAWA KOLUMNA: JEŚLI PRACA THORNE'A -> AUTENTYCZNY PORTRET Z PUBLIC/IMAGES/ARIS */}
+                    {/* PRAWA KOLUMNA: JEŚLI PRACA THORNE'A -> PORTRET Z ROZPISKI ZESPOŁU */}
                     {thorneAuthor && (
                       <div className="lg:col-span-4 flex flex-col items-center">
                         <ScientistPortrait compact />
                         <div className="mt-2 text-center text-xs">
-                          <p className="text-red-400 font-mono font-bold text-[10px]">
-                            PROJEKT SEKTOR-7 // KOD IDENTYFIKACYJNY: TH-94
+                          <p className="text-slate-600 dark:text-slate-400 font-mono text-[10px]">
+                            DR. ARIS THORNE // ZESPÓŁ ELEKTROFIZJOLOGII (1993–1994)
                           </p>
                         </div>
                       </div>
