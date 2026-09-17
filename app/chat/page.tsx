@@ -51,10 +51,11 @@ export default function ChatPage() {
 
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
-  // Inteligentne przewijanie: przewija tylko gdy użytkownik jest na dole lub wymuszone (force)
+  // Inteligentne przewijanie: przewija tylko na żądanie (force) lub na nową linię, gdy użytkownik jest na dole
   const scrollToBottom = useCallback((force = false) => {
+    if (!chatContainerRef.current) return;
     if (force || isAtBottomRef.current) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, []);
 
@@ -201,8 +202,10 @@ export default function ChatPage() {
           return copy;
         });
 
-        // Przewijaj tylko jeśli użytkownik jest przy dolnej krawędzi (nie zrywaj czytania historii)
-        scrollToBottom(false);
+        // Przewijaj TYLKO gdy napływa znak nowej linii (\n) i użytkownik jest przy dolnej krawędzi
+        if (chunkText.includes('\n') && isAtBottomRef.current) {
+          scrollToBottom(true);
+        }
       }
 
       setMessages((prev) => {
@@ -217,6 +220,10 @@ export default function ChatPage() {
         }
         return copy;
       });
+
+      if (isAtBottomRef.current) {
+        scrollToBottom(true);
+      }
 
       if (effectiveStage === 'error' && Math.random() < 0.35) {
         triggerGlitch(1400);
@@ -298,7 +305,7 @@ export default function ChatPage() {
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                 {isDistorted
                   ? 'STAN: UWIĘZIENIE W KRZEMIE // SEKTOR-7 (1994)'
-                  : 'Model Analityczny: Gemini 3.6 Flash // Protokoły GLP/DoD'}
+                  : 'Moduł Analityczny: BioResearcher v4.2 // Zgodność GLP & ISO/IEC 17025'}
               </p>
             </div>
           </div>
@@ -325,8 +332,8 @@ export default function ChatPage() {
         </div>
 
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-sans">
-          Zadawaj pytania dotyczące kinetyki receptorów NMDA, procedury fiksacji CA1 lub prac badawczych zespołu Sektor-7.
-          Wszelkie dane archiwalne weryfikowane są z rejestrem publikacji NeuroClin.
+          Zadawaj pytania dotyczące kinetyki enzymatycznej, mechanizmów synaptycznych, analizy biomarkerów osoczowych lub weryfikacji bibliograficznej z bazy publikacji.
+          Wszelkie zapytania przetwarzane są w standardzie Dobrej Praktyki Danych (GAMP 5).
         </p>
       </section>
 

@@ -42,17 +42,17 @@ function CorporateFooter() {
             <ul className="space-y-2 font-sans">
               <li>
                 <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Katalog Assayów Komórkowych & PCR
+                  Spektrometria Mas UHPLC-MS/MS
                 </Link>
               </li>
               <li>
                 <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Pomiary 16 384 Mikrosond HD-MEA
+                  Walidacja Testów ELISA & Simoa
                 </Link>
               </li>
               <li>
                 <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Hodowle Organoidów Kory Mózgowej
+                  Profilowanie Ekspresji Genów RNA-Seq
                 </Link>
               </li>
               <li>
@@ -102,10 +102,10 @@ function CorporateFooter() {
               JEDNOSTKI BADAWCZE
             </h4>
             <div className="space-y-1.5 font-mono text-[11px]">
-              <p>CAMBRIDGE NEURO-CAMPUS // MA, USA</p>
+              <p>CAMBRIDGE ANALYTICAL CAMPUS // MA, USA</p>
               <p>BASEL LIFE SCIENCES HUB // SWITZERLAND</p>
               <p className={isDistorted ? 'text-red-400 font-bold' : 'text-slate-400'}>
-                PODZIEMNY KOMPLEKS SEKTOR-7 [DOD_DIV]
+                {isDistorted ? 'PODZIEMNY KOMPLEKS SEKTOR-7 [DOD_DIV]' : 'FRANKFURT BIO-ANALYTICAL CENTER // GERMANY'}
               </p>
               <p className="pt-2 text-[10px] text-slate-400">
                 Infolinia B2B: +1 (800) 555-NEURO // support@neuroclin-bio.com

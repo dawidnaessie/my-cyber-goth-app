@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { useSystemState } from '@/components/SystemStateContext';
 import { soundEngine } from '@/lib/soundEngine';
 
-interface AssayService {
+interface AnalyticalService {
   id: string;
   name: string;
-  category: 'Biomarkery' | 'Genomika' | 'Elektrofizjologia' | 'Modele 3D' | 'Obrazowanie';
+  category: 'Chromatografia & Spektrometria' | 'Immunochemia & Testy Biochemiczne' | 'Biologia Molekularna & Genomika' | 'Kinetyka & Biofizyka' | 'Testy Komórkowe In Vitro';
   basePriceUsd: number;
   unit: string;
   turnaroundDays: number;
@@ -17,102 +17,102 @@ interface AssayService {
   recommendedFor: string;
 }
 
-const ASSAYS_CATALOG: AssayService[] = [
+const ANALYTICAL_SERVICES: AnalyticalService[] = [
   {
-    id: 'assay-exosome',
-    name: 'Izolacja Egzosomów i Analiza NTA (Exosome Profiling)',
-    category: 'Biomarkery',
-    basePriceUsd: 1850,
-    unit: 'seria 10 próbek osocza/CSF',
-    turnaroundDays: 7,
-    description:
-      'Wysokooczyszczona frakcjonacja pęcherzyków zewnątrzkomórkowych metodą SEC połączona z Nanoparticle Tracking Analysis (NTA) oraz immuno-oznaczaniem markerów neurodegeneracji.',
-    specifications: [
-      'Detekcja tetraspanin: CD9, CD63, CD81',
-      'Pomiar stężenia p-tau217 oraz oligomerów amyloid-β42',
-      'Rozdzielczość wielkości cząstek: 30–800 nm',
-    ],
-    recommendedFor: 'Diagnostyka wczesnych stadiów chorób otępiennych i monitorowanie terapii monoklonalnych.',
-  },
-  {
-    id: 'assay-ddpcr',
-    name: 'Wysokoprzepustowy Digital Droplet PCR (ddPCR Screening)',
-    category: 'Genomika',
-    basePriceUsd: 920,
-    unit: 'płytka 96-dołkowa',
+    id: 'serv-lcms',
+    name: 'Wysokorozdzielcza Spektrometria Mas & Chromatografia (UHPLC-MS/MS)',
+    category: 'Chromatografia & Spektrometria',
+    basePriceUsd: 1450,
+    unit: 'seria do 20 próbek',
     turnaroundDays: 5,
     description:
-      'Absolutna kwantyfikacja kopii kwasów nukleinowych bez konieczności stosowania krzywych wzorcowych. Skrajna czułość wykrywania mutacji w genach APP, PSEN1, MAPT oraz alleli APOE.',
+      'Kwantyfikacja farmakokinetyczna, analiza zanieczyszczeń śladowych, profilowanie metabolitów oraz oznaczenia czystości chemicznej API w złożonych matrycach biologicznych zgodnie z GLP.',
     specifications: [
-      'Generowanie do 20 000 kropli emulsyjnych na dołek',
-      'Czułość analityczna: 0.001% zmutowanych alleli',
-      'Panel multipleksowy: APOE-ε4 / MAPT / SNCA',
+      'Platformy Sciex Triple Quad 6500+ oraz Agilent 1290 Infinity II UHPLC',
+      'Granica oznaczalności (LOQ) poniżej 0.05 ng/mL dla większości analitów',
+      'Pełna walidacja metodyki zgodnie z wytycznymi ICH M10 / FDA',
     ],
-    recommendedFor: 'Screening genetyczny pacjentów w badaniach klinicznych fazy I–III.',
+    recommendedFor: 'Badania biodostępności, transfery analityczne oraz kontrola jakości formulacji farmaceutycznych.',
   },
   {
-    id: 'assay-hd-mea',
-    name: 'Elektrofizjologia HD-MEA (16 384 Mikrosondy Krzemowe)',
-    category: 'Elektrofizjologia',
-    basePriceUsd: 4500,
-    unit: 'eksperyment 48h in vitro',
-    turnaroundDays: 10,
+    id: 'serv-immunoassay',
+    name: 'Rozwój i Walidacja Testów Immunoenzymatycznych (ELISA & Simoa HD-X)',
+    category: 'Immunochemia & Testy Biochemiczne',
+    basePriceUsd: 1200,
+    unit: 'płytka 96-dołkowa / seria Simoa',
+    turnaroundDays: 6,
     description:
-      'Wielkoskalowe mapowanie lokalnych potencjałów polowych (LFP) i wyładowań jednostkowych w żywych preparatach neuronalnych CA1 oraz organoidach kory mózgowej z rozdzielczością poniżej 50 µs.',
+      'Opracowywanie czułych testów kanapkowych (sandwich ELISA), multipleksowych paneli fluorescencyjnych oraz ultra-czułych oznaczeń pojedynczych cząsteczek białkowych (Simoa) w surowicy, osoczu i lizatach.',
     specifications: [
-      'Gęstość elektrod: 3 150 elektrod / mm²',
-      'Równoległa rejestracja do 16 384 kanałów ze sprzężeniem stałoprądowym',
-      'Analiza rytmów theta (4–8 Hz) oraz oscylacji gamma (40 Hz)',
+      'Precyzja wewnątrzseryjna CV < 4.5%, międzyseryjna CV < 8.0%',
+      'Minimalna objętość próbki: 15 µL matrycy',
+      'Testy specyficzności krzyżowej i interferencji endogennych',
     ],
-    recommendedFor: 'Badania neurotoksyczności, fiksacji synaptycznej i kinetyki bloku magnezowego NMDA.',
+    recommendedFor: 'Ilościowe monitorowanie markerów biologicznych w fazie przedklinicznej i klinicznej.',
   },
   {
-    id: 'assay-organoids',
-    name: 'Hodowla i Różnicowanie Organoidów Kory Mózgowej (3D iPSC)',
-    category: 'Modele 3D',
-    basePriceUsd: 6200,
-    unit: 'partia 6 organoidów (cykl 60 dni)',
-    turnaroundDays: 60,
+    id: 'serv-rna-seq',
+    name: 'Targetowane Profilowanie Ekspresji Genów (Targeted RNA-Seq & RT-qPCR)',
+    category: 'Biologia Molekularna & Genomika',
+    basePriceUsd: 980,
+    unit: 'panel 24 próbek (do 96 celów)',
+    turnaroundDays: 7,
     description:
-      'Generowanie trójwymiarowych sferoidów neuronalnych z komórek iPSC pacjentów. Modelowanie architektury kory czołowej i formacji hipokampa z zachowaniem spontanicznej synchronizacji synaps.',
+      'Ilościowa analiza transkryptomiczna metodą cyfrowego droplet PCR (ddPCR) oraz sekwencjonowania celowanego. Precyzyjna normalizacja do stabilnych genów referencyjnych.',
     specifications: [
-      'Ekspresja markerów: NeuN, MAP2, GFAP, vGlut1',
-      'Formowanie funkcjonalnych mikrokolumn neuronalnych',
-      'Możliwość integracji z matrycą mikrosond krzemowych',
+      'Aparatura Bio-Rad QX200 ddPCR oraz Applied Biosystems QuantStudio 7',
+      'Wykrywanie zmian ekspresji od poziomu 1.2-krotnej zmiany (fold change)',
+      'Automatyczny raport bioinformatyczny z analizą $\\Delta\\Delta C_t$',
     ],
-    recommendedFor: 'Testowanie leków modulujących plastyczność i mechanizmy naprawy neurodegeneracji.',
+    recommendedFor: 'Weryfikacja celów terapeutycznych, badania wyciszania genów (siRNA/CRISPR) oraz screening transkryptomiczny.',
   },
   {
-    id: 'assay-scrna',
-    name: 'Transkryptomika Pojedynczych Komórek (scRNA-seq 10x Genomics)',
-    category: 'Genomika',
-    basePriceUsd: 3400,
-    unit: 'biblioteka 10 000 komórek',
-    turnaroundDays: 14,
-    description:
-      'Pojedynczokomórkowe profilowanie transkryptomu tkanki mózgowej i kultur organotypowych. Identyfikacja subpopulacji mikrogleju zaangażowanego w degradację blaszek amyloidowych przez szlak TREM2.',
-    specifications: [
-      'Głębokość sekwencjonowania: 50 000 odczytów / komórkę',
-      'Pełna dekonwolucja fenotypów mikrogleju (M1 vs. M2 / DAM)',
-      'Mapowanie ekspresji podjednostek receptora NMDA (GluN2A / GluN2B)',
-    ],
-    recommendedFor: 'Określanie celów molekularnych dla immunoterapii neurozapalenia.',
-  },
-  {
-    id: 'assay-calcium',
-    name: 'Dynamiczne Obrazowanie Wapniowe Live-Cell (Fura-2 AM)',
-    category: 'Obrazowanie',
-    basePriceUsd: 1250,
-    unit: 'seria 5 rejestracji dynamicznych',
+    id: 'serv-spr-kinetics',
+    name: 'Kinetyka Wiązań Molekularnych w Czasie Rzeczywistym (Biacore T200 SPR)',
+    category: 'Kinetyka & Biofizyka',
+    basePriceUsd: 2100,
+    unit: 'analiza interakcji ligand-receptor (chip CM5)',
     turnaroundDays: 4,
     description:
-      'Kwantyfikacja napływu jonów Ca²⁺ w somie neuronów piramidowych podczas stymulacji agonistami receptorów glutaminianowych. Pomiary kinetyki powrotu do homeostazy i ryzyka ekscytotoksyczności.',
+      'Bezznacznikowy pomiar stałych kinetycznych asocjacji ($k_a$), dysocjacji ($k_d$) oraz stałej równowagi ($K_D$) zjawiska wiązania przeciwciał, aptamerów i drobnocząsteczkowych inhibitorów do białek docelowych.',
     specifications: [
-      'Ratiometryczny wskaźnik Fura-2 AM (340/380 nm)',
-      'Rejestracja w warstwach CA1 hipokampa',
-      'Wyznaczanie stałych czasowych usuwania wapnia (τ_Ca)',
+      'Zakres oznaczania $K_D$: od 1 pM do 1 mM',
+      'Termostatowanie celi pomiarowej w zakresie 4–45°C',
+      'Dopasowanie nieliniowe do modelu wiązania 1:1 Langmuira',
     ],
-    recommendedFor: 'Weryfikacja bezpieczeństwa nowych cząsteczek blokujących receptory NMDA.',
+    recommendedFor: 'Selekcja wiodących cząsteczek leczniczych, charakterystyka epitopowa przeciwciał monoklonalnych.',
+  },
+  {
+    id: 'serv-cytotox',
+    name: 'Testy Żywotności Komórkowej & Modele Przepuszczalności In Vitro',
+    category: 'Testy Komórkowe In Vitro',
+    basePriceUsd: 850,
+    unit: 'panel 3 stężeń / 4 linie komórkowe',
+    turnaroundDays: 5,
+    description:
+      'Standardowe panele oceny cytotoksyczności komórkowej (test MTT, uwalnianie LDH, fluorymetryczny pomiar ATP CellTiter-Glo) oraz badania transportu przez barierę nabłonkową w komorach Transwell (Caco-2 / MDCK).',
+    specifications: [
+      'Wyznaczanie wartości $IC_{50}$ oraz $EC_{50}$ z 8-punktowych krzywych stężeń',
+      'Pomiary oporu transepitelialnego (TEER > 350 $\\Omega \\cdot \\text{cm}^2$)',
+      'Kontrole dodatnie i ujemne zwalidowane według norm ISO 10993-5',
+    ],
+    recommendedFor: 'Wczesny screening bezpieczeństwa związków chemicznych i formulacji kosmetycznych.',
+  },
+  {
+    id: 'serv-lims-cloud',
+    name: 'Wdrożenie Oprogramowania BioResearcher Analytics & Integracja LIMS',
+    category: 'Kinetyka & Biofizyka',
+    basePriceUsd: 3200,
+    unit: 'pakiet licencji korporacyjnej + integracja API',
+    turnaroundDays: 14,
+    description:
+      'Chmurowa platforma przetwarzania surowych danych bioanalitycznych, automatycznego dopasowywania krzywych kalibracyjnych, walidacji statystycznej oraz bezpośredniej synchronizacji z systemami LIMS klienta.',
+    specifications: [
+      'Pełna zgodność z normą FDA 21 CFR Part 11 (Audit Trail, podpisy cyfrowe)',
+      'Wbudowany asystent analityczny BioResearcher AI wspomagający interpretację',
+      'Eksport raportów walidacyjnych w formatach PDF/A i certyfikowanym XML',
+    ],
+    recommendedFor: 'Laboratoria dążące do automatyzacji raportowania i przejścia na standardy Dobrej Praktyki Danych (GAMP 5).',
   },
 ];
 
@@ -120,362 +120,298 @@ export default function ServicesPage() {
   const { opticsOn, sanityStage } = useSystemState();
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
-  const [selectedAssayIds, setSelectedAssayIds] = useState<string[]>(['assay-exosome', 'assay-hd-mea']);
-  const [sampleMultiplier, setSampleMultiplier] = useState<number>(1);
-  const [turnaroundTier, setTurnaroundTier] = useState<'standard' | 'express' | 'rush'>('standard');
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [orderConfirmation, setOrderConfirmation] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('Wszystkie');
+  const [selectedServiceId, setSelectedServiceId] = useState<string>(ANALYTICAL_SERVICES[0].id);
 
-  const toggleSelectAssay = (id: string) => {
-    soundEngine.playKeystroke();
-    setSelectedAssayIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
+  // Kalkulator zapytania ofertowego (B2B Request for Quotation)
+  const [sampleType, setSampleType] = useState<string>('Osocze / Surowica krwi');
+  const [sampleCount, setSampleCount] = useState<number>(20);
+  const [needGlpCompliance, setNeedGlpCompliance] = useState<boolean>(true);
+  const [quoteSubmitted, setQuoteSubmitted] = useState<boolean>(false);
 
-  const turnaroundMultiplier = turnaroundTier === 'rush' ? 1.5 : turnaroundTier === 'express' ? 1.25 : 1.0;
+  const categories = [
+    'Wszystkie',
+    'Chromatografia & Spektrometria',
+    'Immunochemia & Testy Biochemiczne',
+    'Biologia Molekularna & Genomika',
+    'Kinetyka & Biofizyka',
+    'Testy Komórkowe In Vitro',
+  ];
 
-  const totalBasePrice = selectedAssayIds.reduce((sum, id) => {
-    const assay = ASSAYS_CATALOG.find((a) => a.id === id);
-    return sum + (assay ? assay.basePriceUsd : 0);
-  }, 0);
+  const filteredServices = ANALYTICAL_SERVICES.filter(
+    (s) => selectedCategory === 'Wszystkie' || s.category === selectedCategory
+  );
 
-  const calculatedTotal = Math.round(totalBasePrice * sampleMultiplier * turnaroundMultiplier);
+  const currentService = ANALYTICAL_SERVICES.find((s) => s.id === selectedServiceId) || ANALYTICAL_SERVICES[0];
 
-  const handlePlaceOrder = () => {
-    soundEngine.playKeystroke();
-    const quoteId = `RFQ-2026-${Math.floor(1000 + Math.random() * 9000)}-NC`;
-    setOrderConfirmation(quoteId);
-    setModalOpen(true);
-  };
+  const estimatedTotalUsd = Math.round(
+    currentService.basePriceUsd * Math.max(1, Math.ceil(sampleCount / 10)) * (needGlpCompliance ? 1.25 : 1.0)
+  );
 
   return (
-    <div className="flex-1 flex flex-col space-y-6 font-sans">
-      {/* HEADER USŁUG */}
+    <div className="flex-1 flex flex-col space-y-8 font-sans">
+      {/* 1. NAGŁÓWEK SEKCI USŁUG B2B */}
       <section
-        className={`p-5 md:p-7 rounded-xl border transition-all ${
+        className={`p-6 sm:p-8 md:p-10 rounded-2xl border transition-all duration-300 ${
           isDistorted
             ? 'bg-[#090505] border-[#781414] anomaly-border-blood text-[#e6c2b8]'
             : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
         }`}
       >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4 border-slate-200 dark:border-slate-800">
-          <div>
-            <div className="flex items-center space-x-2 text-xs text-slate-500 mb-1">
-              <Link href="/" className="hover:text-sky-600">Home</Link>
-              <span>&gt;</span>
-              <span className="font-semibold text-slate-700 dark:text-slate-300">Usługi Badawcze B2B</span>
-            </div>
-            <h1
-              className={`text-xl md:text-2xl font-extrabold tracking-tight ${
-                isDistorted ? 'text-red-400 font-mono anomaly-glow-blood' : 'text-slate-900 dark:text-white'
-              }`}
-            >
-              USŁUGI BADAWCZE & ASSAYE KONTRAKTOWE (CRO)
-            </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-sans">
-              Akredytowane procedury analityczne: izolacja egzosomów, screening mikromacierzowy HD-MEA oraz zaawansowane hodowle organoidów mózgowych.
-            </p>
+        <div className="max-w-4xl space-y-3">
+          <div className="flex items-center space-x-2 text-xs text-slate-500 mb-1">
+            <Link href="/" className="hover:text-sky-600">Home</Link>
+            <span>&gt;</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Usługi Analityczne & CRO</span>
           </div>
 
-          <div className="text-right text-xs font-mono text-slate-500 space-y-0.5">
-            <p className="font-bold text-sky-600 dark:text-sky-400">AKREDYTACJA GLP / CLIA / ISO 9001</p>
-            <p>Laboratoria: Cambridge / Basel</p>
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-semibold bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+            <span className="w-2 h-2 rounded-full bg-sky-500" />
+            <span>KONTRAKTOWE USŁUGI BADAWCZE (CRO) & CERTYFIKACJA GLP</span>
           </div>
-        </div>
 
-        {/* METRYKI LABORATORYJNE */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 text-xs">
-          <div className="p-2.5 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <p className="text-[10px] text-slate-500 font-mono">Dostępność Macierzy HD-MEA:</p>
-            <p className="font-bold text-slate-800 dark:text-slate-200">16 384 Kanały // Gotowe</p>
-          </div>
-          <div className="p-2.5 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <p className="text-[10px] text-slate-500 font-mono">Czystość Egzosomów:</p>
-            <p className="font-bold text-emerald-600 dark:text-emerald-400">&gt; 98.6% SEC-NTA</p>
-          </div>
-          <div className="p-2.5 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <p className="text-[10px] text-slate-500 font-mono">Zgodność Regulacyjna:</p>
-            <p className="font-bold text-slate-800 dark:text-slate-200">FDA 21 CFR Part 58</p>
-          </div>
-          <div className="p-2.5 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <p className="text-[10px] text-slate-500 font-mono">Bioreaktory CA1-TH:</p>
-            <p className="font-bold text-sky-600 dark:text-sky-400">Aktywny monitoring 24/7</p>
+          <h1
+            className={`text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight ${
+              isDistorted ? 'text-red-400 font-mono anomaly-glow-blood' : 'text-slate-900 dark:text-white'
+            }`}
+          >
+            Certyfikowane Badania Bio-Analityczne & Wsparcie Laboratoryjne
+          </h1>
+
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Świadczymy akredytowane usługi analityczne w reżimie Dobrej Praktyki Laboratoryjnej (GLP) oraz normy ISO/IEC 17025.
+            Wspieramy działy R&D jednostek akademickich oraz przemysłu farmaceutycznego na każdym etapie rozwoju cząsteczki:
+            od wczesnego profilowania fizykochemicznego po zaawansowaną walidację bioanalityczną.
+          </p>
+
+          <div className="pt-2 flex flex-wrap gap-4 text-xs font-mono text-slate-500">
+            <span>• AKREDYTACJA ISO/IEC 17025:2018</span>
+            <span>• ZGODNOŚĆ Z WYTYCZNYMI ICH M10</span>
+            <span>• CZAS REALIZACJI OD 4 DNI ROBOCZYCH</span>
           </div>
         </div>
       </section>
 
-      {/* GŁÓWNA SEKCJA: KATALOG ASSAYÓW + KALKULATOR ZAMÓWIENIA */}
+      {/* 2. FILTR KATEGORII USŁUG */}
+      <section className="flex flex-wrap items-center gap-2 border-b pb-4 border-slate-200 dark:border-slate-800">
+        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider mr-2">Dział Analityczny:</span>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => {
+              soundEngine.playKeystroke();
+              setSelectedCategory(cat);
+            }}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              selectedCategory === cat
+                ? 'bg-sky-600 text-white shadow-sm'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </section>
+
+      {/* 3. GŁÓWNA SIATKA KATALOGU USŁUG */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* LEWA KOLUMNA: KATALOG USŁUG */}
-        <section className="lg:col-span-8 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-              Dostępne Procedury Analityczne ({ASSAYS_CATALOG.length})
-            </h2>
-            <span className="text-xs text-slate-500">Zaznacz assaye, aby obliczyć szacunkowy koszt</span>
-          </div>
+        {/* LEWA KOLUMNA: LISTA KART USŁUG */}
+        <div className="lg:col-span-7 space-y-4">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">
+            Dostępne Pakiety Analityczne ({filteredServices.length})
+          </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ASSAYS_CATALOG.map((assay) => {
-              const isSelected = selectedAssayIds.includes(assay.id);
-
+          <div className="space-y-4">
+            {filteredServices.map((serv) => {
+              const isSelected = serv.id === selectedServiceId;
               return (
                 <div
-                  key={assay.id}
-                  onClick={() => toggleSelectAssay(assay.id)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col justify-between select-none ${
+                  key={serv.id}
+                  onClick={() => {
+                    soundEngine.playKeystroke();
+                    setSelectedServiceId(serv.id);
+                  }}
+                  className={`p-5 rounded-xl border cursor-pointer transition-all duration-200 ${
                     isSelected
-                      ? isDistorted
-                        ? 'bg-red-950/60 border-red-700 text-red-100 shadow-md'
-                        : 'bg-sky-50/90 dark:bg-sky-950/50 border-sky-400 dark:border-sky-600 text-slate-900 dark:text-white shadow-md'
+                      ? 'border-sky-500 bg-sky-50/40 dark:bg-sky-950/20 shadow-sm ring-1 ring-sky-500/50'
                       : isDistorted
-                      ? 'bg-[#090505] border-[#781414]/50 hover:border-red-800 text-red-300'
-                      : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm'
+                      ? 'border-[#781414]/50 bg-[#090505] text-[#d8cfbe]'
+                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                        {assay.category}
-                      </span>
-                      <div className="flex items-center gap-1.5 text-xs font-mono font-bold">
-                        <span className="text-sky-600 dark:text-sky-400">${assay.basePriceUsd}</span>
-                        <span className="text-slate-400 font-normal">/ {assay.unit}</span>
-                      </div>
-                    </div>
-
-                    <h3 className="font-bold text-sm leading-snug">{assay.name}</h3>
-
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                      {assay.description}
-                    </p>
-
-                    <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800 space-y-1 text-[11px] font-mono">
-                      {assay.specifications.map((spec, idx) => (
-                        <div key={idx} className="flex items-start gap-1.5 text-slate-500 dark:text-slate-400">
-                          <span className="text-sky-500">✓</span>
-                          <span>{spec}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-2">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                      {serv.category}
+                    </span>
+                    <span className="text-xs font-mono font-bold text-slate-900 dark:text-white">
+                      od ${serv.basePriceUsd} USD / {serv.unit}
+                    </span>
                   </div>
 
-                  <div className="pt-4 mt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
-                    <span className="text-slate-400 font-mono text-[11px]">
-                      Czas realizacji: ~{assay.turnaroundDays} dni roboczych
+                  <h3
+                    className={`text-base font-bold tracking-tight mb-1.5 ${
+                      isSelected ? 'text-sky-700 dark:text-sky-300' : 'text-slate-900 dark:text-white'
+                    }`}
+                  >
+                    {serv.name}
+                  </h3>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                    {serv.description}
+                  </p>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 font-mono">
+                    <span>Średni czas: {serv.turnaroundDays} dni roboczych</span>
+                    <span className="text-sky-600 dark:text-sky-400 font-semibold hover:underline">
+                      {isSelected ? 'Wybrano do kalkulacji ✓' : 'Wybierz do wyceny →'}
                     </span>
-                    <button
-                      type="button"
-                      className={`px-3 py-1 rounded text-xs font-semibold transition-colors ${
-                        isSelected
-                          ? 'bg-sky-600 text-white'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
-                      }`}
-                    >
-                      {isSelected ? '✓ Wybrano' : '+ Dodaj do wyceny'}
-                    </button>
                   </div>
                 </div>
               );
             })}
           </div>
-        </section>
+        </div>
 
-        {/* PRAWA KOLUMNA: INTERAKTYWNY KALKULATOR ZAPOTRZEBOWANIA */}
-        <aside className="lg:col-span-4 space-y-4">
+        {/* PRAWA KOLUMNA: KALKULATOR WYCENY & FORMULARZ OFERTOWY */}
+        <div className="lg:col-span-5">
           <div
-            className={`p-5 rounded-xl border sticky top-24 space-y-4 ${
+            className={`sticky top-20 p-5 sm:p-6 rounded-xl border transition-all ${
               isDistorted
-                ? 'bg-[#0a0505] border-[#781414] anomaly-border-blood font-mono'
-                : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
+                ? 'bg-[#0a0505] border-[#781414] text-[#ffcccc]'
+                : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-md'
             }`}
           >
-            <div className="border-b pb-3 border-slate-200 dark:border-slate-800">
-              <h3 className="font-bold text-sm tracking-wide text-slate-900 dark:text-white uppercase font-sans">
-                KALKULATOR BADAŃ KONTRAKTOWYCH
+            <div className="border-b pb-3 mb-4">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                FORMULARZ ZAPYTANIA OFERTOWEGO (RFQ)
+              </span>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
+                Wycena Wstępna & Zlecenie Analityczne
               </h3>
-              <p className="text-[11px] text-slate-500">
-                Natychmiastowe oszacowanie budżetu projektu B2B
+              <p className="text-xs text-slate-500 mt-0.5">
+                Wybrana usługa: <strong>{currentService.name}</strong>
               </p>
             </div>
 
-            {/* LISTA WYBRANYCH USŁUG */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Wybrane pozycje ({selectedAssayIds.length}):
-              </label>
-              {selectedAssayIds.length === 0 ? (
-                <p className="text-xs text-slate-400 italic">Brak wybranych pozycji z katalogu.</p>
-              ) : (
-                <ul className="space-y-1.5 max-h-40 overflow-y-auto pr-1 text-xs">
-                  {selectedAssayIds.map((id) => {
-                    const item = ASSAYS_CATALOG.find((a) => a.id === id);
-                    if (!item) return null;
-                    return (
-                      <li
-                        key={id}
-                        className="flex items-center justify-between p-2 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700"
-                      >
-                        <span className="line-clamp-1 flex-1 mr-2 text-[11px] font-medium">{item.name}</span>
-                        <span className="font-mono font-bold text-sky-600 dark:text-sky-400 text-xs shrink-0">
-                          ${item.basePriceUsd}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
-
-            {/* LICZBA PRÓBEK / SERII */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
-                <span>Mnożnik Próbek / Kohort:</span>
-                <span className="font-mono text-sky-600 dark:text-sky-400 font-bold">{sampleMultiplier}x</span>
-              </div>
-              <input
-                type="range"
-                min="1"
-                max="10"
-                value={sampleMultiplier}
-                onChange={(e) => setSampleMultiplier(parseInt(e.target.value, 10))}
-                className="w-full accent-sky-600 cursor-pointer"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400 font-mono">
-                <span>1 seria (pilot)</span>
-                <span>5 serii</span>
-                <span>10 serii (badanie kliniczne)</span>
-              </div>
-            </div>
-
-            {/* TRYB REALIZACJI */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Tryb Przetwarzania i Standard Kontroli:
-              </label>
-              <div className="grid grid-cols-3 gap-1.5 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setTurnaroundTier('standard')}
-                  className={`p-2 rounded border text-center transition-all ${
-                    turnaroundTier === 'standard'
-                      ? 'bg-sky-600 text-white font-semibold border-sky-600'
-                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}
+            <div className="space-y-4 text-xs font-sans">
+              <div>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Typ Matrycy Biologicznej / Próbki:
+                </label>
+                <select
+                  value={sampleType}
+                  onChange={(e) => setSampleType(e.target.value)}
+                  className="w-full p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
                 >
-                  <p className="font-bold text-[11px]">Standard</p>
-                  <p className="text-[9px] opacity-80">+0%</p>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTurnaroundTier('express')}
-                  className={`p-2 rounded border text-center transition-all ${
-                    turnaroundTier === 'express'
-                      ? 'bg-sky-600 text-white font-semibold border-sky-600'
-                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}
-                >
-                  <p className="font-bold text-[11px]">Express</p>
-                  <p className="text-[9px] opacity-80">+25%</p>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTurnaroundTier('rush')}
-                  className={`p-2 rounded border text-center transition-all ${
-                    turnaroundTier === 'rush'
-                      ? 'bg-sky-600 text-white font-semibold border-sky-600'
-                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}
-                >
-                  <p className="font-bold text-[11px]">GLP Rush 48h</p>
-                  <p className="text-[9px] opacity-80">+50%</p>
-                </button>
-              </div>
-            </div>
-
-            {/* PODSUMOWANIE FINANSOWE */}
-            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-500">
-                <span>Koszty analityczne netto:</span>
-                <span className="font-mono font-semibold">${totalBasePrice * sampleMultiplier}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs text-slate-500">
-                <span>Dopłata za tryb ({turnaroundTier}):</span>
-                <span className="font-mono font-semibold">
-                  +${Math.round(totalBasePrice * sampleMultiplier * (turnaroundMultiplier - 1))}
-                </span>
+                  <option value="Osocze / Surowica krwi">Osocze / Surowica krwi (EDTA, Heparyna)</option>
+                  <option value="Płyn mózgowo-rdzeniowy (CSF)">Płyn mózgowo-rdzeniowy (CSF)</option>
+                  <option value="Lizaty komórkowe i frakcje tkankowe">Lizaty komórkowe i frakcje tkankowe</option>
+                  <option value="Roztwory rekombinowane / Przeciwciała">Roztwory rekombinowane / Przeciwciała (czystość &gt; 90%)</option>
+                  <option value="Ekstrakty kwasów nukleinowych (RNA/DNA)">Ekstrakty kwasów nukleinowych (RNA / DNA)</option>
+                  <option value="Formulacje farmaceutyczne / Substancje czynne API">Formulacje farmaceutyczne / Czyste API</option>
+                </select>
               </div>
 
-              <div className="pt-2 border-t border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                <span className="font-bold text-xs text-slate-900 dark:text-white uppercase font-sans">
-                  SZACOWANY KOSZT BADANIA:
-                </span>
-                <span className="text-lg font-bold font-mono text-sky-600 dark:text-sky-400">
-                  ${calculatedTotal.toLocaleString()} USD
-                </span>
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="font-semibold text-slate-700 dark:text-slate-300">
+                    Liczba Próbek w Zleceniu:
+                  </label>
+                  <span className="font-mono font-bold text-sky-600 dark:text-sky-400">
+                    {sampleCount} próbek
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="5"
+                  max="100"
+                  step="5"
+                  value={sampleCount}
+                  onChange={(e) => setSampleCount(Number(e.target.value))}
+                  className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-600"
+                />
+                <div className="flex justify-between text-[10px] font-mono text-slate-400 mt-1">
+                  <span>5 próbek (min.)</span>
+                  <span>50 próbek</span>
+                  <span>100 próbek (seria)</span>
+                </div>
               </div>
 
-              <button
-                type="button"
-                onClick={handlePlaceOrder}
-                disabled={selectedAssayIds.length === 0}
-                className="w-full py-2.5 rounded-lg bg-sky-600 hover:bg-sky-700 disabled:opacity-40 text-white text-xs font-semibold tracking-wider transition-colors shadow-sm mt-3"
-              >
-                GENERUJ ZAPYTANIE OFERTOWE / ZAMÓWIENIE &rarr;
-              </button>
-            </div>
-          </div>
-        </aside>
-      </div>
-
-      {/* MODAL POTWIERDZENIA ZAMÓWIENIA */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
-                <h3 className="font-bold text-sm tracking-wide text-slate-900 dark:text-white">
-                  ZLECENIE BADAŃ PRZYJĘTE // GLP-NC
-                </h3>
-              </div>
-              <button
-                onClick={() => setModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 text-sm font-bold"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300 font-sans">
-              <p>
-                Dziękujemy za złożenie zapytania ofertowego w <strong>NeuroClin Biosciences Inc.</strong>
-              </p>
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded border border-slate-200 dark:border-slate-700 font-mono text-xs space-y-1">
-                <p>
-                  Numer Zlecenia: <strong className="text-sky-600 dark:text-sky-400">{orderConfirmation}</strong>
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={needGlpCompliance}
+                    onChange={(e) => setNeedGlpCompliance(e.target.checked)}
+                    className="rounded border-slate-300 text-sky-600 focus:ring-sky-500 w-4 h-4"
+                  />
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    Certyfikowany Raport GLP / ISO 17025 (+25%)
+                  </span>
+                </label>
+                <p className="text-[11px] text-slate-500 pl-6 leading-relaxed">
+                  Obejmuje pełny ślad audytowy, kalibrację wielopunktową oraz walidację statystyczną do przedłożenia regulatorom (FDA / EMA).
                 </p>
-                <p>Wybranych pozycji: {selectedAssayIds.length}</p>
-                <p>Szacunkowy budżet: ${calculatedTotal.toLocaleString()} USD</p>
-                <p>Tryb: {turnaroundTier.toUpperCase()} // GLP Validated</p>
               </div>
-              <p className="text-[11px] text-slate-500">
-                Potwierdzenie wraz z protokołem transferu materiału biologicznego (MTA) oraz numerem partii zostało wygenerowane. Nasz koordynator skontaktuje się w ciągu 2 godzin roboczych.
-              </p>
-            </div>
 
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                onClick={() => setModalOpen(false)}
-                className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-md transition-colors"
-              >
-                Zamknij & Powrót do Portalu
-              </button>
+              {/* SZCZEGÓŁY METODYCZNE WYBRANEJ USŁUGI */}
+              <div className="space-y-1.5 pt-1">
+                <p className="font-semibold text-slate-700 dark:text-slate-300">Specyfikacja procedury:</p>
+                <ul className="space-y-1 text-slate-600 dark:text-slate-400 font-mono text-[11px]">
+                  {currentService.specifications.map((spec, idx) => (
+                    <li key={idx} className="flex items-start space-x-1.5">
+                      <span className="text-sky-500 font-bold">✓</span>
+                      <span>{spec}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* PODSUMOWANIE KOSZTÓW */}
+              <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                <div className="flex justify-between items-baseline mb-1">
+                  <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    Szacowany koszt netto:
+                  </span>
+                  <span className="text-xl font-extrabold text-slate-900 dark:text-white font-mono">
+                    ${estimatedTotalUsd.toLocaleString()} USD
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-500">
+                  Zawiera przygotowanie próbek, analizę instrumentalną oraz wygenerowanie certyfikatu analizy (CoA).
+                </p>
+              </div>
+
+              {quoteSubmitted ? (
+                <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-center space-y-1">
+                  <p className="font-bold">Zapytanie zostało zarejestrowane (#RFQ-2026-88)</p>
+                  <p className="text-[11px]">
+                    Nasz koordynator analityczny skontaktuje się w ciągu 24h z przygotowanym protokołem badania.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2 pt-1">
+                  <button
+                    onClick={() => {
+                      soundEngine.playKeystroke();
+                      setQuoteSubmitted(true);
+                    }}
+                    className="w-full py-2.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs transition-all shadow-sm"
+                  >
+                    Wyślij Zapytanie Ofertowe (RFQ)
+                  </button>
+                  <Link
+                    href="/chat"
+                    className="block text-center text-[11px] text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium"
+                  >
+                    Skonsultuj protokół pomiarowy z BioResearcher AI →
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

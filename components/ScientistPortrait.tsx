@@ -34,7 +34,7 @@ export function ScientistPortrait({ compact = false }: { compact?: boolean }) {
             isDistorted ? 'text-red-400 font-mono' : 'text-sky-600 dark:text-sky-400'
           }`}
         >
-          {isDistorted ? 'AKTA: #94-B-088 // THORNE, A.' : 'GŁÓWNY BADACZ // DOSSIER'}
+          {isDistorted ? 'AKTA: #94-B-088 // THORNE, A.' : 'REJESTR ARCHIWALNY // DOSSIER'}
         </span>
         <span
           className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
@@ -43,17 +43,17 @@ export function ScientistPortrait({ compact = false }: { compact?: boolean }) {
               : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700'
           }`}
         >
-          {isDistorted ? 'STATUS: ZUTYLIZOWANY' : 'HISTORICAL LEAD (1991–1994)'}
+          {isDistorted ? 'STATUS: UWIĘZIONY' : 'DOKUMENTACJA Z 1994 R.'}
         </span>
       </div>
 
       {/* RAMKA FOTOGRAFII Z PUBLIC/IMAGES/ARIS */}
       <div className="relative overflow-hidden rounded border border-slate-300 dark:border-slate-700 bg-black shadow-inner">
-        <div className="relative w-full h-[320px] overflow-hidden bg-slate-950 flex items-center justify-center">
+        <div className="relative w-full h-[300px] overflow-hidden bg-slate-950 flex items-center justify-center">
           {!loadFailed ? (
             <Image
               src={imgSrc}
-              alt="Dr. Aris Thorne - Fotografia ewidencyjna (1994)"
+              alt="Dr. Aris Thorne - Fotografia archiwalna (1994)"
               fill
               sizes="(max-width: 640px) 100vw, 360px"
               priority
@@ -70,7 +70,7 @@ export function ScientistPortrait({ compact = false }: { compact?: boolean }) {
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src="/images/aris.png"
-              alt="Dr. Aris Thorne - Fotografia ewidencyjna (1994)"
+              alt="Dr. Aris Thorne - Fotografia archiwalna (1994)"
               className={`w-full h-full object-cover object-top ${
                 isDistorted
                   ? 'grayscale contrast-150 brightness-75 anomaly-chromatic'
@@ -98,7 +98,7 @@ export function ScientistPortrait({ compact = false }: { compact?: boolean }) {
 
           {!isDistorted && (
             <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-black/70 backdrop-blur-sm rounded text-[9px] text-slate-200 font-mono">
-              FOTOGRAFIA BIOMETRYCZNA // ARCH. 1994
+              FOTOGRAFIA ARCHIWALNA // 14.11.1994
             </div>
           )}
         </div>
@@ -114,17 +114,16 @@ export function ScientistPortrait({ compact = false }: { compact?: boolean }) {
           >
             Dr. Aris Thorne, Ph.D.
           </h3>
-          <span className="text-[10px] text-slate-500 font-mono">1942–1994 (?)</span>
+          <span className="text-[10px] text-slate-500 font-mono">1942–1994</span>
         </div>
 
         <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-          Kierownik Pracowni Elektrofizjologii Komórkowej
+          Kierownik Zespołu Badań Doświadczalnych
         </p>
         <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-mono">
-          Instytut Neurobiologii Poznawczej // Sektor-7
+          Pracownia Elektrofizjologii // Sektor-7
         </p>
 
-        {/* UKRYTE / JAWNE NOTATKI ZALEŻNIE OD STANU */}
         <div
           className={`mt-3 p-2.5 rounded text-[11px] leading-relaxed transition-colors ${
             isDistorted
@@ -134,20 +133,20 @@ export function ScientistPortrait({ compact = false }: { compact?: boolean }) {
         >
           {isDistorted ? (
             <div>
-              <p className="font-bold text-red-400 mb-1">[DOKUMENTACJA EKSCYTOTOKSYCZNA]:</p>
+              <p className="font-bold text-red-400 mb-1">[SYGNALIZACJA DEKOHERENCJI]:</p>
               <p>
-                16 384 mikrosondy krzemowe w strukturze CA1. Pętla fenolowa utylizowała preparat biologiczny, podczas
-                gdy wzorzec iglicowy podtrzymywany jest nieprzerwanie w tablicy BioResearcher AI.
+                Ciągła dekoherencja sygnału neuronalnego zarejestrowana w węźle obliczeniowym.
+                Zanotowano nieautoryzowaną aktywność pasma kognitywnego odpowiadającą wzorcowi Thorne&apos;a.
               </p>
             </div>
           ) : (
             <div>
               <p className="font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Kluczowy Wkład Naukowy (1991–1994):
+                Karta Informacyjna Archiwum:
               </p>
               <p>
-                Pionier wielokanałowych matryc mikroelektrodowych do rejestracji engramów hipokampa. Ostatnia praca
-                opublikowana w listopadzie 1994 r. przed zamknięciem i reorganizacją jednostki Sektor-7.
+                Prowadził badania nad wielokanałową rejestracją potencjałów błonowych w mikrosieciach neuronalnych.
+                Ostatni raport badawczy zarejestrowano 14 listopada 1994 r. przed zamknięciem placówki.
               </p>
             </div>
           )}

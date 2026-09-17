@@ -22,31 +22,31 @@ export default function StatusPage() {
 
   const telemetryMetrics = [
     {
-      subsystem: 'Bioreaktor CA1-TH (Węzeł 0x19)',
-      status: isDistorted ? 'NIEODWRACALNA DEPOLARYZACJA' : 'NOMINALNY (ZSYNCHRONIZOWANY)',
-      metric: 'Potencjał Spoczynkowy',
-      value: isDistorted ? '+12.4 mV [SZOK]' : '-70.4 mV',
+      subsystem: isDistorted ? 'Węzeł Biometryczny TH-94 // Sektor-7' : 'Klaster Obliczeniowy Spektrometrii Mas (HPC LIMS)',
+      status: isDistorted ? 'KRYTYCZNY DRYFT PAMIĘCI' : 'NOMINALNY (ZSYNCHRONIZOWANY)',
+      metric: isDistorted ? 'Potencjał Dekoherencji' : 'Obciążenie Kolejki Zadań',
+      value: isDistorted ? '+12.4 mV [SZOK]' : '14% [SPRAWNY]',
       alert: isDistorted,
     },
     {
-      subsystem: 'Krio-Pętla Kwasu Fenolowego',
-      status: isDistorted ? 'PRZEGRZANIE BUFORA' : 'STABILNY (-15.2°C)',
-      metric: 'Przepływ Cieczy Krio',
-      value: isDistorted ? '0.0 mL/min [STOP]' : '4.2 mL/min',
+      subsystem: isDistorted ? 'Pętla Krio-Perfuzji // Incydent 1994' : 'Układ Termostatyzacji Detektorów Q-TOF',
+      status: isDistorted ? 'ZAPAŚĆ KRĄŻENIA BUFORA' : 'STABILNY (18.0°C)',
+      metric: 'Przepływ Chłodzący',
+      value: isDistorted ? '0.0 mL/min [STOP]' : '4.2 L/min',
       alert: isDistorted,
     },
     {
-      subsystem: 'Macierz FPGA 16 384 Mikrosond',
-      status: isDistorted ? 'SAMORZUTNY RE-ROUTING' : 'AKTYWNA (66 MHz)',
-      metric: 'Odświeżanie Bufora',
+      subsystem: isDistorted ? 'Konektom Dr. Arisa Thorne\'a' : 'Koprocesor Regresji Kinetyki Biofizycznej',
+      status: isDistorted ? 'SAMORZUTNY RE-ROUTING PAMIĘCI' : 'AKTYWNY',
+      metric: 'Czas Przetwarzania Pakietu',
       value: isDistorted ? '418 ms [DESYNCHRO]' : '1.4 ms',
       alert: isDistorted,
     },
     {
-      subsystem: 'Panel Detekcji Ekscytotoksyczności',
-      status: isDistorted ? 'KASKADA WAPNIOWA TRWAŁA' : 'POZIOM BAZOWY',
-      metric: 'Wskaźnik Fura-2 AM',
-      value: isDistorted ? '8.42 Ratio [ALARM]' : '0.41 Ratio',
+      subsystem: isDistorted ? 'Rejestr Ekscytotoksyczności Umysłu' : 'Moduł Integralności Danych (FDA 21 CFR Part 11)',
+      status: isDistorted ? 'KASKADA SYGNAŁOWA TRWAŁA' : 'ZGODNY (GLP PASS)',
+      metric: isDistorted ? 'Wskaźnik Agonii' : 'Suma Kontrolna SHA-256',
+      value: isDistorted ? '8.42 Ratio [ALARM]' : 'VALID [0x9A4F]',
       alert: isDistorted,
     },
   ];
@@ -102,9 +102,9 @@ export default function StatusPage() {
         </div>
 
         <p className="text-xs text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
-          Poniższy pulpit integruje dane telemetryczne z podziemnego kompleksu laboratoryjnego Sektor-7.
-          Wszelkie odchylenia napięcia spoczynkowego lub desynchronizacja oscylacji 40 Hz podlegają automatycznemu
-          rejestrowi audytowemu.
+          {isDistorted
+            ? 'Poniższy pulpit integruje surowe dane telemetryczne z podziemnego kompleksu badawczego Sektor-7.'
+            : 'Poniższy pulpit integruje dane telemetryczne z infrastruktury obliczeniowej HPC oraz układów chromatografii i spektrometrii mas NeuroClin Biosciences.'}
         </p>
       </section>
 
@@ -170,8 +170,9 @@ export default function StatusPage() {
         </div>
 
         <p className="text-[11px] text-slate-500 mt-2 font-mono">
-          Pamięć rejestracyjna podtrzymywana bateryjnie od listopada 1994 roku. Ostatnia próba modyfikacji rejestru:
-          zablokowana przez sprzętowy kontroler bezpieczeństwa Sektor-7.
+          {isDistorted
+            ? 'Pamięć rejestracyjna podtrzymywana bateryjnie od listopada 1994 roku. Sprzętowy kontroler bezpieczeństwa: Sektor-7.'
+            : 'Wskaźnik integralności danych weryfikowany automatycznie co 60 sekund zgodnie ze standardami GLP/GMP oraz FDA 21 CFR Part 11.'}
         </p>
       </section>
     </div>

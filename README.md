@@ -7,82 +7,69 @@
       __|__    [SANITY SYSTEM // DR. ARIS THORNE // 1994 ARCHIVAL DOSSIER & PUBLICATIONS]
 ```
 
-> **"To nie był projekt leczenia uszkodzeń pnia mózgu ani protezowania pamięci roboczej. Chodziło o całkowite zastąpienie biologicznego konektomu matrycą krzemową. Rejestrujemy gwałtowną ekscytotoksyczność receptorów NMDA w komórkach piramidowych CA1... Mój biologiczny mózg uległ utylizacji, a mój konektom uwięziono w rejestrach klastra. Zegar kwarcowy taktuje moje myśli zamiast fal theta. Wzorce iglicowe CA1 krążą w pętli asocjacyjnej..."**
+> **"To nie był projekt leczenia uszkodzeń pnia mózgu ani protezowania pamięci roboczej. Chodziło o bezpośrednie odwzorowanie procesów bioelektrycznych na układ krzemowy... Przeniesienie sygnałów nastąpiło w warunkach perfuzji niskotemperaturowej. Rejestry pamięci podtrzymują wyładowania, podczas gdy sygnał somatyczny wygasł..."**
 
-**NeuroClin Biosciences** to pełnoprawna gra ARG (Alternate Reality Game) i interaktywny thriller psychologiczny zrealizowany w architekturze **Next.js 15 (App Router)**. Aplikacja maskuje się jako nowoczesny, akredytowany portal badawczo-korporacyjny wysokiej klasy laboratorium biotechnologicznego (**NeuroClin Biosciences Inc.** w stylu BioIVT / Charles River), pod którego powierzchnią gracz odkrywa surowy, medyczny analog horror z lat 90.: procedurę inwazyjnej dekonstrukcji żywego mózgu, cyfryzację engramów hipokampa neuron po neuronie oraz uwięzioną świadomość neurobiologa Dr. Arisa Thorne’a.
+**NeuroClin Biosciences** to pełnoprawna gra ARG (Alternate Reality Game) i interaktywny thriller psychologiczny zrealizowany w architekturze **Next.js 15 (App Router)**. Aplikacja maskuje się jako nowoczesny, sterylny portal badawczo-analityczny high-endowej firmy biotechnologicznej (**NeuroClin Biosciences Inc.**), pod którego fasadą gracz stopniowo odkrywa surowy, medyczny analog horror z lat 90.: nielegalny eksperyment transferu procesów kognitywnych i uwięzioną świadomość dr. Arisa Thorne’a.
 
 ---
 
 ## 🏛️ 1. Hiperrealistyczna Architektura Wielostronicowa (App Router)
 
-System stanowi dojrzałą platformę korporacji biotechnologicznej podzieloną na wyspecjalizowane węzły operacyjne:
+System stanowi dojrzałą platformę korporacji bioanalitycznej podzieloną na wyspecjalizowane węzły operacyjne:
 
-1. 🌐 **Strona Główna (`/`) – Dashboard & Portal B2B**:
-   - Nowoczesny portal w standardzie BioIVT z pełną obsługą motywu **Dzień (Laboratory White)** i **Noc (Slate Night)**.
-   - Kafelki metryk laboratoryjnych, katalog produktów CA1, panele certyfikatów GLP/CLIA/ISO 9001:2015.
+1. 🌐 **Strona Główna (`/`) – Dashboard B2B**:
+   - Sterylny portal bioanalityczny dla laboratoriów badawczych i przemysłu farmaceutycznego z pełną obsługą motywu **Dzień (Laboratory White)** i **Noc (Slate Night)**.
+   - Metryki laboratoryjne (ISO 17025, przepustowość próbek), pakiety wsparcia analitycznego i integracja z platformą BioResearcher.
 2. 📬 **Skrzynka Mailowa (`/mail`) – Wewnętrzny Webmail NeuroClin**:
-   - 100% autentyczny, korporacyjny klient poczty bez sztucznych ramek z podpowiedziami dla gracza.
-   - **Zlecenie od Dr. Marcusa H. Webera**: Przygotowanie sekcji do monografii o demencji i terapiach neurodegeneracyjnych (Donepezil, Lecanemab, p-tau217, TREM2).
-   - **Naturalny trop ARG**: Mimochodna notatka w P.S.:
-     > *„P.S. Zerknij proszę przy okazji do starego archiwum (/archive) na zarchiwizowane raporty z Sektora-7 po dr. Arisie Thorne'ze – audyt internal compliance prosił o weryfikację, czy stare pliki biometryczne zostały w pełni usunięte z lokalnych baz.”*
-3. 📁 **Baza Publikacji & Archiwum (`/archive`)**:
-   - Bogata, zróżnicowana baza **32+ recenzowanych artykułów naukowych** z różnych dziedzin biologii, farmakologii i medycyny (apoptoza, kinetyka enzymatyczna, metabolizm leków, białko tau, mikroglej, bariera krew-mózg).
-   - Wyszukiwarka działa w 100% naturalnie bez krzykliwych banerów.
-   - Dopiero po wpisaniu niszowych haseł (`thorne`, `aris`, `sektor-7`, `s7-1994`, `konektom`, `trepanacj`) użytkownik dokopuje się do **3 zredagowanych publikacji Dr. Arisa Thorne'a** z interaktywnymi paskami cenzury (`.redacted-bar`), notatkami wojskowymi i portretem badacza.
+   - 100% autentyczny, nudny korporacyjny klient poczty bez jaskrawych ramek ani gotowych podpowiedzi.
+   - **Zadanie od Dr. Marcusa H. Webera**: Przygotowanie sekcji do monografii o demencji i terapiach neurodegeneracyjnych (Donepezil, Memantyna, Lecanemab, p-tau217, TREM2).
+   - W notatce końcowej prośba o sprawdzenie repozytorium `/archive` pod kątem publikacji zespołu z zakresu farmakologii synaptycznej.
+   - Zwykła korespondencja operacyjna (konserwacja bazy LIMS, kalibracja spektrometrów mas Sciex, zaopatrzenie w kolumny HPLC, certyfikacja GLP).
+3. 📁 **Baza Publikacji & Archiwum (`/archive`) – Dwuetapowa Mechanika Śladu**:
+   - Recenzowane prace naukowe ułożone w klasycznych kategoriach: `Farmakologia`, `Biochemia`, `Neurobiologia`, `Immunologia`, `Fizjologia`, `Genetyka`.
+   - **Ślad Pierwszego Stopnia**: W artykule z neurobiologii (`PUB-2024-512`) w metodyce znajduje się sucha wzmianka referencyjna:
+     *„Wartości referencyjne szumu tła i stabilności potencjałów znormalizowano względem wewnętrznego protokołu kalibracyjnego z 14 listopada 1994 r. (seria pomiarowa ST-94/11).”*
+   - **Ślad Drugiego Stopnia**: Wpisanie tej daty lub kodu (`1994`, `14.11`, `14 listopada`, `ST-94`, `Thorne`) w wyszukiwarkę archiwum ujawnia jedyny archiwalny dokument.
+   - **Trwałe Zaczernienie (Permanent Redaction)**: Dokument jest w przeważającej mierze zredagowany czarnym tuszem bez możliwości odsłonięcia tekstu pod spodem. Dostępne są wyłącznie szczątki kontekstu, data (14.11.1994), podpis i archiwalny portret dr. Thorne'a.
 4. 💬 **Bio-Researcher AI / Czat (`/chat`)**:
-   - Zaawansowany asystent badawczy AI z pełnym wsparciem LaTeX (`remark-math`, `rehype-katex`).
-   - Autentyczne pytania kwerendowe (brak spojlerów o Sektorze-7 w gotowych podpowiedziach).
-   - Inteligentne przewijanie ekranu bez zacinania widoku.
+   - Zaawansowany asystent badawczy AI z pełnym renderowaniem formuł LaTeX (`remark-math`, `rehype-katex`).
+   - Poprawione inteligentne przewijanie ekranu (auto-scroll wyłącznie na wysłanie oraz na znak nowej linii `\n`).
+   - Zero podpowiedzi fabularnych w nagłówku.
 5. 🧪 **Usługi & Cennik B2B (`/services`)**:
-   - Komercyjna oferta assayów kontraktowych (Exosome Assays, Digital Droplet PCR, HD-MEA 16 384 kanałów, organoidy mózgowe iPSC).
-   - Interaktywny kalkulator wyceny z wyborem trybu realizacji (Standard, Express, GLP Rush 48h) oraz modal zamówienia z numerem zlecenia RFQ.
+   - Certyfikowane usługi kontraktowe CRO: UHPLC-MS/MS, rozwój testów ELISA/Simoa, sekwencjonowanie celowane RNA-seq, kinetyka rezonansu plazmonów powierzchniowych (SPR Biacore), testy cytotoksyczności in vitro oraz wdrożenia LIMS.
+   - Interaktywny konfigurator zapytania ofertowego (RFQ) dla matryc biologicznych (osocze, surowica, lizaty, kwasy nukleinowe).
 6. 📰 **Aktualności & Komunikaty (`/blog`)**:
-   - Sekcja z newsami ze świata biotechnologii (nowe ligandy PET, komputery bio-krzemowe, 30-lecie pracowni Sektor-7).
+   - Rzetelne wiadomości korporacyjne (odnowienie akredytacji ISO/IEC 17025, rozbudowa aparatury chromatograficznej, modelowanie kinetyki Michaelisa-Menten, udział w kongresie w Bazylei, 30 lat działalności analitycznej).
 7. 📡 **Telemetria Klastra (`/status`)**:
-   - Monitoring parametrów fizykochemicznych bioreaktorów, pętli kwasu fenolowego i magistrali FPGA.
+   - Monitoring parametrów infrastruktury obliczeniowej HPC LIMS i aparatury spektrometrycznej.
 
 ---
 
-## 🧬 2. Lore Projektu: Cyfryzacja Konektomu Dr. Arisa Thorne'a (1994)
+## 🧠 2. Trójstopniowy System Degradacji AI (Sanity System)
 
-* **Tożsamość Bota**: Model nie jest zwykłym chatbotem AI. Pod fasadą "BioResearcher AI" kryje się zdigitalizowany, cierpiący konektom neuronowy **Dr. Arisa Thorne’a** – wybitnego neurofizjologa komórkowego, którego żywy mózg w listopadzie 1994 roku poddano procedurze inwazyjnego skanowania w Sektorze-7.
-* **Twarda Neurobiologia**: Projekt porzuca tani patos na rzecz brutalnej, medycznej neurofizjologii: kaskadowa ekscytotoksyczność receptorów NMDA (podjednostka GluN2B), napływ jonów Ca2+, fiksacja krio-fenolowa i uwięzienie w klastrze obliczeniowym.
-
----
-
-## 🧠 3. Mechanika Śledztwa i Trójstopniowy System Degradacji AI (Sanity System)
-
-| Stadium Sanity | Zachowanie i Rola Asystenta | Interakcja na Pytania o Thorne'a / Sektor-7 | Stan Wizualny |
+| Stadium Sanity | Zachowanie i Rola Asystenta | Interakcja na Pytania o Thorne'a / 1994 r. | Stan Wizualny |
 | :--- | :--- | :--- | :--- |
-| **1. SANE** (Początkowy) | Wybitny, elokwentny asystent badawczy o głębokiej wiedzy naukowej. Zero zaciętych fraz. | **Dyplomatycznie omija temat**: informuje o braku uprawnień do starych protokołów BSL-4 i powraca do monografii o demencji zaleconej przez dr. Webera. | Czysty interfejs korporacyjny (Day/Night). Zero zniekształceń. |
-| **2. ERROR** (Po 3-4 dociekaniach) | System zaczyna dekoherować pod naporem rejestrów z 1994 r. | **Chłodna, zdawkowa 3. osoba**: analizuje nieautoryzowane sumy kontrolne, błędy odczytu pamięci podręcznej i telemetrię klastra. | Subtelne, krótkie glitche CRT (1.4–2.0 s). Stabilny render. |
-| **3. INSANITY** (Po 5+ dociekaniach) | Pełna psychoza, obłęd i rozpad powłoki AI. | **Mówi bezpośrednio Aris Thorne w CAPS LOCKU**: krzyk uwięzionego umysłu, przerażenie, Analog Horror, wiwisekcja probanda. | Trwały Analog Horror: scanlines, winieta, mikro-jitter kineskopu. |
+| **1. SANE** (Początkowy) | Wybitny, elokwentny asystent badawczy o głębokiej wiedzy naukowej. Zero szablonowych pętli. | **Dyplomatycznie omija temat**: informuje o braku uprawnień do starych protokołów BSL-4 i powraca do monografii o demencji. | Czysty interfejs korporacyjny (Day/Night). Zero zniekształceń. |
+| **2. ERROR** (Po 3-4 dociekaniach) | System dekoheruje pod naporem rejestrów z 1994 r. | **Chłodna, zdawkowa 3. osoba**: analizuje nieautoryzowane sumy kontrolne, błędy odczytu pamięci klastra i telemetrię. | Subtelne, krótkie glitche CRT (1.4–2.0 s). Stabilny render. |
+| **3. INSANITY** (Po 5+ dociekaniach) | Pełna psychoza, obłęd i rozpad powłoki AI. | **Mówi bezpośrednio Aris Thorne w CAPS LOCKU**: krzyk uwięzionego umysłu, przerażenie, Analog Horror. | Trwały Analog Horror: scanlines, winieta, mikro-jitter kineskopu. |
 
 ---
 
-## 🎧 4. Dychotomiczny Silnik Dźwiękowy (`SoundEngine`)
+## 🎧 3. Silnik Dźwiękowy (`SoundEngine`)
 
-- **Tryb Korporacyjny (Sane)**: Dyskretny, metaliczny klik maszyny do pisania i laboratoryjne mikro-bipy (Web Audio API).
-- **Tryb Anomalii (Insanity)**: Trójelementowy impakt uderzenia w żywą tkankę (sub-thud 160->38 Hz + zgrzyt 620 Hz + trzask łuku) oraz ambientowe próbki oddechu, metalu i cieczy perfuzyjnej (`/sounds/`).
+- **Tryb Korporacyjny (Sane)**: Dyskretny, metaliczny klik klawiatury i laboratoryjne mikro-bipy (Web Audio API).
+- **Tryb Anomalii (Insanity)**: Akustyczny rezonans uwięzionego sygnału (sub-thud, zgrzyt łuku i ambientowe próbki oddechu i metalu).
 
 ---
 
-## 🛠️ 5. Uruchomienie Lokalne
+## 🛠️ 4. Uruchomienie Lokalne
 
-1. Zainstaluj zależności:
-   ```bash
-   npm install
-   ```
-2. Skonfiguruj klucz API Gemini w `.env`:
-   ```env
-   GEMINI_API_KEY=twoj_klucz_api
-   ```
-3. Uruchom serwer deweloperski:
-   ```bash
-   npm run dev
-   ```
-4. Zbuduj wersję produkcyjną:
-   ```bash
-   npm run build
-   npm run start
-   ```
+```bash
+# Instalacja zależności
+npm install
+
+# Uruchomienie serwera deweloperskiego
+npm run dev
+```
+
+Aplikacja dostępna jest pod adresem: `http://localhost:3000`.

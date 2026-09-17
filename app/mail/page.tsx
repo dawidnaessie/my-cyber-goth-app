@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSystemState } from '@/components/SystemStateContext';
 import { soundEngine } from '@/lib/soundEngine';
 
-interface EmailItem {
+interface CorporateEmail {
   id: string;
   senderName: string;
   senderEmail: string;
@@ -15,7 +15,6 @@ interface EmailItem {
   time: string;
   isUnread: boolean;
   isUrgent: boolean;
-  isClassified?: boolean;
   snippet: string;
   body: React.ReactNode;
 }
@@ -25,7 +24,6 @@ export default function MailPage() {
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
   const [selectedEmailId, setSelectedEmailId] = useState<string>('mail-weber-01');
-  const [activeFolder, setActiveFolder] = useState<'inbox' | 'starred' | 'sent' | 'archive' | 'trash'>('inbox');
   const [unreadState, setUnreadState] = useState<Record<string, boolean>>({
     'mail-weber-01': true,
     'mail-sec-02': false,
@@ -34,29 +32,30 @@ export default function MailPage() {
     'mail-hr-05': false,
   });
 
-  const markAsRead = (id: string) => {
+  const handleSelectEmail = (id: string) => {
     soundEngine.playKeystroke();
-    setUnreadState((prev) => ({ ...prev, [id]: false }));
+    setSelectedEmailId(id);
+    if (unreadState[id]) {
+      setUnreadState((prev) => ({ ...prev, [id]: false }));
+    }
   };
 
-  const emails: EmailItem[] = [
+  const emails: CorporateEmail[] = [
     {
       id: 'mail-weber-01',
       senderName: 'Dr. Marcus H. Weber',
       senderEmail: 'm.weber@neuroclin-bio.internal',
-      role: 'Kierownik Zespołu Neurobiologii Translacyjnej // Prowadzący',
-      subject: 'PILNE: Zlecenie sekcji do monografii o chorobach neurodegeneracyjnych (termin: piątek)',
+      role: 'Head of Translational Neurobiology',
+      subject: 'Zlecenie: Przygotowanie przeglądu literatury do monografii o demencji i terapiach neurodegeneracji',
       date: '17 września 2026',
       time: '08:42:15',
       isUnread: unreadState['mail-weber-01'],
       isUrgent: true,
       snippet:
-        'Cześć, w związku ze zbliżającym się terminem oddania rozdziału monografii o terapiach demencji i AD, musisz przygotować podsumowanie bibliograficzne...',
+        'W związku ze zbliżającym się terminem oddania rozdziału do monografii, pilnie zlecam Ci przygotowanie sekcji przeglądowej oraz weryfikację bibliograficzną w naszym portalu...',
       body: (
-        <div className="space-y-4 text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
-          <p>
-            Cześć,
-          </p>
+        <div className="space-y-4 text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200 font-sans">
+          <p>Cześć,</p>
           <p>
             W związku ze zbliżającym się terminem oddania naszego rozdziału do monografii <em>„Nowe Horyzonty w Terapiach Neurodegeneracji: Od Biochemii Synaptycznej do Biomarkerów Osoczowych”</em>, pilnie zlecam Ci przygotowanie sekcji przeglądowej oraz weryfikację bibliograficzną w naszym portalu badawczym.
           </p>
@@ -70,16 +69,16 @@ export default function MailPage() {
             </h4>
             <ol className="list-decimal list-inside space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
               <li>
-                <strong>Inhibitory acetylocholinoesterazy (AChE)</strong> (donepezil, rywastygmina) oraz modulacja allosteryczna NMDA (memantyna) — kinetyka receptorowa i zapobieganie napływowi jonów Ca²⁺.
+                <strong>Inhibitory acetylocholinoesterazy (AChE)</strong> (donepezil, rywastygmina) oraz modulacja allosteryczna NMDA (memantyna) — kinetyka receptorowa i ochrona przed patologicznym napływem jonów Ca²⁺.
               </li>
               <li>
-                <strong>Terapie monoklonalne anty-amyloidowe</strong> (lecanemab, donanemab) — mechanizm usuwania protofibryli Aβ oraz wskaźniki powikłań naczyniowych (ARIA-E).
+                <strong>Terapie monoklonalne anty-amyloidowe</strong> (lecanemab, donanemab) — mechanizm klirensu protofibryli Aβ oraz wskaźniki powikłań naczyniowych (ARIA-E).
               </li>
               <li>
-                <strong>Białko Tau i biomarkery osoczowe</strong> — fosforylacja p-tau217 i p-tau181 jako czułe indykatory wczesnej neurodystrofii synaptycznej.
+                <strong>Białko Tau i biomarkery osoczowe</strong> — fosforylacja p-tau217 i p-tau181 jako wysoce precyzyjne wskaźniki wczesnej neurodystrofii synaptycznej.
               </li>
               <li>
-                <strong>Neuroimmunologia i mikroglej</strong> — rola szlaku TREM2 w modulacji fagocytozy blaszek oraz wygaszaniu przewlekłego stanu zapalnego.
+                <strong>Neuroimmunologia i mikroglej</strong> — rola szlaku receptorowego TREM2 w modulacji fagocytozy blaszek oraz wygaszaniu przewlekłego stanu zapalnego.
               </li>
             </ol>
           </div>
@@ -89,13 +88,13 @@ export default function MailPage() {
           </p>
 
           <p className="text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800/70">
-            P.S. W sekcji metodycznej musimy podeprzeć się wcześniejszą literaturą naszego ośrodka. Przeszukaj proszę zasoby w <Link href="/archive" className="text-sky-600 dark:text-sky-400 underline font-medium">/archive</Link> pod kątem dawnych protokołów elektrofizjologicznych skrawków hipokampa (CA1) oraz kultur organoidów, aby zestawić parametry techniczne.
+            P.S. W sekcji bibliograficznej upewnij się, że zacytujemy nasze wcześniejsze publikacje i artykuły recenzowane. Przeszukaj repozytorium w <Link href="/archive" className="text-sky-600 dark:text-sky-400 underline font-medium">/archive</Link> pod kątem prac z zakresu farmakologii synaptycznej i kinetyki enzymatycznej.
           </p>
 
           <div className="pt-2 text-xs font-mono text-slate-500">
             <p>Pozdrawiam serdecznie,</p>
             <p className="font-bold text-slate-700 dark:text-slate-300 mt-1">Dr. Marcus H. Weber, Ph.D.</p>
-            <p>Head of Translational Neurobiology & Synaptic Connectomics</p>
+            <p>Head of Translational Neurobiology</p>
             <p>NeuroClin Biosciences Inc. // Cambridge Campus</p>
           </div>
         </div>
@@ -103,52 +102,53 @@ export default function MailPage() {
     },
     {
       id: 'mail-sec-02',
-      senderName: 'IT Security & Cluster Ops',
+      senderName: 'IT Systems & Infrastructure',
       senderEmail: 'sec-admin@neuroclin-bio.internal',
       role: 'Dział Bezpieczeństwa Teleinformatycznego',
-      subject: '[KOMUNIKAT] Okresowa wymiana tokenów autoryzacyjnych do klastra obliczeniowego FPGA',
+      subject: '[KOMUNIKAT] Planowana konserwacja bazy danych LIMS oraz wymiana certyfikatów SSL/TLS',
       date: '16 września 2026',
       time: '17:15:02',
       isUnread: unreadState['mail-sec-02'],
       isUrgent: false,
       snippet:
-        'Wszystkie terminale badawcze podpięte do szyny VMEbus muszą zaktualizować tokeny autoryzacyjne przed weekendowym oknem serwisowym...',
+        'W nocy z soboty na niedzielę planowane jest okno serwisowe serwera bazy danych LIMS. Prosimy o zapisanie wszelkich otwartych arkuszy analiz...',
       body: (
         <div className="space-y-3 text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200 font-sans">
+          <p>Szanowni Pracownicy Działu Badań,</p>
           <p>
-            Szanowni Pracownicy Zespołu Badawczego,
+            Informujemy, że w nocy z soboty (20.09) na niedzielę (21.09) w godzinach 01:00–04:00 UTC odbędzie się planowa przerwa techniczna w dostępie do bazy laboratoryjnej BioResearcher LIMS.
           </p>
           <p>
-            W nocy z soboty na niedzielę planowany jest rutynowy restart magistrali światłowodowej klastra biofizycznego FPGA (częstotliwość bazowa 66 MHz). Prosimy o zapisanie wszelkich otwartych sesji symulacji plastyczności synaptycznej do godziny 23:00.
+            Podczas okna serwisowego zaktualizujemy certyfikaty bezpieczeństwa SSL/TLS dla stacji roboczych w laboratoriach chromatografii oraz wdrożymy zaktualizowane procedury szyfrowania śladu audytowego (zgodnie z normą FDA 21 CFR Part 11).
           </p>
           <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded font-mono text-xs text-slate-600 dark:text-slate-400 space-y-1">
-            <p>Węzeł główny: CLUSTER-S7-CORE-01</p>
-            <p>Protokół: IP-over-VMEbus / Sub-system TH-94</p>
-            <p>Status: MONITOROWANY CAŁODOBOWO</p>
+            <p>Host: db-cluster-lims.neuroclin.internal</p>
+            <p>Protokół: PostgreSQL 16.2 / TLS 1.3</p>
+            <p>Status: OKNO ZATWIERDZONE PRZEZ ZARZĄD IT</p>
           </div>
         </div>
       ),
     },
     {
       id: 'mail-dev-03',
-      senderName: 'Aparatura & Metrologia',
+      senderName: 'Dział Aparatury & Metrologii',
       senderEmail: 'lab-devices@neuroclin-bio.internal',
       role: 'Główny Inżynier Przyrządów Pomiarowych',
-      subject: 'Raport kalibracji: spektrometry masowe oraz mikromacierze 16 384 sond (HD-MEA)',
+      subject: 'Raport kwartalnej kalibracji: spektrometry masowe Sciex oraz systemy UHPLC Agilent',
       date: '15 września 2026',
       time: '11:30:40',
       isUnread: unreadState['mail-dev-03'],
       isUrgent: false,
       snippet:
-        'Kalibracja matrycy HD-MEA #088 wykazała 99.4% sprawności kanałów. Odnotowano drobne fluktuacje potencjału spoczynkowego...',
+        'Zakończono kwartalną kalibrację spektrometrów Sciex Triple Quad 6500+. Wszystkie parametry kwadrupoli i pompy chromatograficznej mieszczą się w normie...',
       body: (
         <div className="space-y-3 text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
           <p>Dzień dobry,</p>
           <p>
-            Zakończono kwartalną kalibrację matrycy krzemowej o gęstości 16 384 mikroelektrod. Pomiary szumów tła wykazały stabilność na poziomie poniżej 2.5 µV RMS.
+            Zakończono kwartalną procedurę metrologicznej weryfikacji tandemowych spektrometrów mas (Sciex Triple Quad 6500+) oraz modułów UHPLC (Agilent 1290 Infinity II).
           </p>
           <p>
-            Zwracamy uwagę, że w kanale 412–420 odnotowano powtarzające się wzorce wyładowań iglicowych o charakterystyce zgodnej z rytmem theta (4–7 Hz), pomimo braku podłączonej świeżej tkanki w bioreaktorze. Urządzenie zostało przekazane do weryfikacji przez zespół konektomiki.
+            Testy czystości linii i liniowości detektorów wykazały współczynnik korelacji $R^2 &gt; 0.9995$ dla standardowych krzywych kalibracyjnych w zakresie stężeń 0.1–500 ng/mL. Wszystkie przyrządy pomiarowe zostały dopuszczone do rutynowych analiz komercyjnych GLP na kolejny kwartał.
           </p>
         </div>
       ),
@@ -158,20 +158,20 @@ export default function MailPage() {
       senderName: 'Dział Logistyki & Odczynników',
       senderEmail: 'supplies@neuroclin-bio.internal',
       role: 'Dział Zaopatrzenia Medycznego',
-      subject: 'Dostawa krioflaszek i buforu HEPES (Partia #NC-2026-08)',
+      subject: 'Dostawa kolumn chromatograficznych C18 oraz buforu HEPES (Partia #NC-2026-08)',
       date: '12 września 2026',
       time: '09:04:18',
       isUnread: unreadState['mail-log-04'],
       isUrgent: false,
       snippet:
-        'Potwierdzamy przyjęcie partii odczynników buforowych do chłodni -80°C w skrzydle B. Zgłoszenie zapotrzebowania zrealizowane...',
+        'Potwierdzamy przyjęcie partii kolumn analitycznych oraz odczynników buforowych do magazynu centralnego. Zgłoszenie zapotrzebowania zrealizowane...',
       body: (
         <div className="space-y-3 text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
-          <p>Informujemy, że zamówiona partia odczynników laboratoryjnych została złożona w magazynie kriogenicznym skrzydła B:</p>
+          <p>Informujemy, że zamówiona partia odczynników i materiałów zużywalnych została przyjęta do magazynu odczynników w skrzydle B:</p>
           <ul className="list-disc list-inside space-y-1 font-mono text-xs">
-            <li>Bufor HEPES 1M (pH 7.35) — 12 flakonów x 500 ml</li>
-            <li>Pożywka hodowlana Neurobasal-A z suplementem B-27 — 20 l</li>
-            <li>Mikropipety borokrzemianowe 4.5 MΩ — 500 szt.</li>
+            <li>Kolumny analityczne Waters ACQUITY UPLC BEH C18 (2.1 x 50 mm, 1.7 µm) — 6 szt.</li>
+            <li>Bufor HEPES 1M (pH 7.35, klasa HPLC) — 12 flakonów x 500 ml</li>
+            <li>Końcówki z filtrem niskoretencyjnym (10 µL, 200 µL, 1000 µL) — 50 opakowań</li>
           </ul>
         </div>
       ),
@@ -187,15 +187,15 @@ export default function MailPage() {
       isUnread: unreadState['mail-hr-05'],
       isUrgent: false,
       snippet:
-        'Przypominamy o konieczności ukończenia corocznego e-modułu z zakresu bezpieczeństwa biologicznego BSL-2 oraz archiwizacji danych...',
+        'Przypominamy o konieczności ukończenia corocznego e-modułu z zakresu bezpieczeństwa biologicznego BSL-2 oraz archiwizacji danych GLP...',
       body: (
         <div className="space-y-3 text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
           <p>Szanowni Pracownicy Działu Badań,</p>
           <p>
-            Przypominamy, że do końca bieżącego miesiąca wszyscy analitycy laboratoryjni i operatorzy klastra zobowiązani są do odnowienia wewnętrznej certyfikacji z zakresu procedur BSL-2 oraz protokołów integralności danych GLP (zgodnie z normą ISO/IEC 17025).
+            Przypominamy, że do końca bieżącego miesiąca wszyscy analitycy laboratoryjni i operatorzy aparatury analitycznej zobowiązani są do odnowienia wewnętrznej certyfikacji z zakresu procedur BSL-2 oraz protokołów integralności danych GLP (zgodnie z normą PN-EN ISO/IEC 17025:2018).
           </p>
           <p>
-            Szkolenie obejmuje procedury postępowania z pierwotnymi kulturami neuronalnymi, bezpieczną utylizację odczynników organicznych oraz zasady anonimizacji wyników przed publikacją w repozytorium.
+            Szkolenie obejmuje procedury bezpiecznego postępowania z biologicznymi matrycami krwi i płynu mózgowo-rdzeniowego, utylizację rozpuszczalników organicznych oraz zasady rejestracji surowych danych w systemie analitycznym.
           </p>
           <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded font-mono text-xs text-slate-600 dark:text-slate-400">
             Status Twojego profilu: WYMAGA ODNOWIENIA DO 30.09.2026 // KOD: GLP-BIO-2026-B
@@ -236,7 +236,7 @@ export default function MailPage() {
               </h1>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
-              Zalogowano jako: <strong>badacz@neuroclin-bio.internal</strong> // Uprawnienia: BSL-2+ / Lab Analyst
+              Zalogowano jako: <strong>badacz@neuroclin-bio.internal</strong> // Uprawnienia: BSL-2 / Lab Analyst
             </p>
           </div>
 
@@ -261,284 +261,172 @@ export default function MailPage() {
               : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
           }`}
         >
-          <div className="space-y-1">
+          <div className="space-y-1 text-xs">
             <button
-              onClick={() => {
-                soundEngine.playKeystroke();
-                setActiveFolder('inbox');
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                activeFolder === 'inbox'
-                  ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300 dark:border-sky-800'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
+              onClick={() => soundEngine.playKeystroke()}
+              className="w-full text-left px-3 py-2 rounded-lg bg-sky-50 dark:bg-sky-950 text-sky-700 dark:text-sky-300 font-semibold flex items-center justify-between"
             >
-              <div className="flex items-center gap-2">
-                <span>📥</span>
-                <span>Odebrane</span>
-              </div>
-              {unreadCount > 0 && (
-                <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white animate-pulse">
-                  {unreadCount}
-                </span>
-              )}
+              <span>📥 Odebrane</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-200 dark:bg-sky-900">
+                {emails.length}
+              </span>
             </button>
-
             <button
-              onClick={() => {
-                soundEngine.playKeystroke();
-                setActiveFolder('starred');
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                activeFolder === 'starred'
-                  ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300 dark:border-sky-800'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
+              onClick={() => soundEngine.playKeystroke()}
+              className="w-full text-left px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between"
             >
-              <div className="flex items-center gap-2">
-                <span>⭐</span>
-                <span>Oznaczone</span>
-              </div>
-              <span className="text-[10px] text-slate-400">1</span>
+              <span>📤 Wysłane</span>
+              <span className="text-[10px] font-mono">14</span>
             </button>
-
             <button
-              onClick={() => {
-                soundEngine.playKeystroke();
-                setActiveFolder('sent');
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                activeFolder === 'sent'
-                  ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300 dark:border-sky-800'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
+              onClick={() => soundEngine.playKeystroke()}
+              className="w-full text-left px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between"
             >
-              <div className="flex items-center gap-2">
-                <span>📤</span>
-                <span>Wysłane</span>
-              </div>
-              <span className="text-[10px] text-slate-400">14</span>
+              <span>📁 Archiwum Działowe</span>
+              <span className="text-[10px] font-mono">182</span>
             </button>
-
             <button
-              onClick={() => {
-                soundEngine.playKeystroke();
-                setActiveFolder('archive');
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                activeFolder === 'archive'
-                  ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300 dark:border-sky-800'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
+              onClick={() => soundEngine.playKeystroke()}
+              className="w-full text-left px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between"
             >
-              <div className="flex items-center gap-2">
-                <span>🗄️</span>
-                <span>Archiwum Badań</span>
-              </div>
-              <span className="text-[10px] text-slate-400">128</span>
-            </button>
-
-            <button
-              onClick={() => {
-                soundEngine.playKeystroke();
-                setActiveFolder('trash');
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                activeFolder === 'trash'
-                  ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300 dark:border-sky-800'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span>🗑️</span>
-                <span>Kosz</span>
-              </div>
-              <span className="text-[10px] text-slate-400">3</span>
+              <span>🗑️ Kosz</span>
+              <span className="text-[10px] font-mono">3</span>
             </button>
           </div>
 
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs font-mono text-slate-500">
-            <div className="flex justify-between text-[11px]">
-              <span>Zajętość konta:</span>
-              <span className="font-bold">4.8 GB / 10 GB</span>
-            </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-sky-500 h-full w-[48%]" />
-            </div>
-            <p className="text-[10px] text-slate-400">Archiwum zgodne z protokołem GLP-NC.</p>
-          </div>
-
-          {/* SZYBKIE SKRÓTY DO BADANIA */}
-          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
-            <h5 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
-              SKRÓTY ROBOCZE:
-            </h5>
-            <Link
-              href="/archive"
-              className="block p-2 rounded bg-slate-50 dark:bg-slate-800/60 hover:bg-sky-50 dark:hover:bg-sky-950/40 text-[11px] text-sky-600 dark:text-sky-400 transition-colors"
-            >
-              &rarr; Baza Publikacji & Archiwum
-            </Link>
-            <Link
-              href="/chat"
-              className="block p-2 rounded bg-slate-50 dark:bg-slate-800/60 hover:bg-sky-50 dark:hover:bg-sky-950/40 text-[11px] text-sky-600 dark:text-sky-400 transition-colors"
-            >
-              &rarr; Bio-Chat AI Konsultant
-            </Link>
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
+            <p>Pojemność skrzynki: 1.4 GB / 25 GB</p>
+            <p>Zabezpieczenie: DKIM / SPF / DMARC PASS</p>
           </div>
         </aside>
 
-        {/* ŚRODKOWA KOLUMNA: LISTA MAILI */}
-        <section
-          className={`lg:col-span-4 rounded-xl border p-2 space-y-1.5 overflow-y-auto max-h-[640px] ${
+        {/* ŚRODKOWA KOLUMNA: LISTA WIADOMOŚCI */}
+        <div
+          className={`lg:col-span-4 rounded-xl border overflow-hidden flex flex-col ${
             isDistorted
-              ? 'bg-[#080404] border-[#781414]/70 font-mono'
+              ? 'bg-[#0a0505] border-[#781414]/70'
               : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
           }`}
         >
-          <div className="p-2 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-500">
-            <span>SKRZYNKA ODBIORCZA ({emails.length})</span>
-            <span className="text-[10px] font-mono">FILTR: DATA DESC</span>
+          <div className="p-3 border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+            <span>Wiadomości ({emails.length})</span>
+            <span className="text-[10px] font-mono font-normal">Sortuj: Najnowsze</span>
           </div>
 
-          {emails.map((email) => {
-            const isSelected = email.id === selectedEmailId;
-            const isUnread = email.isUnread;
-
-            return (
-              <div
-                key={email.id}
-                onClick={() => {
-                  soundEngine.playKeystroke();
-                  setSelectedEmailId(email.id);
-                  if (email.isUnread) {
-                    markAsRead(email.id);
-                  }
-                }}
-                className={`p-3 rounded-lg cursor-pointer transition-all border select-none ${
-                  isSelected
-                    ? isDistorted
-                      ? 'bg-red-950/60 border-red-700 text-red-100 shadow-sm'
-                      : 'bg-sky-50/90 dark:bg-sky-950/50 border-sky-300 dark:border-sky-800 text-sky-950 dark:text-sky-100 shadow-sm'
-                    : isDistorted
-                    ? 'bg-[#0e0606] border-red-900/40 hover:border-red-700 text-red-300'
-                    : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200/70 dark:border-slate-800 hover:border-sky-400 text-slate-700 dark:text-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between text-[11px] mb-1">
-                  <div className="flex items-center gap-1.5 font-semibold">
-                    {isUnread && (
-                      <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-                    )}
-                    <span className={isUnread ? 'font-bold text-slate-900 dark:text-white' : ''}>
-                      {email.senderName}
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-slate-400 font-mono">{email.time}</span>
-                </div>
-
-                <h4
-                  className={`text-xs font-semibold mb-1 line-clamp-1 ${
-                    email.isUrgent
-                      ? 'text-amber-700 dark:text-amber-400 font-bold'
-                      : isSelected
-                      ? 'text-slate-900 dark:text-white font-bold'
-                      : 'text-slate-800 dark:text-slate-200'
+          <div className="divide-y divide-slate-100 dark:divide-slate-800/80 overflow-y-auto max-h-[580px]">
+            {emails.map((email) => {
+              const isSelected = email.id === selectedEmailId;
+              return (
+                <div
+                  key={email.id}
+                  onClick={() => handleSelectEmail(email.id)}
+                  className={`p-3.5 cursor-pointer transition-all ${
+                    isSelected
+                      ? 'bg-sky-50 dark:bg-sky-950/30 border-l-4 border-sky-500'
+                      : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'
                   }`}
                 >
-                  {email.isUrgent && <span className="text-red-500 mr-1">[!]</span>}
-                  {email.subject}
-                </h4>
+                  <div className="flex items-center justify-between mb-1">
+                    <span
+                      className={`text-xs font-semibold truncate ${
+                        email.isUnread ? 'text-slate-900 dark:text-white font-bold' : 'text-slate-600 dark:text-slate-400'
+                      }`}
+                    >
+                      {email.senderName}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono shrink-0">{email.time}</span>
+                  </div>
 
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-tight">
-                  {email.snippet}
-                </p>
-              </div>
-            );
-          })}
-        </section>
+                  <p
+                    className={`text-xs truncate mb-1 ${
+                      email.isUnread
+                        ? 'text-slate-900 dark:text-slate-100 font-bold'
+                        : 'text-slate-700 dark:text-slate-300 font-medium'
+                    }`}
+                  >
+                    {email.subject}
+                  </p>
+
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-snug">
+                    {email.snippet}
+                  </p>
+
+                  {email.isUrgent && (
+                    <span className="inline-block mt-1.5 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300">
+                      PILNE / PRIORYTET
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
         {/* PRAWA KOLUMNA: PODGLĄD WYBRANEJ WIADOMOŚCI */}
-        <section
-          className={`lg:col-span-5 rounded-xl border p-5 md:p-6 flex flex-col justify-between overflow-y-auto max-h-[640px] ${
+        <div
+          className={`lg:col-span-5 rounded-xl p-5 md:p-6 border flex flex-col justify-between ${
             isDistorted
-              ? 'bg-[#090505] border-[#781414] anomaly-border-blood text-[#e6c2b8]'
+              ? 'bg-[#080303] border-[#781414] text-[#ffcccc]'
               : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 shadow-sm'
           }`}
         >
-          <div className="space-y-4">
-            {/* GÓRA WIADOMOŚCI */}
-            <div className="border-b pb-4 border-slate-200 dark:border-slate-800">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  {currentEmail.isClassified ? 'DOKUMENT POUFNY // ARCHIWUM' : 'KOMUNIKACJA ROBOCZA'}
-                </span>
-                <span className="text-xs font-mono text-slate-400">
+          <div>
+            <div className="border-b pb-4 mb-4 border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-slate-400 font-mono">
                   {currentEmail.date} // {currentEmail.time}
                 </span>
+                {currentEmail.isUrgent && (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300">
+                    PRIORYTET WYSOKI
+                  </span>
+                )}
               </div>
 
-              <h2
-                className={`text-base md:text-lg font-bold tracking-tight mb-3 ${
-                  isDistorted ? 'text-red-400 font-mono anomaly-glow-blood' : 'text-slate-900 dark:text-white'
-                }`}
-              >
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-snug mb-3">
                 {currentEmail.subject}
               </h2>
 
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center space-x-2.5">
-                  <div className="w-8 h-8 rounded-full bg-sky-600 text-white font-bold flex items-center justify-center text-xs">
-                    {currentEmail.senderName
-                      .split(' ')
-                      .map((n) => n[0])
-                      .join('')}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 dark:text-white">
-                      {currentEmail.senderName}
-                    </p>
-                    <p className="text-[11px] text-slate-500 font-mono">
-                      &lt;{currentEmail.senderEmail}&gt;
-                    </p>
-                  </div>
-                </div>
-
-                <div className="text-right text-[11px] text-slate-400">
-                  <p>Do: badacz@neuroclin-bio.internal</p>
-                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-semibold">
-                    ✓ Szyfrowanie PGP-4096
+              <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 font-mono">
+                <div>
+                  <p>
+                    Od: <strong>{currentEmail.senderName}</strong> &lt;{currentEmail.senderEmail}&gt;
                   </p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">{currentEmail.role}</p>
+                </div>
+                <div className="text-right text-[11px] text-slate-400">
+                  Do: badacz@neuroclin-bio.internal
                 </div>
               </div>
             </div>
 
-            {/* TREŚĆ MAILA */}
             <div className="py-2">{currentEmail.body}</div>
           </div>
 
-          {/* DOLNY PASEK AKCJI DLA MAILA */}
-          <div className="pt-4 mt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-sans text-slate-500">
-            <div className="flex items-center space-x-2">
+          <div className="pt-4 mt-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex gap-2">
               <button
                 onClick={() => soundEngine.playKeystroke()}
-                className="px-3 py-1.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-semibold"
+                className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold transition-all"
               >
                 Odpowiedz
               </button>
               <button
                 onClick={() => soundEngine.playKeystroke()}
-                className="px-3 py-1.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
               >
                 Przekaż dalej
               </button>
             </div>
 
-            <span className="text-[10px] font-mono text-slate-400">
-              ID Wiadomości: msg-2026-0917-884
-            </span>
+            <Link
+              href="/chat"
+              className="text-sky-600 dark:text-sky-400 hover:underline font-semibold"
+            >
+              Rozpocznij kwerendę z BioResearcher AI →
+            </Link>
           </div>
-        </section>
+        </div>
       </div>
     </div>
   );

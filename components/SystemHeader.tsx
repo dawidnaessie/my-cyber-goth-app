@@ -67,8 +67,8 @@ export function SystemHeader() {
             <span className="hidden md:inline text-slate-400">|</span>
             <span className="hidden md:inline font-mono text-[10px]">
               {isDistorted
-                ? 'DESYNCHRONIZACJA POTENCJAŁÓW: 418 ms'
-                : 'Primary Neuronal Specimen Bank // Bioreactor CA1-TH Active'}
+                ? 'DESYNCHRONIZACJA POTENCJAŁÓW: 418 ms // KONEKTOM TH-94'
+                : 'Bio-Analytical Laboratories & Contract Research // ISO/IEC 17025 Accredited'}
             </span>
           </div>
 
