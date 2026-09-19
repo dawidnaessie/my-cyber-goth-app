@@ -21,27 +21,26 @@ System stanowi dojrzałą platformę korporacji bioanalitycznej podzieloną na w
    - Sterylny portal bioanalityczny dla laboratoriów badawczych i przemysłu farmaceutycznego z pełną obsługą motywu **Dzień (Laboratory White)** i **Noc (Slate Night)**.
    - Metryki laboratoryjne (ISO 17025, przepustowość próbek), pakiety wsparcia analitycznego i integracja z platformą BioResearcher.
 2. 📬 **Skrzynka Mailowa (`/mail`) – Wewnętrzny Webmail NeuroClin**:
-   - 100% autentyczny, nudny korporacyjny klient poczty bez jaskrawych ramek ani gotowych podpowiedzi.
-   - **Zadanie od Dr. Marcusa H. Webera**: Przygotowanie sekcji do monografii o demencji i terapiach neurodegeneracyjnych (Donepezil, Memantyna, Lecanemab, p-tau217, TREM2).
-   - W notatce końcowej prośba o sprawdzenie repozytorium `/archive` pod kątem publikacji zespołu z zakresu farmakologii synaptycznej.
-   - Zwykła korespondencja operacyjna (konserwacja bazy LIMS, kalibracja spektrometrów mas Sciex, zaopatrzenie w kolumny HPLC, certyfikacja GLP).
-3. 📁 **Baza Publikacji & Archiwum (`/archive`) – Dwuetapowa Mechanika Śladu**:
-   - Recenzowane prace naukowe ułożone w klasycznych kategoriach: `Farmakologia`, `Biochemia`, `Neurobiologia`, `Immunologia`, `Fizjologia`, `Genetyka`.
-   - **Ślad Pierwszego Stopnia**: W artykule z neurobiologii (`PUB-2024-512`) w metodyce znajduje się sucha wzmianka referencyjna:
-     *„Wartości referencyjne szumu tła i stabilności potencjałów znormalizowano względem wewnętrznego protokołu kalibracyjnego z 14 listopada 1994 r. (seria pomiarowa ST-94/11).”*
-   - **Ślad Drugiego Stopnia**: Wpisanie tej daty lub kodu (`1994`, `14.11`, `14 listopada`, `ST-94`, `Thorne`) w wyszukiwarkę archiwum ujawnia jedyny archiwalny dokument.
-   - **Trwałe Zaczernienie (Permanent Redaction)**: Dokument jest w przeważającej mierze zredagowany czarnym tuszem bez możliwości odsłonięcia tekstu pod spodem. Dostępne są wyłącznie szczątki kontekstu, data (14.11.1994), podpis i archiwalny portret dr. Thorne'a.
-4. 💬 **Bio-Researcher AI / Czat (`/chat`)**:
-   - Zaawansowany asystent badawczy AI z pełnym renderowaniem formuł LaTeX (`remark-math`, `rehype-katex`).
-   - Poprawione inteligentne przewijanie ekranu (auto-scroll wyłącznie na wysłanie oraz na znak nowej linii `\n`).
-   - Zero podpowiedzi fabularnych w nagłówku.
+   - 100% autentyczny klient poczty z zachowaniem przystępności naukowej (Mid-Level Science).
+   - **Zlecenie od Dr. Marcusa H. Webera**: Przygotowanie przeglądu do monografii o chorobach neurodegeneracyjnych (Donepezil, Memantyna, Lecanemab, p-tau217, TREM2, plastyczność synaptyczna LTP).
+   - Wyraźne wskazanie publikacji zespołu (dr Elena Vance, 2024 w `/archive`) oraz intrygująca przestroga w P.S. przed wycofanymi protokołami z dawnego **Sektora-7** (listopad 1994 r., dr Aris Thorne).
+3. 📁 **Baza Publikacji & Archiwum (`/archive`) – Profesjonalny Portal Wiedzy i Ślad ARG**:
+   - Gęste, recenzowane repozytorium (4 829 zindeksowanych prac w klastrze, indeksacja NLM/CrossRef/PubMed Central, licencja CC BY 4.0 Open Access).
+   - 16 pełnowymiarowych publikacji naukowych w kategoriach: `Farmakologia`, `Biochemia`, `Neurobiologia`, `Immunologia`, `Fizjologia`, `Genetyka`.
+   - **Pełna Struktura Akademicka**: Każdy artykuł posiada zwięzły Abstrakt, Cel badania i mechanizm biologiczny (Mid-Level Biology), Metodologię narracyjną oraz ustrukturyzowaną (model tkankowy, aparatura, odczynniki, próbkowanie), Wyniki narracyjne i tabelę analityczną z formułami KaTeX ($p\text{-tau217}$, $\text{Ca}^{2+}$, $K_i$, $P_{app}$), Wnioski translacyjne oraz eksport cytowania (BibTeX, APA, RIS).
+   - **Wielozakładkowy Czytnik Publikacji (`PublicationDetailModal`)**: Płynny modal z pięcioma zakładkami, obsługą klawiatury (`Esc`) i efektami dźwiękowymi.
+   - **Ślad Pierwszego Stopnia**: W artykule z neurobiologii (`PUB-2024-512`, Dr. Elena Vance & Dr. Marcus H. Weber) metodyka wskazuje normalizację względem protokołu kalibracyjnego **ST-94/11** z 14 listopada 1994 r. (Pracownia Elektrofizjologii Sektor-7, dr Aris Thorne).
+   - **Ślad Drugiego Stopnia**: Wpisanie kodu lub powiązanych fraz (`Thorne`, `Aris`, `Sektor-7`, `1994`, `ST-94`) w sterylną wyszukiwarkę ujawnia zredagowany raport `PUB-1994-041-S7`.
+   - **Trwałe Zaczernienie & Telemetria z 1994 r.**: Dokument jest zredagowany czarnym tuszem, odsłaniając fragmenty dotyczące transferu engramów mikrosieci do rejestrów klastra, archiwalny portret doktora Thorne'a (`ScientistPortrait`) oraz telemetrię z 14.11.1994 godz. 03:17:42 UTC (zanik tętna dawcy, skok oscylacji gamma na szynie VMEbus).
+4. 💬 **Bio-Text Composer / Czat (`/chat`)**:
+   - Asystent redakcyjny AI z pełnym renderowaniem formuł LaTeX (`remark-math`, `rehype-katex`).
+   - Globalna persystencja historii rozmowy i stanu Sanity w tle (nawigacja między stronami nie resetuje bufora).
+   - Dedykowany przycisk `[PURGE BUFFER]` czyszczący pamięć asystenta wyłącznie na żądanie gracza.
 5. 🧪 **Usługi & Cennik B2B (`/services`)**:
    - Certyfikowane usługi kontraktowe CRO: UHPLC-MS/MS, rozwój testów ELISA/Simoa, sekwencjonowanie celowane RNA-seq, kinetyka rezonansu plazmonów powierzchniowych (SPR Biacore), testy cytotoksyczności in vitro oraz wdrożenia LIMS.
    - Interaktywny konfigurator zapytania ofertowego (RFQ) dla matryc biologicznych (osocze, surowica, lizaty, kwasy nukleinowe).
 6. 📰 **Aktualności & Komunikaty (`/blog`)**:
    - Rzetelne wiadomości korporacyjne (odnowienie akredytacji ISO/IEC 17025, rozbudowa aparatury chromatograficznej, modelowanie kinetyki Michaelisa-Menten, udział w kongresie w Bazylei, 30 lat działalności analitycznej).
-7. 📡 **Telemetria Klastra (`/status`)**:
-   - Monitoring parametrów infrastruktury obliczeniowej HPC LIMS i aparatury spektrometrycznej.
 
 ---
 

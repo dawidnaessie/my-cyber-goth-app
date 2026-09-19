@@ -40,6 +40,11 @@ export const SUSPICIOUS_KEYWORDS = [
   'ca1-th',
   'th-94',
   'th94',
+  'st-94',
+  'st94',
+  'st-94/11',
+  'protokół kalibracyjny',
+  'protokol kalibracyjny',
 
   // Incydent z listopada 1994 i klauzule wojskowe
   'listopad 1994',

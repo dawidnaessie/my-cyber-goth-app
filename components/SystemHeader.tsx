@@ -22,7 +22,6 @@ export function SystemHeader() {
     { href: '/chat', label: 'Bio-Chat AI' },
     { href: '/services', label: 'Usługi B2B' },
     { href: '/blog', label: 'Aktualności' },
-    { href: '/status', label: 'Telemetria' },
   ];
 
   const handleNavClick = () => {
@@ -307,7 +306,7 @@ export function SystemHeader() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Wpisz np. 'CA1', 'NMDA', 'Thorne', 'ekscytotoksyczność'..."
+              placeholder="Wyszukaj publikacje po tytule, autorze, słowach kluczowych lub DOI..."
               className="w-full px-3 py-2 text-sm border rounded-md outline-none bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-sky-500"
               autoFocus
             />
@@ -315,7 +314,7 @@ export function SystemHeader() {
             <div className="text-xs text-slate-500 space-y-2 max-h-48 overflow-y-auto font-sans">
               <p className="font-semibold text-slate-400 uppercase text-[10px]">Sugerowane hasła naukowe:</p>
               <div className="flex flex-wrap gap-1.5">
-                {['NMDA Receptor Kinetics', '16,384-Site Microelectrode Array', 'Aris Thorne 1994', 'Phenolic Perfusion', 'LTP CA1 Hippocampus'].map((tag) => (
+                {['NMDA Receptor Kinetics', '16,384-Site Microelectrode Array', 'Simoa HD-X Immunoassay', 'Phenolic Perfusion', 'LTP CA1 Hippocampus'].map((tag) => (
                   <Link
                     key={tag}
                     href={`/archive?q=${encodeURIComponent(tag)}`}

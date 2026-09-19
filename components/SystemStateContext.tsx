@@ -25,13 +25,13 @@ export function SystemStateProvider({ children }: { children: React.ReactNode })
   const [theme, setThemeState] = useState<CorporateTheme>('light');
   const [opticsOn, setOpticsOn] = useState<boolean>(true);
   const [audioEnabled, setAudioEnabled] = useState<boolean>(false);
-  const [sanityStage, setSanityStage] = useState<SanityStage>('sane');
+  const [sanityStage, setSanityStageState] = useState<SanityStage>('sane');
   const [isGlitching, setIsGlitching] = useState<boolean>(false);
 
   const sanityStageRef = useRef<SanityStage>(sanityStage);
   sanityStageRef.current = sanityStage;
 
-  // Inicjalizacja preferencji motywu z localStorage lub prefers-color-scheme
+  // Inicjalizacja preferencji motywu oraz stanu Sanity z localStorage
   useEffect(() => {
     try {
       const savedTheme = localStorage.getItem('neuroclin_theme') as CorporateTheme | null;
@@ -40,6 +40,24 @@ export function SystemStateProvider({ children }: { children: React.ReactNode })
       }
     } catch {
       // Ignorowanie błędów w trybie prywatnym/SSR
+    }
+
+    try {
+      const savedSanity = localStorage.getItem('neuroclin_sanity_stage') as SanityStage | null;
+      if (savedSanity === 'sane' || savedSanity === 'error' || savedSanity === 'insanity') {
+        setSanityStageState(savedSanity);
+      }
+    } catch {
+      // Ignorowanie błędów w trybie prywatnym/SSR
+    }
+  }, []);
+
+  const setSanityStage = useCallback((stage: SanityStage) => {
+    setSanityStageState(stage);
+    try {
+      localStorage.setItem('neuroclin_sanity_stage', stage);
+    } catch {
+      // Bezpieczny fallback
     }
   }, []);
 

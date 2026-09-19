@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { SystemStateProvider, useSystemState } from './SystemStateContext';
+import { ChatProvider } from './ChatContext';
 import { SystemHeader } from './SystemHeader';
 
 function CorporateFooter() {
@@ -87,11 +88,6 @@ function CorporateFooter() {
               <li>
                 <Link href="/chat" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
                   BioResearcher AI™ Konsultant Badań
-                </Link>
-              </li>
-              <li>
-                <Link href="/status" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Telemetria Klastra Obliczeniowego
                 </Link>
               </li>
             </ul>
@@ -188,7 +184,9 @@ function ShellContent({ children }: { children: React.ReactNode }) {
 export function ClientShell({ children }: { children: React.ReactNode }) {
   return (
     <SystemStateProvider>
-      <ShellContent>{children}</ShellContent>
+      <ChatProvider>
+        <ShellContent>{children}</ShellContent>
+      </ChatProvider>
     </SystemStateProvider>
   );
 }

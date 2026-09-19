@@ -18,8 +18,8 @@ Projekt całkowicie odrzuca tanie klisze sci-fi na rzecz dusznego, bezwzględneg
   Wszelkie zjawiska opierają się na autentycznych mechanizmach fizjologicznych: ekscytotoksyczność receptorów NMDA przy nadmiernym wyrzucie kwasu glutaminowego, kaskada wapniowa Ca2+, opóźnienie fototransdukcji siatkówki (40–120 ms), desynchronizacja fal gamma (40 Hz) i theta (4–8 Hz) oraz zanik somatycznego sprzężenia zwrotnego z nerwu błędnego.
 * **Procedura Transferu w Sektorze-7**:
   W nocy 14 listopada 1994 r. przeprowadzono procedurę inwazyjnej implantacji 16 384 mikroelektrod krzemowych w strukturę CA1 hipokampa Thorne'a. Preparat biologiczny uległ rozkładowi i utylizacji w pętli fenolowej, podczas gdy jego ślady pamięciowe zostały uwięzione w taktowaniu kwarcowym klastra.
-* **Subtelne Śledztwo ARG (Brak Łopatologicznych Podpowiedzi)**:
-  Wszelkie bezpośrednie instrukcje typu *"Wpisz w konsoli..."* zostały bezwzględnie usunięte. Gracz łączy fakty samodzielnie na podstawie recenzowanych publikacji, wskaźników DOI, protokołów histopatologicznych i zapisków w `/archive`.
+* **Subtelne Śledztwo ARG (Całkowity Brak Łopatologicznych Podpowiedzi)**:
+  Wszelkie bezpośrednie instrukcje typu *"Wpisz w konsoli..."*, *"Szukaj Thorne'a"*, sugerowane tagi zdradzające fabułę w wyszukiwarkach zostały bezwzględnie usunięte. Gracz łączy fakty samodzielnie na podstawie recenzowanych publikacji, wskaźników DOI, protokołów histopatologicznych i zapisków w `/archive`.
 
 ---
 
@@ -44,12 +44,24 @@ Aplikacja operuje na trzech rygorystycznie zdefiniowanych profilach zachowań:
 
 ---
 
-## 3. Rygor Inżynieryjny i Czysty Kod (Zero Bloatware)
+## 3. Globalne Zarządzanie Stanem i Reguły Persystencji
+
+1. **Niezmienność Stanu przy Nawigacji po Portalu**:
+   - Przejście z `/chat` na dowolną inną stronę (`/archive`, `/mail`, `/services`, `/blog`) i powrót **nie ma prawa resetować** historii wiadomości, stanu strumieniowania ani poziomu degradacji Sanity.
+   - Stan jest utrzymywany w pamięci aplikacji (`ClientShell` -> `ChatProvider` & `SystemStateProvider`) oraz synchronizowany z `localStorage`.
+2. **Warunek Resetu Stanu**:
+   - Czyszczenie bufora pamięci i powrót Sanity do stanu `SANE` może nastąpić **wyłącznie** poprzez świadomą decyzję gracza – kliknięcie przycisku `[PURGE BUFFER]` lub wprowadzenie komendy `/clear` / `/reset`.
+3. **Puryzm Hydratacji (Next.js App Router)**:
+   - Wszelkie odczyty pamięci przeglądarki (`localStorage`) są izolowane w `useEffect` po montowaniu komponentów klienta, gwarantując zerową liczbę błędów Hydration Mismatch.
+
+---
+
+## 4. Rygor Inżynieryjny i Czysty Kod (Zero Bloatware)
 
 1. **Obsługa Autentycznego Obrazu z `/public/images/aris.jpg`**:
    - Bezpośrednie renderowanie pliku fotograficznego przy użyciu zoptymalizowanego komponentu `next/image` ze stylizacją analogowej mikrofiszy z 1994 r.
 2. **Architektura Wielostronicowa Next.js App Router**:
-   - Wszystkie podstrony (`/`, `/chat`, `/archive`, `/status`) współdzielą globalny stan `SystemStateContext` bez przeładowywania drzewa audio czy zerwania kontekstu.
+   - Wszystkie podstrony współdzielą globalny stan bez przeładowywania drzewa DOM, audio czy utraty kontekstu.
 3. **Puryzm Typowania (Strict TypeScript)**:
    - Pełna kontrola typów `SanityStage`, struktur komunikatów, interfejsów audio i zdarzeń DOM.
 4. **Izolacja Poświadczeń**:

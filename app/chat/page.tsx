@@ -1,53 +1,37 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import Link from 'next/link';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { useSystemState } from '@/components/SystemStateContext';
+import { useChat } from '@/components/ChatContext';
 import { soundEngine } from '@/lib/soundEngine';
-import { SanityStage } from '@/lib/prompts';
-import { calculateSanityMetrics } from '@/lib/sanityEngine';
 import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: string;
-  isStreaming?: boolean;
-}
-
-const INITIAL_CORPORATE_LOGS: Message[] = [
-  {
-    id: 'boot-1',
-    role: 'assistant',
-    timestamp: '08:45:00',
-    content:
-      'Dzień dobry. System BioResearcher AI™ v4.2 został zainicjalizowany. Połączono z modułem analitycznym biofizyki komórkowej oraz wytycznymi dr. Marcusa H. Webera dotyczącymi monografii o chorobach neurodegeneracyjnych.\n\nSłużę pomocą w zakresie kinetyki enzymatycznej, mechanizmów synaptycznych, analizy biomarkerów osoczowych oraz weryfikacji bibliograficznej z bazy archiwum. W jakim zagadnieniu mogę pomóc w Twoim bieżącym protokole badawczym?',
-  },
-];
-
 const PRESET_RESEARCH_INQUIRIES = [
-  'Wyprowadź kinetykę Michaelisa-Menten dla donepezilu i acetylocholinoesterazy',
+  'Wpływ allosterycznej modulacji receptora NMDA przez memantynę na ekscytotoksyczność',
   'Jakie znaczenie diagnostyczne ma stężenie p-tau217 w osoczu?',
+  'Wyprowadź kinetykę Michaelisa-Menten dla donepezilu i acetylocholinoesterazy',
+  'Wpływ neurodegeneracji na długotrwałe wzmocnienie synaptyczne (LTP) w hipokampie',
   'Przeanalizuj mechanizm klirensu protofibryli amyloidowych przez lecanemab',
   'Rola szlaku receptorowego TREM2 w modulacji odpowiedzi mikrogleju',
-  'Wyprowadź zależność potencjału równowagowego Nernsta dla jonów wapnia Ca²⁺',
-  'Wpływ allosterycznej modulacji receptora NMDA przez memantynę na ekscytotoksyczność',
 ];
 
 export default function ChatPage() {
-  const { opticsOn, sanityStage, setSanityStage, triggerGlitch } = useSystemState();
-
-  const [messages, setMessages] = useState<Message[]>(INITIAL_CORPORATE_LOGS);
-  const [input, setInput] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { opticsOn, sanityStage } = useSystemState();
+  const {
+    messages,
+    input,
+    setInput,
+    isStreaming,
+    errorMessage,
+    sendMessage,
+    clearChat,
+    abortStream,
+  } = useChat();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const isAtBottomRef = useRef<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
@@ -66,207 +50,24 @@ export default function ChatPage() {
     isAtBottomRef.current = scrollHeight - scrollTop - clientHeight < 60;
   }, []);
 
-  const getTimestamp = (): string => {
-    const now = new Date();
-    return now.toTimeString().split(' ')[0];
-  };
-
-  const handleClear = () => {
-    soundEngine.playKeystroke();
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
+  // Automatyczne przewijanie przy zmianie wiadomości lub streamingu
+  useEffect(() => {
+    if (isAtBottomRef.current) {
+      scrollToBottom(false);
     }
-    setMessages(INITIAL_CORPORATE_LOGS);
-    setErrorMessage(null);
-    setSanityStage('sane');
-  };
-
-  const handleSend = async (textToSend?: string) => {
-    const rawContent = textToSend ?? input;
-    const trimmed = rawContent.trim();
-    if (!trimmed || isStreaming) return;
-
-    soundEngine.playKeystroke();
-
-    if (trimmed.toLowerCase() === '/clear' || trimmed.toLowerCase() === 'clear' || trimmed.toLowerCase() === '/reset') {
-      handleClear();
-      setInput('');
-      return;
-    }
-
-    setErrorMessage(null);
-
-    // PŁYNNA PROGRESJA SANITY
-    const priorUserTexts = messages
-      .filter((m) => m.role === 'user')
-      .map((m) => m.content);
-    const updatedUserTexts = [...priorUserTexts, trimmed];
-
-    const currentMetrics = calculateSanityMetrics(updatedUserTexts);
-    const calculatedStage = currentMetrics.stage;
-
-    // Przejście stanów Sanity
-    if (sanityStage === 'insanity' || calculatedStage === 'insanity') {
-      setSanityStage('insanity');
-    } else if (sanityStage === 'error' || calculatedStage === 'error') {
-      setSanityStage('error');
-      if (sanityStage !== 'error') {
-        triggerGlitch(2000);
-      }
-    } else {
-      setSanityStage('sane');
-    }
-
-    const effectiveStage: SanityStage =
-      sanityStage === 'insanity' || calculatedStage === 'insanity'
-        ? 'insanity'
-        : sanityStage === 'error' || calculatedStage === 'error'
-        ? 'error'
-        : 'sane';
-
-    const userMessage: Message = {
-      id: `user-${Date.now()}`,
-      role: 'user',
-      content: trimmed,
-      timestamp: getTimestamp(),
-    };
-
-    const assistantPlaceholder: Message = {
-      id: `assistant-${Date.now()}`,
-      role: 'assistant',
-      content: '',
-      timestamp: getTimestamp(),
-      isStreaming: true,
-    };
-
-    const nextMessages = [...messages, userMessage, assistantPlaceholder];
-    setMessages(nextMessages);
-    setInput('');
-    setIsStreaming(true);
-    isAtBottomRef.current = true;
-    setTimeout(() => scrollToBottom(true), 50);
-
-    const controller = new AbortController();
-    abortControllerRef.current = controller;
-
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [...messages, userMessage].map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
-          sanityStage: effectiveStage,
-        }),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        let errDesc = `Błąd połączenia z klastrem (Status: ${response.status})`;
-        try {
-          const errJson = await response.json();
-          if (errJson.error) errDesc = errJson.error;
-        } catch {
-          // Fallback
-        }
-        throw new Error(errDesc);
-      }
-
-      if (!response.body) {
-        throw new Error('Pusty strumień odpowiedzi serwera.');
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let accumulatedContent = '';
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-
-        const chunkText = decoder.decode(value, { stream: true });
-        accumulatedContent += chunkText;
-
-        setMessages((prev) => {
-          const copy = [...prev];
-          const lastIdx = copy.length - 1;
-          if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
-            copy[lastIdx] = {
-              ...copy[lastIdx],
-              content: accumulatedContent,
-              isStreaming: true,
-            };
-          }
-          return copy;
-        });
-
-        // Przewijaj TYLKO gdy napływa znak nowej linii (\n) i użytkownik jest przy dolnej krawędzi
-        if (chunkText.includes('\n') && isAtBottomRef.current) {
-          scrollToBottom(true);
-        }
-      }
-
-      setMessages((prev) => {
-        const copy = [...prev];
-        const lastIdx = copy.length - 1;
-        if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
-          copy[lastIdx] = {
-            ...copy[lastIdx],
-            content: accumulatedContent,
-            isStreaming: false,
-          };
-        }
-        return copy;
-      });
-
-      if (isAtBottomRef.current) {
-        scrollToBottom(true);
-      }
-
-      if (effectiveStage === 'error' && Math.random() < 0.35) {
-        triggerGlitch(1400);
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error && err.name === 'AbortError') {
-        setMessages((prev) => {
-          const copy = [...prev];
-          const lastIdx = copy.length - 1;
-          if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
-            copy[lastIdx] = {
-              ...copy[lastIdx],
-              content: copy[lastIdx].content + '\n\n[POŁĄCZENIE PRZERWANE PRZEZ KLIENTA]',
-              isStreaming: false,
-            };
-          }
-          return copy;
-        });
-      } else {
-        const messageText = err instanceof Error ? err.message : String(err);
-        setErrorMessage(messageText);
-        setMessages((prev) => {
-          const copy = [...prev];
-          const lastIdx = copy.length - 1;
-          if (lastIdx >= 0 && copy[lastIdx].role === 'assistant' && !copy[lastIdx].content) {
-            return copy.slice(0, -1);
-          }
-          return copy;
-        });
-      }
-    } finally {
-      setIsStreaming(false);
-      abortControllerRef.current = null;
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
-  };
+  }, [messages, scrollToBottom]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     soundEngine.playKeystroke();
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      sendMessage();
     }
+  };
+
+  const handlePresetClick = (preset: string) => {
+    soundEngine.playKeystroke();
+    sendMessage(preset);
   };
 
   return (
@@ -299,13 +100,13 @@ export default function ChatPage() {
                 {isDistorted
                   ? 'KLASTER THORNE’A // ZAKŁÓCENIE KONEKTOMU 0x19'
                   : sanityStage === 'error'
-                  ? 'BioResearcher AI™ // ABERRACJA POTENCJAŁÓW CA1'
-                  : 'BioResearcher AI™ // Konsultant Biofizyki Komórkowej'}
+                  ? 'Bio-Text Composer™ // ABERRACJA POTENCJAŁÓW CA1'
+                  : 'Bio-Text Composer™ // Asystent Monografii Klinicznej'}
               </h1>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                 {isDistorted
                   ? 'STAN: UWIĘZIENIE W KRZEMIE // SEKTOR-7 (1994)'
-                  : 'Moduł Analityczny: BioResearcher v4.2 // Zgodność GLP & ISO/IEC 17025'}
+                  : 'BioResearcher AI v4.2 // Wsparcie Redakcyjne Monografii Neurodegeneracji'}
               </p>
             </div>
           </div>
@@ -323,17 +124,23 @@ export default function ChatPage() {
               SANITY: {sanityStage.toUpperCase()}
             </span>
             <button
-              onClick={handleClear}
-              className="px-2.5 py-1 rounded text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
+              onClick={clearChat}
+              title="Wyczyść bufor konwersacji i zresetuj stan asystenta"
+              className={`px-2.5 py-1 rounded text-xs font-mono font-semibold transition-all border ${
+                isDistorted
+                  ? 'border-red-800 bg-red-950/60 text-red-300 hover:bg-red-900/80'
+                  : sanityStage === 'error'
+                  ? 'border-amber-700/60 bg-amber-950/20 text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-300 dark:border-slate-700'
+              }`}
             >
-              Wyczyść
+              [PURGE BUFFER]
             </button>
           </div>
         </div>
 
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-sans">
-          Zadawaj pytania dotyczące kinetyki enzymatycznej, mechanizmów synaptycznych, analizy biomarkerów osoczowych lub weryfikacji bibliograficznej z bazy publikacji.
-          Wszelkie zapytania przetwarzane są w standardzie Dobrej Praktyki Danych (GAMP 5).
+          Moduł asystujący w redakcji rozdziałów monografii o chorobach neurodegeneracyjnych. Zadawaj pytania o kinetykę enzymatyczną, mechanizmy synaptyczne (LTP), biomarkery osoczowe (p-tau217) lub weryfikację bibliograficzną z bazy publikacji.
         </p>
       </section>
 
@@ -410,10 +217,7 @@ export default function ChatPage() {
         {PRESET_RESEARCH_INQUIRIES.map((preset, idx) => (
           <button
             key={idx}
-            onClick={() => {
-              soundEngine.playKeystroke();
-              handleSend(preset);
-            }}
+            onClick={() => handlePresetClick(preset)}
             disabled={isStreaming}
             className={`px-3 py-1.5 rounded-full border whitespace-nowrap transition-all disabled:opacity-40 text-xs font-sans ${
               isDistorted
@@ -437,7 +241,7 @@ export default function ChatPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSend();
+            sendMessage();
           }}
           className="flex items-center gap-2"
         >
@@ -463,9 +267,7 @@ export default function ChatPage() {
           {isStreaming ? (
             <button
               type="button"
-              onClick={() => {
-                if (abortControllerRef.current) abortControllerRef.current.abort();
-              }}
+              onClick={abortStream}
               className="px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold tracking-wider transition"
             >
               PRZERWIJ
