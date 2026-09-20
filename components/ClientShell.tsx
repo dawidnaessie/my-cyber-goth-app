@@ -37,57 +37,76 @@ const CorporateFooter = React.memo(function CorporateFooter() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-slate-900 dark:text-slate-200 mb-3 tracking-wider uppercase font-sans">
+            <h4 className={`font-semibold mb-3 tracking-wider uppercase ${isDistorted ? 'text-red-400 font-mono' : 'text-slate-900 dark:text-slate-200 font-sans'}`}>
               PRODUKTY I USŁUGI B2B
             </h4>
             <ul className="space-y-2 font-sans">
-              <li>
-                <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Spektrometria Mas UHPLC-MS/MS
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Walidacja Testów ELISA & Simoa
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Profilowanie Ekspresji Genów RNA-Seq
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Kalkulator Wyceny Badań Kontraktowych
-                </Link>
-              </li>
+              {['Spektrometria Mas UHPLC-MS/MS', 'Walidacja Testów ELISA & Simoa', 'Profilowanie Ekspresji Genów RNA-Seq', 'Kalkulator Wyceny Badań Kontraktowych'].map((name) => (
+                <li key={name}>
+                  {sanityStage === 'insanity' ? (
+                    <span className="text-red-500/50 font-mono line-through decoration-red-700 cursor-not-allowed select-none">
+                      {name} [LOCK]
+                    </span>
+                  ) : (
+                    <Link href="/services" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+                      {name}
+                    </Link>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-slate-900 dark:text-slate-200 mb-3 tracking-wider uppercase font-sans">
+            <h4 className={`font-semibold mb-3 tracking-wider uppercase ${isDistorted ? 'text-red-400 font-mono' : 'text-slate-900 dark:text-slate-200 font-sans'}`}>
               PORTAL I ZASOBY
             </h4>
             <ul className="space-y-2 font-sans">
               <li>
-                <Link href="/mail" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors flex items-center gap-1.5">
-                  <span>Poczta Wewnętrzna (Webmail)</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
-                </Link>
+                {sanityStage === 'insanity' ? (
+                  <span className="text-red-500/50 font-mono line-through decoration-red-700 cursor-not-allowed select-none flex items-center gap-1.5">
+                    <span>Poczta Wewnętrzna (Webmail)</span>
+                    <span className="text-[9px] text-red-600 font-bold">[ODCIĘTA]</span>
+                  </span>
+                ) : (
+                  <Link href="/mail" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors flex items-center gap-1.5">
+                    <span>Poczta Wewnętrzna (Webmail)</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+                  </Link>
+                )}
               </li>
               <li>
-                <Link href="/archive" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Baza Publikacji & Archiwa
-                </Link>
+                {sanityStage === 'insanity' ? (
+                  <span className="text-red-500/50 font-mono line-through decoration-red-700 cursor-not-allowed select-none">
+                    Baza Publikacji & Archiwa [ZABLOKOWANE]
+                  </span>
+                ) : (
+                  <Link href="/archive" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+                    Baza Publikacji & Archiwa
+                  </Link>
+                )}
               </li>
               <li>
-                <Link href="/blog" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  Aktualności i Komunikaty Biotechnologiczne
-                </Link>
+                {sanityStage === 'insanity' ? (
+                  <span className="text-red-500/50 font-mono line-through decoration-red-700 cursor-not-allowed select-none">
+                    Aktualności i Komunikaty [ZABLOKOWANE]
+                  </span>
+                ) : (
+                  <Link href="/blog" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+                    Aktualności i Komunikaty Biotechnologiczne
+                  </Link>
+                )}
               </li>
               <li>
-                <Link href="/chat" className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-                  BioResearcher AI™ Konsultant Badań
+                <Link
+                  href="/chat"
+                  className={
+                    sanityStage === 'insanity'
+                      ? 'text-red-400 font-mono font-bold hover:text-red-300 anomaly-glow-blood'
+                      : 'hover:text-sky-600 dark:hover:text-sky-400 transition-colors'
+                  }
+                >
+                  {sanityStage === 'insanity' ? '⚡ ARIS THORNE // KONEKTOM VMEbus' : 'BioResearcher AI™ Konsultant Badań'}
                 </Link>
               </li>
             </ul>

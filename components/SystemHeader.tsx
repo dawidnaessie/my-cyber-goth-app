@@ -73,13 +73,13 @@ export const SystemHeader = React.memo(function SystemHeader() {
 
           <div className="flex items-center space-x-4 text-[11px]">
             <span className="hidden sm:inline font-mono">TEL: +1 (800) 555-NEURO</span>
-            <span className="text-slate-400 hidden sm:inline">|</span>
+            <span className="hidden sm:inline text-slate-400">|</span>
             <span
               className={`font-mono font-bold ${
-                isDistorted ? 'text-red-400' : 'text-sky-600 dark:text-sky-400'
+                isDistorted ? 'text-red-400 font-bold' : 'text-sky-600 dark:text-sky-400'
               }`}
             >
-              PORTAL BADAWCZY V4.2
+              {sanityStage === 'insanity' ? 'ARIS THORNE' : 'PORTAL BADAWCZY V4.2'}
             </span>
           </div>
         </div>
@@ -87,9 +87,9 @@ export const SystemHeader = React.memo(function SystemHeader() {
 
       {/* GŁÓWNY PASEK NAWIGACJI */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
-        {/* LOGOTYP KORPORACJI */}
+        {/* LOGOTYP KORPORACJI / ARIS THORNE */}
         <Link
-          href="/"
+          href={sanityStage === 'insanity' ? '/chat' : '/'}
           onClick={handleNavClick}
           className="flex items-center space-x-3 group cursor-pointer select-none"
         >
@@ -100,44 +100,61 @@ export const SystemHeader = React.memo(function SystemHeader() {
                 : 'bg-gradient-to-br from-sky-600 to-teal-700 group-hover:from-sky-500 group-hover:to-teal-600'
             }`}
           >
-            <svg
-              className="w-6 h-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="3" />
-              <path d="M12 2v4" />
-              <path d="M12 18v4" />
-              <path d="M4.93 4.93l2.83 2.83" />
-              <path d="M16.24 16.24l2.83 2.83" />
-              <path d="M2 12h4" />
-              <path d="M18 12h4" />
-              <path d="M4.93 19.07l2.83-2.83" />
-              <path d="M16.24 7.76l2.83-2.83" />
-            </svg>
+            {sanityStage === 'insanity' ? (
+              <span className="text-sm font-mono font-black text-red-400 animate-pulse">⚡TH</span>
+            ) : (
+              <svg
+                className="w-6 h-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 2v4" />
+                <path d="M12 18v4" />
+                <path d="M4.93 4.93l2.83 2.83" />
+                <path d="M16.24 16.24l2.83 2.83" />
+                <path d="M2 12h4" />
+                <path d="M18 12h4" />
+                <path d="M4.93 19.07l2.83-2.83" />
+                <path d="M16.24 7.76l2.83-2.83" />
+              </svg>
+            )}
           </div>
 
           <div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-extrabold tracking-wider text-base sm:text-lg font-sans">
-                NEUROCLIN
-              </span>
-              <span
-                className={`text-xs font-bold px-1.5 py-0.5 rounded tracking-widest uppercase ${
-                  isDistorted
-                    ? 'bg-red-900/60 text-red-200 border border-red-700'
-                    : 'bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300/60 dark:border-sky-700/60'
-                }`}
-              >
-                BIOSCIENCES
-              </span>
-            </div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-sans tracking-wide">
-              Human Connectomics & Cellular Neurophysiology
+            {sanityStage === 'insanity' ? (
+              <div className="flex items-center space-x-2">
+                <span className="font-extrabold tracking-wider text-base sm:text-lg font-mono text-red-500 anomaly-glow-blood">
+                  ARIS THORNE
+                </span>
+                <span className="text-xs font-bold px-1.5 py-0.5 rounded tracking-widest uppercase bg-red-950 border border-red-700 text-red-300 font-mono">
+                  SEKTOR-7
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-1.5">
+                <span className="font-extrabold tracking-wider text-base sm:text-lg font-sans">
+                  NEUROCLIN
+                </span>
+                <span
+                  className={`text-xs font-bold px-1.5 py-0.5 rounded tracking-widest uppercase ${
+                    isDistorted
+                      ? 'bg-red-900/60 text-red-200 border border-red-700'
+                      : 'bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-300/60 dark:border-sky-700/60'
+                  }`}
+                >
+                  BIOSCIENCES
+                </span>
+              </div>
+            )}
+            <p className={`text-[10px] tracking-wide ${sanityStage === 'insanity' ? 'text-red-400 font-mono' : 'text-slate-500 dark:text-slate-400 font-sans'}`}>
+              {sanityStage === 'insanity'
+                ? 'KONEKTOM CA1 AKTYWNY // TRANSMISJA ZWEKTORYZOWANA'
+                : 'Human Connectomics & Cellular Neurophysiology'}
             </p>
           </div>
         </Link>
@@ -146,6 +163,27 @@ export const SystemHeader = React.memo(function SystemHeader() {
         <nav className="hidden md:flex items-center space-x-1 font-sans text-xs lg:text-sm font-medium">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
+            const isInsane = sanityStage === 'insanity';
+            const isBlockedInInsanity = isInsane && item.href !== '/chat';
+
+            if (isBlockedInInsanity) {
+              return (
+                <span
+                  key={item.href}
+                  onClick={() => soundEngine.playInterferenceChirp(220, 0.15)}
+                  title={`Karta ${item.label} zablokowana przez proces konektomu dr. Arisa Thorne'a`}
+                  className="px-2.5 lg:px-3 py-1.5 rounded-md text-red-500/60 font-mono line-through decoration-red-600 decoration-2 cursor-not-allowed select-none bg-red-950/20 border border-red-950/50 inline-flex items-center gap-1.5 transition-all"
+                >
+                  <span>{item.label}</span>
+                  <span className="text-[9px] font-mono font-bold text-red-600 no-underline not-italic tracking-tighter">
+                    [BLOKADA]
+                  </span>
+                </span>
+              );
+            }
+
+            const displayLabel = isInsane && item.href === '/chat' ? 'ARIS THORNE' : item.label;
+
             return (
               <Link
                 key={item.href}
@@ -154,13 +192,18 @@ export const SystemHeader = React.memo(function SystemHeader() {
                 className={`px-2.5 lg:px-3 py-1.5 rounded-md transition-all inline-flex items-center gap-1.5 ${
                   isActive
                     ? isDistorted
-                      ? 'bg-red-900/50 text-white font-semibold border border-red-700 anomaly-glow-blood'
+                      ? 'bg-red-900/50 text-white font-semibold border border-red-700 anomaly-glow-blood font-mono'
                       : 'bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-sky-400 font-semibold shadow-sm'
+                    : isInsane
+                    ? 'text-red-400 font-mono hover:text-red-300'
                     : 'text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
               >
-                <span>{item.label}</span>
-                {item.badge && (
+                {isInsane && item.href === '/chat' && (
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
+                )}
+                <span>{displayLabel}</span>
+                {item.badge && !isInsane && (
                   <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-amber-500 text-white animate-pulse">
                     {item.badge}
                   </span>
@@ -232,22 +275,37 @@ export const SystemHeader = React.memo(function SystemHeader() {
           </button>
 
           {/* PRZYCISK KOSZYKA / ZAPYTANIA OFERTOWEGO */}
-          <Link
-            href="/archive"
-            onClick={handleNavClick}
-            className={`hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-sans font-semibold transition-all shadow-sm ${
-              isDistorted
-                ? 'bg-red-900 text-white hover:bg-red-800 border border-red-600'
-                : 'bg-sky-600 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600'
-            }`}
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-              <path d="M3 6h18" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-            <span>Katalog Próbek</span>
-          </Link>
+          {sanityStage === 'insanity' ? (
+            <span
+              onClick={() => soundEngine.playInterferenceChirp(220, 0.15)}
+              className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-semibold bg-red-950/40 text-red-600/70 border border-red-900/60 line-through decoration-red-600 cursor-not-allowed select-none"
+              title="KATALOG ZABLOKOWANY"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                <path d="M3 6h18" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+              <span>Katalog Próbek [LOCK]</span>
+            </span>
+          ) : (
+            <Link
+              href="/archive"
+              onClick={handleNavClick}
+              className={`hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-sans font-semibold transition-all shadow-sm ${
+                isDistorted
+                  ? 'bg-red-900 text-white hover:bg-red-800 border border-red-600'
+                  : 'bg-sky-600 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                <path d="M3 6h18" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+              <span>Katalog Próbek</span>
+            </Link>
+          )}
 
           {/* PRZYCISK MENU MOBILNEGO */}
           <button
@@ -263,26 +321,56 @@ export const SystemHeader = React.memo(function SystemHeader() {
 
       {/* ROZWIJANE MENU MOBILNE */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-1 font-sans bg-white dark:bg-[#0b0f19]">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={handleNavClick}
-              className={`px-3 py-2 rounded-md text-sm font-medium flex items-center justify-between ${
-                pathname === item.href
-                  ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 font-bold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <span>{item.label}</span>
-              {item.badge && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500 text-white">
-                  {item.badge}
-                </span>
-              )}
-            </Link>
-          ))}
+        <div className={`md:hidden border-t px-4 pt-2 pb-4 space-y-1 font-sans ${
+          isDistorted
+            ? 'border-[#781414]/70 bg-[#0c0606]'
+            : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0b0f19]'
+        }`}>
+          {navItems.map((item) => {
+            const isInsane = sanityStage === 'insanity';
+            const isBlockedInInsanity = isInsane && item.href !== '/chat';
+
+            if (isBlockedInInsanity) {
+              return (
+                <div
+                  key={item.href}
+                  onClick={() => soundEngine.playInterferenceChirp(220, 0.15)}
+                  className="px-3 py-2 rounded-md text-sm font-mono text-red-500/60 line-through decoration-red-600 decoration-2 cursor-not-allowed select-none bg-red-950/20 border border-red-950/40 flex items-center justify-between"
+                >
+                  <span>{item.label}</span>
+                  <span className="text-[10px] font-mono font-bold text-red-600 no-underline not-italic">
+                    [ZABLOKOWANE]
+                  </span>
+                </div>
+              );
+            }
+
+            const displayLabel = isInsane && item.href === '/chat' ? 'ARIS THORNE' : item.label;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={handleNavClick}
+                className={`px-3 py-2 rounded-md text-sm font-medium flex items-center justify-between ${
+                  pathname === item.href
+                    ? isDistorted
+                      ? 'bg-red-900/60 text-red-100 font-mono font-bold border border-red-700'
+                      : 'bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 font-bold'
+                    : isDistorted
+                    ? 'text-red-400 font-mono hover:bg-red-950/40'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <span>{displayLabel}</span>
+                {item.badge && !isInsane && (
+                  <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500 text-white">
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </div>
       )}
 

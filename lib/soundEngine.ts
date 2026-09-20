@@ -437,9 +437,9 @@ export class SoundEngine {
   }
 
   /**
-   * Syntetyczny mikro-impuls aktywacyjny
+   * Syntetyczny mikro-impuls aktywacyjny / dźwięk błędu zablokowanego modułu
    */
-  private playInterferenceChirp(frequency: number, duration: number): void {
+  public playInterferenceChirp(frequency: number = 440, duration: number = 0.08): void {
     const ctx = this.getAudioContext();
     if (!ctx) return;
 

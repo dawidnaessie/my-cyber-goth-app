@@ -237,7 +237,9 @@ export default function ChatPage() {
                   isDistorted ? 'text-red-400 anomaly-glow-blood font-mono' : 'text-slate-900 dark:text-white'
                 }`}
               >
-                {isDistorted
+                {sanityStage === 'insanity'
+                  ? 'ARIS THORNE // KONEKTOM VMEbus SEKTOR-7'
+                  : isDistorted
                   ? 'BIORESEARCHER AI // ANOMALIA REJESTRÓW THORNE-94'
                   : 'BioResearcher AI™ v4.2 // Bio-Text Composer'}
               </h1>
