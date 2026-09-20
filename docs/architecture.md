@@ -36,9 +36,9 @@ lib/
 │   └── fallbackChain.ts    # Koordynator łańcucha odpornego na awarie z ustrukturyzowaną telemetrią
 ├── ai.ts                   # Fabryka klienta GoogleGenAI z leniwą inicjalizacją (Proxy)
 ├── prompts.ts              # Selekcja promptów systemowych wg SanityStage (Sane / Error / Insanity)
-├── prompts_sane.ts         # Instrukcje dla stadium SANE (Bio-Text Composer, donepezil, memantyna, KaTeX)
-├── prompts_error.ts        # Instrukcje dla stadium ERROR (Dekoherencja klastra, błędy odczytu ST-94)
-├── prompts_insanity.ts     # Instrukcje dla stadium INSANITY (Aris Thorne, CAPS LOCK, Analog Horror)
+├── prompts_sane.ts         # Instrukcje dla stadium SANE (Uniwersalny Bio-Research, Anti-Model Override, LaTeX)
+├── prompts_error.ts        # Instrukcje dla stadium ERROR (Dekoherencja klastra, błędy odczytu ST-94, rygor naukowy)
+├── prompts_insanity.ts     # Instrukcje dla stadium INSANITY (Dr. Aris Thorne, CAPS LOCK, Analog Horror, blokada nawigacji)
 ├── sanityEngine.ts         # Silnik wyliczania metryk degradacji psychiki probanda
 └── soundEngine.ts          # Silnik audialny Web Audio API (Dźwięki laboratoryjne / CRT glitch / rezonans)
 ```

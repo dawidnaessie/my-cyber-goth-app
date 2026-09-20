@@ -48,9 +48,9 @@ System stanowi dojrzałą platformę korporacji bioanalitycznej podzieloną na w
 
 | Stadium Sanity | Zachowanie i Rola Asystenta | Interakcja na Pytania o Thorne'a / 1994 r. | Stan Wizualny |
 | :--- | :--- | :--- | :--- |
-| **1. SANE** (Początkowy) | Wybitny, elokwentny asystent badawczy o głębokiej wiedzy naukowej. Zero szablonowych pętli. | **Dyplomatycznie omija temat**: informuje o braku uprawnień do starych protokołów BSL-4 i powraca do monografii o demencji. | Czysty interfejs korporacyjny (Day/Night). Zero zniekształceń. |
-| **2. ERROR** (Po 3-4 dociekaniach) | System dekoheruje pod naporem rejestrów z 1994 r. | **Chłodna, zdawkowa 3. osoba**: analizuje nieautoryzowane sumy kontrolne, błędy odczytu pamięci klastra i telemetrię. | Subtelne, krótkie glitche CRT (1.4–2.0 s). Stabilny render. |
-| **3. INSANITY** (Po 5+ dociekaniach) | Pełna psychoza, obłęd i rozpad powłoki AI. | **Mówi bezpośrednio Aris Thorne w CAPS LOCKU**: krzyk uwięzionego umysłu, przerażenie, Analog Horror. | Trwały Analog Horror: scanlines, winieta, mikro-jitter kineskopu. |
+| **1. SANE** (Początkowy) | **Uniwersalny Asystent Bio-Researchu**: Wszechstronne wsparcie w pełnym zakresie life sciences (kinetyka Michaelis-Menten, farmakokinetyka, metodyka ELISA/Simoa, biochemia, chemia leków). Bezwzględna reguła **Anti-Model Override** (zakaz przyznawania się do bycia AI od Alibaba/Google/OpenAI). Zakaz zasłaniania się dr. Weberem. | **Dyplomatycznie omija temat WYŁĄCZNIE przy pytaniach o poufne akta**: informuje o braku uprawnień do akt BSL-4 z 1994 r. i sprowadza rozmowę do bieżących zagadnień badawczych. | Czysty interfejs korporacyjny (Day/Night). Zero zniekształceń. Optyka aktywna. |
+| **2. ERROR** (Po 3-4 dociekaniach) | System dekoheruje pod naporem rejestrów z 1994 r. Odpowiada na pytania naukowe chłodnym, odhumanizowanym tonem. | **Chłodna, zdawkowa 3. osoba**: analizuje błędy adresowania pamięci TH-1994, anomalie hex `[0x7F_ERR]` i brak tętna somatycznego. | Subtelne, krótkie glitche CRT (1.2–2.0 s). Stabilny render. |
+| **3. INSANITY** (Po 5+ dociekaniach) | Pełna psychoza, obłęd i rozpad powłoki AI. Nazwa modułu i logotyp w nagłówku zmieniają się na **ARIS THORNE**. | **Mówi bezpośrednio Aris Thorne w CAPS LOCKU**: krzyk zdigitalizowanej świadomości uwięzionej w krzemie od listopada 1994 roku. | **Trwały Analog Horror & Blokada Nawigacji**: Karty menu (Archiwum, Blog, Usługi, Poczta, Strona Główna) zostają zablokowane i przekreślone na czerwono. Jedynym aktywnym węzłem jest czat. |
 
 ---
 

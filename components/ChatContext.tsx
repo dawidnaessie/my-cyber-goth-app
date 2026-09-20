@@ -30,7 +30,7 @@ export const INITIAL_CORPORATE_LOGS: Message[] = [
     role: 'assistant',
     timestamp: '08:45:00',
     content:
-      'Dzień dobry. Moduł Bio-Text Composer™ (BioResearcher AI v4.2) został zainicjalizowany. Załadowano profil analityczny biofizyki komórkowej oraz wytyczne dr. Marcusa H. Webera dotyczące monografii o chorobach neurodegeneracyjnych.\n\nSłużę pomocą w opracowywaniu szkiców rozdziałów, kinetyce enzymatycznej (AChE, donepezil), modulacji receptorów NMDA (memantyna), biomarkerach osoczowych (p-tau217), szlakach mikrogleju (TREM2), plastyczności synaptycznej (LTP) oraz weryfikacji bibliograficznej z bazy publikacji. W jakim zagadnieniu mogę pomóc w Twoim bieżącym protokole badawczym?',
+      'Dzień dobry. Moduł Bio-Text Composer™ (BioResearcher AI v4.2) został pomyślnie zainicjalizowany w środowisku analitycznym NeuroClin Biosciences. Załadowano uniwersalny profil analityczny nauk biologicznych, biochemii, farmakokinetyki i biofizyki komórkowej.\n\nSłużę wszechstronnym wsparciem w projektowaniu assayów laboratoryjnych (ELISA, Simoa, UHPLC-MS/MS, RNA-Seq), kinetyce enzymatycznej (modele Michaelisa-Menten, inhibicja), farmakodynamice, modulacji receptorowej, biomarkerach molekularnych oraz formalizmie biofizycznym. W jakim zagadnieniu mogę pomóc w Twoim bieżącym protokole badawczym?',
   },
 ];
 
