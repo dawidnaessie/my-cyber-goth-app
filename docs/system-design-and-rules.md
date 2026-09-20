@@ -79,11 +79,19 @@ Dla zapewnienia 100% dostępności terminala laboratoryjnego wprowadzono trójst
    - Strumieniowanie Server-Sent Events (SSE) jest w locie transkodowane do formatu tekstowego zgodnego z klientem `ChatContext`.
 3. **Puryzm Spójności Sanity i Kontekstu**:
    - Model zapasowy (Groq) otrzymuje **dokładnie ten sam system prompt** (`SANE_PROMPT`, `ERROR_PROMPT` lub `INSANITY_PROMPT`), pełną historię konwersacji, identyczną temperaturę (0.7 / 0.9 / 0.95) oraz ten sam rygor naukowy Bio-Text Composera i formatowania LaTeX ($...$, $$...$$).
-4. **Odporność na Deprecację Modeli w Chmurze**:
+4. **Likwidacja Powitań i Przełączeń Zapasowych (Seamless Break / Hard Cut)**:
+   - Całkowity zakaz witania się, ponownego przedstawiania czy wspominania o backendzie przy przejęciu strumienia przez Groq.
+   - Odpowiedź rozpoczyna się natychmiast od treści merytorycznej lub reakcji fabularnej.
+5. **Mechanizm Urwanej Transmisji (Abrupt Cut & Signal Loss)**:
+   - W przypadku zerwania połączenia lub błędu, odpowiedź zostaje brutalnie ucięta w połowie słowa z doklejeniem surowego znacznika:
+     `...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...`
+   - W stanie INSANITY ucięcie symuluje przegrzanie i przepięcie klastra:
+     `...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7 // DEKOMPOZYCJA TERMICZNA KONEKTOMU]...`
+6. **Odporność na Deprecację Modeli w Chmurze**:
    - Klient Groq posiada zaimplementowaną kaskadę zweryfikowanych modeli (priorytet: `llama-3.3-70b-versatile`, `llama3-8b-8192`, fallback: `qwen/qwen3.8-27b`, `groq/compound-mini`, `groq/compound`), co gwarantuje działanie nawet w przypadku wycofania pojedynczego modelu przez dostawcę.
-5. **Zasada Pancernego Bufora Awaryjnego (Emergency Buffer w Lore)**:
+7. **Zasada Pancernego Bufora Awaryjnego (Emergency Buffer w Lore)**:
    - Całkowity zakaz wyrzucania surowych wyjątków HTTP 500, czerwonych błędów w konsoli lub pustych dymków w UI.
-   - W razie jednoczesnej awarii obu chmur (np. limit 429 Quota na Gemini i Groq), system serwuje kontrolowaną, immersyjną odpowiedź bufora lokalnego Sektor-7, wplatając treść zapytania użytkownika w raport awarii pamięci podręcznej (`[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]`).
+   - W razie jednoczesnej awarii obu chmur (np. limit 429 Quota na Gemini i Groq), system serwuje kontrolowaną, immersyjną odpowiedź bufora lokalnego Sektor-7, wplatając treść zapytania użytkownika w raport awarii pamięci podręcznej i kończąc nagłym ucięciem sygnału.
 
 
 ---

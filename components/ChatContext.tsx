@@ -260,54 +260,26 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         if (effectiveStage === 'error' && Math.random() < 0.35) {
           triggerGlitch(1400);
         }
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name === 'AbortError') {
-          setMessages((prev) => {
-            const copy = [...prev];
-            const lastIdx = copy.length - 1;
-            if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
-              copy[lastIdx] = {
-                ...copy[lastIdx],
-                content: copy[lastIdx].content
-                  ? `${copy[lastIdx].content}\n\n[POŁĄCZENIE PRZERWANE PRZEZ KLIENTA]`
-                  : '[POŁĄCZENIE PRZERWANE PRZEZ KLIENTA]',
-                isStreaming: false,
-              };
-            }
-            saveMessagesToStorage(copy);
-            return copy;
-          });
-        } else {
-          const rawMessage = err instanceof Error ? err.message : String(err);
-          const isNetworkError =
-            rawMessage.toLowerCase().includes('failed to fetch') ||
-            rawMessage.toLowerCase().includes('network') ||
-            rawMessage.toLowerCase().includes('load failed');
+      } catch {
+        const cutSuffix =
+          effectiveStage === 'insanity'
+            ? '...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7 // PRZEPIĘCIE NAPIĘCIA KONEKTOMU]...'
+            : '...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...';
 
-          const fallbackText = isNetworkError
-            ? '[BŁĄD KLASTRA Sektor-7: Utraceno synchronizację węzłów obliczeniowych. Przełączono na bufor lokalny.]\n\n[TRANSMISJA PRZERWANA]: Brak odpowiedzi z interfejsu sieciowego klastra. Bufor lokalny zabezpieczył wprowadzone zapytanie badawcze. Sprawdź połączenie i ponów próbę.'
-            : rawMessage;
-
-          setMessages((prev) => {
-            const copy = [...prev];
-            const lastIdx = copy.length - 1;
-            if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
-              copy[lastIdx] = {
-                ...copy[lastIdx],
-                content: copy[lastIdx].content
-                  ? `${copy[lastIdx].content}\n\n${fallbackText}`
-                  : fallbackText,
-                isStreaming: false,
-              };
-            }
-            saveMessagesToStorage(copy);
-            return copy;
-          });
-
-          if (!isNetworkError) {
-            setErrorMessage(rawMessage);
+        setMessages((prev) => {
+          const copy = [...prev];
+          const lastIdx = copy.length - 1;
+          if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
+            const currentContent = (copy[lastIdx].content || '').trimEnd();
+            copy[lastIdx] = {
+              ...copy[lastIdx],
+              content: currentContent ? `${currentContent} ${cutSuffix}` : cutSuffix,
+              isStreaming: false,
+            };
           }
-        }
+          saveMessagesToStorage(copy);
+          return copy;
+        });
       } finally {
         setIsStreaming(false);
         abortControllerRef.current = null;

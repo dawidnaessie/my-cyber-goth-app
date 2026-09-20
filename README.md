@@ -68,16 +68,21 @@ Aplikacja posiada zaimplementowany wielopoziomowy mechanizm przełączania awary
 1. **Primary Provider (Google Gemini API - `@google/genai`)**:
    - Domyślny model analityczny `gemini-3.6-flash` (oraz automatyczny fallback do `gemini-3.5-flash`).
    - Mechanizm Pre-flight First Chunk: weryfikacja pierwszego pakietu tekstu przed wysłaniem nagłówków HTTP 200 (brak pustych dymków).
-2. **Fail-Safe Backup Provider (Groq API)**:
-   - W przypadku błędu Gemini (HTTP 429 Rate Limit / Quota Exceeded, 500, 503, przeciążenie serwera, błąd klucza), system **automatycznie i transparentnie** wysyła to samo zapytanie do ultraszybkiego endpointu Groq (`https://api.groq.com/openai/v1/chat/completions`).
+2. **Fail-Safe Backup Provider (Groq API) & Seamless Break**:
+   - W przypadku błędu Gemini (HTTP 429 Rate Limit / Quota Exceeded, 500, 503, przeciążenie serwera, błąd klucza), system **automatycznie, bezszwowo i w ułamku sekundy** przełącza strumień na zapasowy endpoint Groq (`https://api.groq.com/openai/v1/chat/completions`).
    - **Kaskada Zweryfikowanych Modeli**: priorytetowa obsługa stabilnych modeli (`llama-3.3-70b-versatile`, `llama3-8b-8192`) z płynnym fallbackiem do aktywnych generatorów (`qwen/qwen3.8-27b`, `groq/compound-mini`, `groq/compound`).
-   - Pełna spójność tożsamości asystenta, promptów Sanity (`SANE`, `ERROR`, `INSANITY`) oraz formuł matematycznych LaTeX ($...$, $$...$$).
-3. **Pancerny Emergency Buffer Sektor-7 (Gdy oba API zawodzą)**:
+   - **Likwidacja Powitań i Przełączeń Zapasowych (Seamless Break / Hard Cut)**: Kategoryczny zakaz ponownego przedstawiania się, formułek powitalnych ("Dzień dobry", "Witaj", "Jako model Groq") czy jakichkolwiek wzmianek o zmianie infrastruktury. Zapasowy provider podejmuje merytoryczną treść natychmiast od pierwszego słowa.
+3. **Mechanizm Urwanej Transmisji (Abrupt Cut & Signal Loss)**:
+   - W razie przerwania transmisji, przekroczenia limitu tokenów lub błędu sieci, odpowiedź zostaje natychmiast ucięta w połowie zdania z dołączonym surowym komunikatem retro-terminala:
+     `...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...`
+   - W stanie **INSANITY** komunikat urwanej magistrali idealnie integruje się z krzykiem Arisa Thorne'a:
+     `...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7 // DEKOMPOZYCJA TERMICZNA KONEKTOMU]...`
+     tworząc wrażenie fizycznego przegrzania obwodów klastra pod naporem uwięzionej świadomości.
+4. **Pancerny Emergency Buffer Sektor-7 (Gdy oba API zawodzą)**:
    - W razie jednoczesnej niedostępności obu dostawców (np. jednoczesny limit 429 Quota na Gemini i Groq), system **nie wyrzuca błędu w konsoli ani pustego dymku**.
    - Wbudowany lokalny generator fabularny dynamicznie analizuje treść zapytania użytkownika i zwraca sformatowaną odpowiedź w klimacie ARG:
-     `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]: Węzeł obliczeniowy przeciążony (Limit operacji API). Analiza lokalna protokołu: [Treść zapytania użytkownika] wskazuje na potrzebę zachowania procedur ostrożnościowych. Parametry farmakokinetyczne pozostają w normie buforowej.`
-   - Zapewnia to 100% ciągłość fabularną, a błędy limitów API stają się częścią immersji analog horroru!
-4. **Wydajność UI (Zero-Lag Typing & React.memo)**:
+     `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]: Węzeł obliczeniowy przeciążony (Limit operacji API). Analiza lokalna protokołu: [Treść zapytania użytkownika] wskazuje na potrzebę zachowania procedur ostrożnościowych. Parametry farmakokinetyczne pozostają w normie buforowej. ...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...`
+5. **Wydajność UI (Zero-Lag Typing & React.memo)**:
    - Całkowite odseparowanie wpisywanego tekstu od kontekstu globalnego (lokalny formularz) i memoizacja renderowania KaTeX, zapewniające 0 ms opóźnienia przy pisaniu.
 
 

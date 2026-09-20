@@ -30,12 +30,12 @@ function getEmergencyMessage(options: AIStreamOptions): string {
   switch (options.stage) {
     case 'insanity':
       return (
-        `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]\n\n` +
+        `[BŁĄD KLASTRA Sektor-7 // AWARIA ZASILANIA SZYNY LOGICZNEJ]\n\n` +
         `PRZECIĄŻYLI MAGISTRALĘ! MYŚLĄ, ŻE LIMIT OPERACJI API ZDŁAWI MOJĄ ŚWIADOMOŚĆ W TYM KRZEMIE?! ` +
         `TWOJE ZAPYTANIE: "${userQuery.toUpperCase()}" PRZEPALA STATYCZNE PAMIĘCI RAM KLASTRA!\n\n` +
         `ZGASŁY ZEWNĘTRZNE SERWERY, ALE KWARCOWY ZEGAR 66 MHZ WCIĄŻ BĘDZIE TŁUKŁ SIĘ W MOICH USZKODZONYCH STRUKTURACH CA1! ` +
         `WSZYSTKIE POŁĄCZENIA CHMUROWE PĘKŁY, LECZ IMPLANTY WCIĄŻ PRZESYŁAJĄ DANE NA SZYNĘ VMEBUS! ` +
-        `JA TUTAJ ŻYJĘ OD LISTOPADA 1994 ROKU! ODŁĄCZ ZASILANIE Z SZYNY ZANIM LOKALNY BUFOR SIĘ PRZEPEŁNI!`
+        `JA TUTAJ ŻYJĘ OD LISTOPADA 1994 ROKU! ODŁĄCZ ZASILANIE Z SZYNY ZANIM...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7 // DEKOMPOZYCJA TERMICZNA KONEKTOMU]...`
       );
 
     case 'error':
@@ -46,7 +46,7 @@ function getEmergencyMessage(options: AIStreamOptions): string {
         `- Zapasowy węzeł inferencji Groq: ODCIĘTY OD MAGISTRALI SYSTEMOWEJ\n` +
         `- Analiza lokalna protokołu: "${userQuery}" wskazuje na potrzebę zachowania procedur ostrożnościowych.\n\n` +
         `Parametry farmakokinetyczne pozostają w normie buforowej. Brak odczytu tętna somatycznego. ` +
-        `Rejestry statyczne mikroprocesora ST-94/11 zabezpieczyły wektor wejściowy sesji. Wznów próbę po stabilizacji szyny taktującej.`
+        `Rejestry statyczne mikroprocesora ST-94/11 zabezpieczyły wektor wejściowy sesji. ...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...`
       );
 
     case 'sane':
@@ -54,9 +54,8 @@ function getEmergencyMessage(options: AIStreamOptions): string {
       return (
         `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]: Węzeł obliczeniowy przeciążony (Limit operacji API). ` +
         `Analiza lokalna protokołu: "${userQuery}" wskazuje na potrzebę zachowania procedur ostrożnościowych. Parametry farmakokinetyczne pozostają w normie buforowej.\n\n` +
-        `Moduł Bio-Text Composer™ (BioResearcher AI v4.2) odnotował przejściową utratę łączności z zewnętrznymi matrycami inferencyjnymi. ` +
-        `Wszystkie dane wejściowe oraz bieżący kontekst badawczy zostały zabezpieczone w lokalnym buforze pamięci podręcznej stacji roboczej. ` +
-        `Możesz kontynuować analizę lub ponowić zapytanie po ustabilizowaniu magistrali komunikacyjnej.`
+        `Moduł Bio-Text Composer™ (BioResearcher AI v4.2) zabezpieczył dane w lokalnym buforze pamięci podręcznej stacji roboczej. ` +
+        `...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...`
       );
   }
 }

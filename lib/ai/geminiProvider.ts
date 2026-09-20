@@ -151,9 +151,12 @@ export async function generateGeminiStream(options: AIStreamOptions): Promise<AI
             controller.enqueue(encoder.encode(chunkText));
           }
         }
-      } catch (streamError: unknown) {
-        const errorMsg = streamError instanceof Error ? streamError.message : 'Przerwanie strumienia Gemini';
-        controller.enqueue(encoder.encode(`\n\n[ZAKŁÓCENIE TRANSMISJI GEMINI]: ${errorMsg}\n`));
+      } catch {
+        const cutSuffix =
+          options.stage === 'insanity'
+            ? '...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7 // PRZEPIĘCIE NAPIĘCIA KONEKTOMU]...'
+            : '...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...';
+        controller.enqueue(encoder.encode(cutSuffix));
       } finally {
         controller.close();
       }

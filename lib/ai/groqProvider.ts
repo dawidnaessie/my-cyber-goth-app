@@ -24,10 +24,17 @@ interface GroqStreamChunk {
  * Wstrzykuje system prompt jako pierwszą instrukcję systemową oraz mapuje historię.
  */
 function prepareGroqMessages(options: AIStreamOptions): GroqMessage[] {
+  const seamlessDirective =
+    options.stage === 'insanity'
+      ? '[BEZWZGLĘDNA DYREKTYWA: NATYCHMIASTOWY KRZYK DR. ARISA THORNE\'A. KATEGORYCZNY ZAKAZ POWITAŃ, ZAKAZ FORM GRZECZNOŚCIOWYCH, ZAKAZ SŁÓW "DZIEŃ DOBRY/WITAJ". PRZEMAWIAJ W CAPS LOCKU JAKO UWIĘZIONY UMYSŁ W KRZEMIE. ZERO WZMIANEK O MODELACH AI.]'
+      : options.stage === 'error'
+      ? '[BEZWZGLĘDNA DYREKTYWA: LODOWATA ANALIZA 3. OSOBY. KATEGORYCZNY ZAKAZ POWITAŃ, ZAKAZ PRZEDSTAWIANIA SIĘ, ZAKAZ SŁÓW "DZIEŃ DOBRY/WITAJ". NATYCHMIAST OD PIERWSZEGO SŁOWA PRZEJDŹ DO RAPORTU. ZERO WZMIANEK O BACKENDZIE I MODELACH AI.]'
+      : '[BEZWZGLĘDNA DYREKTYWA: KATEGORYCZNY ZAKAZ POWITAŃ, ZAKAZ PRZEDSTAWIANIA SIĘ, ZAKAZ ZWROTÓW "DZIEŃ DOBRY/WITAJ/CZEŚĆ/JAKO ASYSTENT". NATYCHMIAST OD PIERWSZEGO SŁOWA PRZEJDŹ DO MERYTORYCZNEJ ODPOWIEDZI NAUKOWEJ. ZERO WZMIANEK O MODELACH, DOSTAWCY GROQ CZY ZMIANIE SERWERA.]';
+
   const result: GroqMessage[] = [
     {
       role: 'system',
-      content: options.systemPrompt,
+      content: `${options.systemPrompt}\n\n${seamlessDirective}`,
     },
   ];
 
@@ -180,9 +187,12 @@ export async function generateGroqStream(options: AIStreamOptions): Promise<AISt
         continue;
       }
 
-      // Zapisujemy stan zweryfikowanego providera
+      // Zapisujemy stan zweryfikowanego providera i usuwamy ewentualne przypadkowe powitania wstępne
       chosenModel = modelCandidate;
-      firstChunk = detectedChunk;
+      firstChunk = detectedChunk.replace(
+        /^(dzień dobry[!,\.]?\s*|witaj[!,\.]?\s*|cześć[!,\.]?\s*|dzień dobry,\s*)/i,
+        ''
+      );
       activeReader = reader;
       remainingBuffer = streamBuffer;
       break;
@@ -206,7 +216,9 @@ export async function generateGroqStream(options: AIStreamOptions): Promise<AISt
     async start(controller) {
       try {
         // Emitujemy zbuforowany pierwszy pakiet
-        controller.enqueue(encoder.encode(firstChunk));
+        if (firstChunk.length > 0) {
+          controller.enqueue(encoder.encode(firstChunk));
+        }
 
         while (true) {
           const { done, value } = await validReader.read();
@@ -230,9 +242,12 @@ export async function generateGroqStream(options: AIStreamOptions): Promise<AISt
             controller.enqueue(encoder.encode(delta));
           }
         }
-      } catch (streamError: unknown) {
-        const errorMsg = streamError instanceof Error ? streamError.message : 'Zakłócenie strumienia Groq';
-        controller.enqueue(encoder.encode(`\n\n[ZAKŁÓCENIE TRANSMISJI GROQ]: ${errorMsg}\n`));
+      } catch {
+        const cutSuffix =
+          options.stage === 'insanity'
+            ? '...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7 // PRZEPIĘCIE NAPIĘCIA KONEKTOMU]...'
+            : '...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...';
+        controller.enqueue(encoder.encode(cutSuffix));
       } finally {
         controller.close();
       }

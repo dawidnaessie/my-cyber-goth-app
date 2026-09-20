@@ -194,22 +194,28 @@ W celu zapewnienia nieprzerwanej dostępności terminala analitycznego BioResear
    - **Mechanizm Pre-flight First Chunk**: Provider odczytuje pierwszy niepusty pakiet danych z iteratora `responseStream` PRZED wysłaniem nagłówków HTTP 200 do klienta. Jeśli Gemini zwróci 429, 503 lub filtr bezpieczeństwa, serwer natychmiast przechwytuje błąd i przełącza zapytanie na Groq API, całkowicie eliminując puste dymki.
    - Przetwarza wieloturowe wiadomości multi-turn z łączeniem kolejnych wypowiedzi o tej samej roli i pomijaniem początkowych logów startowych asystenta.
 
-2. **Transparentny Zapasowy Dostawca (Groq API)**:
+2. **Transparentny Zapasowy Dostawca (Groq API) & Seamless Break**:
    - Zaimplementowany w `lib/ai/groqProvider.ts` przy użyciu natywnego, ultralekkiego połączenia `fetch` na endpoint `https://api.groq.com/openai/v1/chat/completions` (100% zgodny ze specyfikacją OpenAI, nagłówek `Authorization: Bearer GROQ_API_KEY`).
    - **Kaskada Zweryfikowanych Modeli**: priorytetowa obsługa stabilnych modeli (`llama-3.3-70b-versatile`, `llama3-8b-8192`) z płynnym fallbackiem do aktywnych generatorów (`qwen/qwen3.8-27b`, `groq/compound-mini`, `groq/compound`), z wykluczeniem modeli wycofanych lub pustych.
-   - Weryfikuje nadejście pierwszego pakietu tekstu (Pre-flight First Chunk) przed zatwierdzeniem połączenia.
-   - Odczytuje strumień Server-Sent Events (SSE) i transkoduje go w locie do jednolitego strumienia tekstowego `ReadableStream<Uint8Array>`.
+   - **Likwidacja Powitań i Przełączeń Zapasowych (Seamless Break)**: Bezwzględny zakaz formułek powitalnych ("Dzień dobry", "Witaj", "Cześć") oraz wyjaśnień technicznych o backendzie. Groq podejmuje wypowiedź od pierwszego słowa, zachowując 100% ciągłość dialogu.
+   - Weryfikuje nadejście pierwszego pakietu tekstu (Pre-flight First Chunk) przed zatwierdzeniem połączenia i odfiltrowuje ewentualne przypadkowe tokeny powitalne.
 
-3. **100% Spójność Kontekstu i Systemu Sanity**:
+3. **Mechanizm Urwanej Transmisji (Abrupt Cut & Signal Loss)**:
+   - W przypadku zerwania strumienia w trakcie transmisji (awaria sieci, błąd klastra, limit tokenów), system natychmiast urywa tekst w połowie słowa/zdania i dokleja surowy znacznik awarii szyny logicznej:
+     `...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7]...`
+   - W stanie **INSANITY** urwana transmisja przyjmuje formę termicznego przepięcia obwodów konektomu:
+     `...[PRZERWANO TRANSMISJĘ DANYCH // BŁĄD SZYNY KLASTRA Sektor-7 // DEKOMPOZYCJA TERMICZNA KONEKTOMU]...`
+     budując bezkompromisowy klimat cyber-horroru i uniemożliwiając modelom wypluwanie szablonowych komunikatów o błędach.
+
+4. **100% Spójność Kontekstu i Systemu Sanity**:
    - Model zapasowy (Groq) otrzymuje **dokładnie te same instrukcje systemowe** (`SANE_PROMPT`, `ERROR_PROMPT` lub `INSANITY_PROMPT` wyznaczane przez `resolveSanityStage`).
    - Pełna tożsamość Bio-Text Composera, generowanie akapitów o chorobach neurodegeneracyjnych oraz renderowanie formuł matematycznych w LaTeX ($...$, $$...$$) działają identycznie na obu modelach.
    - Identyczne skalowanie temperatury w zależności od etapu psychozy: 0.7 (`sane`), 0.9 (`error`), 0.95 (`insanity`).
 
-4. **Pancerny Emergency Buffer Sektor-7 (Gdy oba API zawodzą)**:
+5. **Pancerny Emergency Buffer Sektor-7 (Gdy oba API zawodzą)**:
    - Zaimplementowany w `lib/ai/emergencyBuffer.ts`.
    - W razie jednoczesnej niedostępności obu dostawców (np. limit 429 Quota na obu API), system **nie rzuca błędu 500 ani nie tworzy pustego dymku w czacie**.
-   - Wbudowany lokalny bufor awaryjny dynamicznie wyciąga treść zapytania użytkownika i natychmiast generuje sformatowaną odpowiedź w klimacie ARG:
-     `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]: Węzeł obliczeniowy przeciążony (Limit operacji API). Analiza lokalna protokołu: [Treść zapytania użytkownika] wskazuje na potrzebę zachowania procedur ostrożnościowych. Parametry farmakokinetyczne pozostają w normie buforowej.`
+   - Wbudowany lokalny bufor awaryjny dynamicznie wyciąga treść zapytania użytkownika i natychmiast generuje sformatowaną odpowiedź w klimacie ARG, zakończoną nagłym ucięciem sygnału.
    - Telemetria serwera oczyszcza komunikaty błędów z surowych zrzutów JSON/RPC, zapewniając czystą konsolę i ciągłość gry.
 
 5. **Nagłówki Telemetryczne i Transparentność Serwerowa**:
