@@ -195,8 +195,8 @@ W celu zapewnienia nieprzerwanej dostępności terminala analitycznego BioResear
    - Przetwarza wieloturowe wiadomości multi-turn z łączeniem kolejnych wypowiedzi o tej samej roli i pomijaniem początkowych logów startowych asystenta.
 
 2. **Transparentny Zapasowy Dostawca (Groq API)**:
-   - Zaimplementowany w `lib/ai/groqProvider.ts` przy użyciu natywnego, ultralekkiego połączenia `fetch` na endpoint `https://api.groq.com/openai/v1/chat/completions` (zero dodatkowych zależności w bundle).
-   - **Kaskada Zweryfikowanych Modeli**: rotuje wyłącznie pomiędzy modelami generującymi pełny tekst (`qwen/qwen3.8-27b`, `groq/compound-mini`, `llama-3.1-8b-instant`), wykluczając modele zwracające puste dymki (np. `gpt-oss-20b`).
+   - Zaimplementowany w `lib/ai/groqProvider.ts` przy użyciu natywnego, ultralekkiego połączenia `fetch` na endpoint `https://api.groq.com/openai/v1/chat/completions` (100% zgodny ze specyfikacją OpenAI, nagłówek `Authorization: Bearer GROQ_API_KEY`).
+   - **Kaskada Zweryfikowanych Modeli**: priorytetowa obsługa stabilnych modeli (`llama-3.3-70b-versatile`, `llama3-8b-8192`) z płynnym fallbackiem do aktywnych generatorów (`qwen/qwen3.8-27b`, `groq/compound-mini`, `groq/compound`), z wykluczeniem modeli wycofanych lub pustych.
    - Weryfikuje nadejście pierwszego pakietu tekstu (Pre-flight First Chunk) przed zatwierdzeniem połączenia.
    - Odczytuje strumień Server-Sent Events (SSE) i transkoduje go w locie do jednolitego strumienia tekstowego `ReadableStream<Uint8Array>`.
 
@@ -205,11 +205,12 @@ W celu zapewnienia nieprzerwanej dostępności terminala analitycznego BioResear
    - Pełna tożsamość Bio-Text Composera, generowanie akapitów o chorobach neurodegeneracyjnych oraz renderowanie formuł matematycznych w LaTeX ($...$, $$...$$) działają identycznie na obu modelach.
    - Identyczne skalowanie temperatury w zależności od etapu psychozy: 0.7 (`sane`), 0.9 (`error`), 0.95 (`insanity`).
 
-4. **Graceful Degradation (Bufor Awaryjny Sektor-7)**:
+4. **Pancerny Emergency Buffer Sektor-7 (Gdy oba API zawodzą)**:
    - Zaimplementowany w `lib/ai/emergencyBuffer.ts`.
-   - Jeśli oba zewnętrzne dostawcy zawiodą jednocześnie lub urządzenie utraci dostęp do internetu, system nie generuje surowego błędu Next.js ani czerwonych alertów awarii serwera.
-   - Zwraca kontrolowaną, immersyjną odpowiedź terminala laboratoryjnego dostosowaną do stadium Sanity (np. `[BŁĄD KLASTRA Sektor-7: Utraceno synchronizację węzłów obliczeniowych. Przełączono na bufor lokalny.]`), zachowując ciągłość narracji ARG i chroniąc historię w `localStorage`.
-   - Moduł `ChatContext.tsx` posiada symetryczną ochronę przed błędami sieciowymi przeglądarki (`Failed to fetch`), a wiadomości o zerowej długości są automatycznie odrzucane z pamięci trwałej.
+   - W razie jednoczesnej niedostępności obu dostawców (np. limit 429 Quota na obu API), system **nie rzuca błędu 500 ani nie tworzy pustego dymku w czacie**.
+   - Wbudowany lokalny bufor awaryjny dynamicznie wyciąga treść zapytania użytkownika i natychmiast generuje sformatowaną odpowiedź w klimacie ARG:
+     `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]: Węzeł obliczeniowy przeciążony (Limit operacji API). Analiza lokalna protokołu: [Treść zapytania użytkownika] wskazuje na potrzebę zachowania procedur ostrożnościowych. Parametry farmakokinetyczne pozostają w normie buforowej.`
+   - Telemetria serwera oczyszcza komunikaty błędów z surowych zrzutów JSON/RPC, zapewniając czystą konsolę i ciągłość gry.
 
 5. **Nagłówki Telemetryczne i Transparentność Serwerowa**:
    - Każda odpowiedź HTTP 200 ze strumieniem z endpointu `/api/chat` zwraca nagłówki diagnostyczne:

@@ -69,11 +69,14 @@ Aplikacja posiada zaimplementowany wielopoziomowy mechanizm przełączania awary
    - Domyślny model analityczny `gemini-3.6-flash` (oraz automatyczny fallback do `gemini-3.5-flash`).
    - Mechanizm Pre-flight First Chunk: weryfikacja pierwszego pakietu tekstu przed wysłaniem nagłówków HTTP 200 (brak pustych dymków).
 2. **Fail-Safe Backup Provider (Groq API)**:
-   - W przypadku błędu Gemini (HTTP 429, 500, 503, przeciążenie serwera, błąd klucza), system **automatycznie i transparentnie** wysyła to samo zapytanie do ultraszybkiego endpointu Groq (`https://api.groq.com/openai/v1/chat/completions`).
-   - **Kaskada Zweryfikowanych Modeli**: automatyczna rotacja modeli (`qwen/qwen3.8-27b`, `groq/compound-mini`, `llama-3.1-8b-instant`).
+   - W przypadku błędu Gemini (HTTP 429 Rate Limit / Quota Exceeded, 500, 503, przeciążenie serwera, błąd klucza), system **automatycznie i transparentnie** wysyła to samo zapytanie do ultraszybkiego endpointu Groq (`https://api.groq.com/openai/v1/chat/completions`).
+   - **Kaskada Zweryfikowanych Modeli**: priorytetowa obsługa stabilnych modeli (`llama-3.3-70b-versatile`, `llama3-8b-8192`) z płynnym fallbackiem do aktywnych generatorów (`qwen/qwen3.8-27b`, `groq/compound-mini`, `groq/compound`).
    - Pełna spójność tożsamości asystenta, promptów Sanity (`SANE`, `ERROR`, `INSANITY`) oraz formuł matematycznych LaTeX ($...$, $$...$$).
-3. **Graceful Degradation (Bufor Awaryjny Sektor-7)**:
-   - W razie jednoczesnej niedostępności obu dostawców lub utraty łącza internetowego, terminal zwraca immersyjną odpowiedź w lore gry (`[BŁĄD KLASTRA Sektor-7...]`), chroniąc interfejs przed surowymi błędami HTTP 500.
+3. **Pancerny Emergency Buffer Sektor-7 (Gdy oba API zawodzą)**:
+   - W razie jednoczesnej niedostępności obu dostawców (np. jednoczesny limit 429 Quota na Gemini i Groq), system **nie wyrzuca błędu w konsoli ani pustego dymku**.
+   - Wbudowany lokalny generator fabularny dynamicznie analizuje treść zapytania użytkownika i zwraca sformatowaną odpowiedź w klimacie ARG:
+     `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]: Węzeł obliczeniowy przeciążony (Limit operacji API). Analiza lokalna protokołu: [Treść zapytania użytkownika] wskazuje na potrzebę zachowania procedur ostrożnościowych. Parametry farmakokinetyczne pozostają w normie buforowej.`
+   - Zapewnia to 100% ciągłość fabularną, a błędy limitów API stają się częścią immersji analog horroru!
 4. **Wydajność UI (Zero-Lag Typing & React.memo)**:
    - Całkowite odseparowanie wpisywanego tekstu od kontekstu globalnego (lokalny formularz) i memoizacja renderowania KaTeX, zapewniające 0 ms opóźnienia przy pisaniu.
 

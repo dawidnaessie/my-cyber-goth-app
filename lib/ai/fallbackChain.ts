@@ -4,24 +4,45 @@ import { generateGroqStream } from './groqProvider';
 import { generateEmergencyBufferStream } from './emergencyBuffer';
 
 /**
- * Ustrukturyzowany rejestrator zdarzeń klastra AI.
+ * Ustrukturyzowany rejestrator zdarzeń klastra AI z oczyszczaniem surowych błędów API.
  */
 function logAiEvent(
   level: 'info' | 'warn' | 'error',
   event: string,
   details: Record<string, unknown>
 ): void {
+  const sanitizeMessage = (msg: unknown): string => {
+    if (typeof msg !== 'string') return '';
+    if (msg.includes('QuotaFailure') || msg.includes('429') || msg.includes('RESOURCE_EXHAUSTED')) {
+      return 'API Rate Limit / Quota Exceeded (429)';
+    }
+    if (msg.includes('model_not_found') || msg.includes('does not exist')) {
+      return 'Model Not Found on Provider';
+    }
+    return msg.length > 150 ? `${msg.slice(0, 147)}...` : msg;
+  };
+
+  const sanitizedDetails: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(details)) {
+    if (key.toLowerCase().includes('error')) {
+      sanitizedDetails[key] = sanitizeMessage(val);
+    } else {
+      sanitizedDetails[key] = val;
+    }
+  }
+
   const logPayload = {
     timestamp: new Date().toISOString(),
     level: level.toUpperCase(),
     subsystem: 'AI_FALLBACK_CHAIN',
     event,
-    ...details,
+    ...sanitizedDetails,
   };
 
   const formatted = JSON.stringify(logPayload);
   if (level === 'error') {
-    console.error(`[CLUSTER_TELEMETRY] ${formatted}`);
+    // Rejestrujemy jako ostrzeżenie systemowe telemetrii, by nie spamować konsoli krytycznymi wyjątkami
+    console.warn(`[CLUSTER_TELEMETRY] ${formatted}`);
   } else if (level === 'warn') {
     console.warn(`[CLUSTER_TELEMETRY] ${formatted}`);
   } else {
@@ -32,7 +53,7 @@ function logAiEvent(
 /**
  * Główny koordynator łańcucha odpornego na awarie (Fail-Safe Provider Chain):
  * 1. Główny dostawca: Google Gemini API (@google/genai)
- * 2. Zapasowy dostawca (transparentny fallback): Groq API (llama-3.1-8b-instant)
+ * 2. Zapasowy dostawca (transparentny fallback): Groq API (llama-3.3-70b-versatile, qwen/qwen3.8-27b)
  * 3. Bufor awaryjny (graceful degradation): lokalny generator fabularny Sektor-7
  */
 export async function executeWithFallbackChain(
@@ -70,7 +91,7 @@ export async function executeWithFallbackChain(
         stage: options.stage,
       });
 
-      // KROK 3: Graceful degradation – lokalny bufor awaryjny
+      // KROK 3: Graceful degradation – lokalny bufor awaryjny (nigdy nie rzuca błędu, nie zwraca pustego dymka)
       return generateEmergencyBufferStream(options);
     }
   }

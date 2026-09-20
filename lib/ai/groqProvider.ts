@@ -7,6 +7,7 @@ interface GroqMessage {
 
 interface GroqStreamDelta {
   content?: string;
+  reasoning?: string;
 }
 
 interface GroqStreamChoice {
@@ -49,7 +50,7 @@ function prepareGroqMessages(options: AIStreamOptions): GroqMessage[] {
 }
 
 /**
- * Parsuje linie SSE i wyciąga delta.content.
+ * Parsuje linie SSE i wyciąga delta.content lub delta.reasoning.
  */
 function extractDeltaText(rawLine: string): string | null {
   const line = rawLine.trim();
@@ -60,7 +61,16 @@ function extractDeltaText(rawLine: string): string | null {
 
   try {
     const chunkJson = JSON.parse(dataContent) as GroqStreamChunk;
-    return chunkJson.choices?.[0]?.delta?.content || null;
+    const delta = chunkJson.choices?.[0]?.delta;
+    if (!delta) return null;
+
+    if (typeof delta.content === 'string' && delta.content.length > 0) {
+      return delta.content;
+    }
+    if (typeof delta.reasoning === 'string' && delta.reasoning.length > 0) {
+      return delta.reasoning;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -77,12 +87,15 @@ export async function generateGroqStream(options: AIStreamOptions): Promise<AISt
   }
 
   const customModel = process.env.GROQ_MODEL?.trim();
-  // Sprawdzone modele generujące pełną treść tekstową na platformie Groq (wykluczono puste modele typu gpt-oss-20b)
+  // Zgodnie z wytycznymi: modele stabilne llama-3.3-70b-versatile, llama3-8b-8192 oraz sprawdzone modele awaryjne
   const candidateModels = [
     customModel,
+    'llama-3.3-70b-versatile',
+    'llama3-8b-8192',
     'qwen/qwen3.8-27b',
     'groq/compound-mini',
-    'llama-3.1-8b-instant',
+    'groq/compound',
+    'openai/gpt-oss-120b',
   ].filter((m): m is string => Boolean(m));
 
   const uniqueModels = Array.from(new Set(candidateModels));

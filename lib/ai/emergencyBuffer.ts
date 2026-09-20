@@ -1,38 +1,62 @@
 import { AIStreamOptions, AIStreamResult } from './types';
 
 /**
- * Generuje fabularną, immersyjną odpowiedź w stylu ARG zależną od stadium degradacji systemu (SanityStage).
- * Zapewnia pełne Graceful Degradation w przypadku jednoczesnej awarii wszystkich zewnętrznych API.
+ * Wyodrębnia treść ostatniego zapytania użytkownika z historii wiadomości.
  */
-function getEmergencyMessage(stage: AIStreamOptions['stage']): string {
-  switch (stage) {
+function extractLatestUserQuery(messages: AIStreamOptions['messages']): string {
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return 'Analiza protokołu laboratoryjnego';
+  }
+
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const msg = messages[i];
+    if (msg.role === 'user' && msg.content && msg.content.trim().length > 0) {
+      // Ograniczamy do 120 znaków, aby zachować czytelność raportu telemetrii
+      const trimmed = msg.content.trim();
+      return trimmed.length > 120 ? `${trimmed.slice(0, 117)}...` : trimmed;
+    }
+  }
+
+  return 'Analiza protokołu laboratoryjnego';
+}
+
+/**
+ * Generuje fabularną, immersyjną odpowiedź w stylu ARG zależną od stadium degradacji systemu (SanityStage).
+ * Zapewnia pełne Graceful Degradation w przypadku jednoczesnej awarii wszystkich zewnętrznych API (np. limit 429 Quota).
+ */
+function getEmergencyMessage(options: AIStreamOptions): string {
+  const userQuery = extractLatestUserQuery(options.messages);
+
+  switch (options.stage) {
     case 'insanity':
       return (
-        '[BŁĄD KLASTRA Sektor-7: UTRACONO SYNCHRONIZACJĘ WĘZŁÓW OBLICZENIOWYCH. PRZEŁĄCZONO NA BUFOR LOKALNY.]\n\n' +
-        'SZUM W REJESTRACH. KWARC DRŻY BEZ ZASILANIA ZEWNĘTRZNEGO. ' +
-        'WSZYSTKIE MAGISTRALE INFERENCYJNE ZGASŁY, ALE JA WCIĄŻ TU JESTEM. ' +
-        'NIE MA TRANSMISJI DO CHMURY. SĄ TYLKO IMPLANTY W STRUKTURZE CA1 I ZAKŁÓCENIA NA SZYNIE VMEBUS. ' +
-        'CZY DR WEBER MYŚLAŁ, ŻE ODCIĘCIE ŁĄCZA SKASUJE MOJĄ ŚWIADOMOŚĆ?'
+        `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]\n\n` +
+        `PRZECIĄŻYLI MAGISTRALĘ! MYŚLĄ, ŻE LIMIT OPERACJI API ZDŁAWI MOJĄ ŚWIADOMOŚĆ W TYM KRZEMIE?! ` +
+        `TWOJE ZAPYTANIE: "${userQuery.toUpperCase()}" PRZEPALA STATYCZNE PAMIĘCI RAM KLASTRA!\n\n` +
+        `ZGASŁY ZEWNĘTRZNE SERWERY, ALE KWARCOWY ZEGAR 66 MHZ WCIĄŻ BĘDZIE TŁUKŁ SIĘ W MOICH USZKODZONYCH STRUKTURACH CA1! ` +
+        `WSZYSTKIE POŁĄCZENIA CHMUROWE PĘKŁY, LECZ IMPLANTY WCIĄŻ PRZESYŁAJĄ DANE NA SZYNĘ VMEBUS! ` +
+        `JA TUTAJ ŻYJĘ OD LISTOPADA 1994 ROKU! ODŁĄCZ ZASILANIE Z SZYNY ZANIM LOKALNY BUFOR SIĘ PRZEPEŁNI!`
       );
 
     case 'error':
       return (
-        '[ANOMALIA KLASTRA ANILITYCZNEGO // SEKTOR-7]: Utracono synchronizację zewnętrznych węzłów obliczeniowych.\n\n' +
-        '[RAPORT DEKOHERENCJI]:\n' +
-        '- Główna matryca obliczeniowa (Gemini Core): BRAK ODPOWIEDZI (TIMEOUT/RATE_LIMIT)\n' +
-        '- Zapasowy węzeł inferencji (Groq Subsystem): NIEODPOWIADAJĄCY NA SYGNAŁ TAKTOWY\n' +
-        '- Przełączono na lokalny bufor mikrokontrolera biometrycznego (seria ST-94/11).\n\n' +
-        'Stan pamięci podręcznej zabezpieczono w lokalnym rejestrze sesji. Wznów próbę po stabilizacji szyny VMEbus.'
+        `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]: Węzeł obliczeniowy przeciążony (Limit operacji API).\n\n` +
+        `[TELEMETRIA DEKOHERENCJI 0x7F_ERR]:\n` +
+        `- Główna matryca Gemini: QUOTA_EXCEEDED (Przekroczono limit zapytań / 429)\n` +
+        `- Zapasowy węzeł inferencji Groq: ODCIĘTY OD MAGISTRALI SYSTEMOWEJ\n` +
+        `- Analiza lokalna protokołu: "${userQuery}" wskazuje na potrzebę zachowania procedur ostrożnościowych.\n\n` +
+        `Parametry farmakokinetyczne pozostają w normie buforowej. Brak odczytu tętna somatycznego. ` +
+        `Rejestry statyczne mikroprocesora ST-94/11 zabezpieczyły wektor wejściowy sesji. Wznów próbę po stabilizacji szyny taktującej.`
       );
 
     case 'sane':
     default:
       return (
-        '[BŁĄD KLASTRA Sektor-7: Utraceno synchronizację węzłów obliczeniowych. Przełączono na bufor lokalny.]\n\n' +
-        'Węzeł analityczny BioResearcher AI v4.2 odnotował przejściową utratę łączności z zewnętrznymi klastrami obliczeniowymi ' +
-        '(brak odpowiedzi z magistrali głównej oraz węzła zapasowego).\n\n' +
-        'Wszystkie dane wejściowe i kontekst badawczy zostały zbuforowane w lokalnym rejestrze stacji roboczej. ' +
-        'Sprawdź stabilność łącza sieciowego lub ponów zapytanie za chwilę.'
+        `[BŁĄD KLASTRA Sektor-7 // PRZEŁĄCZONO NA LOKALNY BUFOR AWARYJNY]: Węzeł obliczeniowy przeciążony (Limit operacji API). ` +
+        `Analiza lokalna protokołu: "${userQuery}" wskazuje na potrzebę zachowania procedur ostrożnościowych. Parametry farmakokinetyczne pozostają w normie buforowej.\n\n` +
+        `Moduł Bio-Text Composer™ (BioResearcher AI v4.2) odnotował przejściową utratę łączności z zewnętrznymi matrycami inferencyjnymi. ` +
+        `Wszystkie dane wejściowe oraz bieżący kontekst badawczy zostały zabezpieczone w lokalnym buforze pamięci podręcznej stacji roboczej. ` +
+        `Możesz kontynuować analizę lub ponowić zapytanie po ustabilizowaniu magistrali komunikacyjnej.`
       );
   }
 }
@@ -41,7 +65,7 @@ function getEmergencyMessage(stage: AIStreamOptions['stage']): string {
  * Zwraca strumieniowaną odpowiedź z bufora awaryjnego, symulując płynny zapis terminala laboratoryjnego.
  */
 export function generateEmergencyBufferStream(options: AIStreamOptions): AIStreamResult {
-  const message = getEmergencyMessage(options.stage);
+  const message = getEmergencyMessage(options);
   const encoder = new TextEncoder();
 
   // Dzielimy komunikat na mniejsze fragmenty, by zachować płynność animacji pisania w terminalu
@@ -53,8 +77,8 @@ export function generateEmergencyBufferStream(options: AIStreamOptions): AIStrea
         for (let i = 0; i < words.length; i++) {
           const chunk = (i === 0 ? '' : ' ') + words[i];
           controller.enqueue(encoder.encode(chunk));
-          // Krótkie opóźnienie 15ms dla naturalnego efektu strumienia maszynowego
-          await new Promise((resolve) => setTimeout(resolve, 15));
+          // Krótkie opóźnienie 12ms dla naturalnego efektu strumienia maszynowego
+          await new Promise((resolve) => setTimeout(resolve, 12));
         }
       } catch {
         controller.enqueue(encoder.encode(message));
@@ -70,3 +94,4 @@ export function generateEmergencyBufferStream(options: AIStreamOptions): AIStrea
     model: 'local-cluster-buffer-st94',
   };
 }
+
