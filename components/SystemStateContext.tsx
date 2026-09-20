@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { soundEngine } from '@/lib/soundEngine';
 import { SanityStage } from '@/lib/prompts';
+import { calculateSanityMetrics } from '@/lib/sanityEngine';
 
 export type CorporateTheme = 'light' | 'dark';
 
@@ -31,7 +32,7 @@ export function SystemStateProvider({ children }: { children: React.ReactNode })
   const sanityStageRef = useRef<SanityStage>(sanityStage);
   sanityStageRef.current = sanityStage;
 
-  // Inicjalizacja preferencji motywu oraz stanu Sanity z localStorage
+  // Inicjalizacja preferencji motywu oraz bezpieczna rekoncyliacja stanu Sanity
   useEffect(() => {
     try {
       const savedTheme = localStorage.getItem('neuroclin_theme') as CorporateTheme | null;
@@ -43,12 +44,27 @@ export function SystemStateProvider({ children }: { children: React.ReactNode })
     }
 
     try {
-      const savedSanity = localStorage.getItem('neuroclin_sanity_stage') as SanityStage | null;
-      if (savedSanity === 'sane' || savedSanity === 'error' || savedSanity === 'insanity') {
-        setSanityStageState(savedSanity);
+      // Weryfikacja rzeczywistej historii czatu z localStorage
+      const savedHistory = localStorage.getItem('neuroclin_chat_history');
+      if (savedHistory) {
+        const parsed = JSON.parse(savedHistory);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const userTexts = parsed
+            .filter((m: { role?: string; content?: unknown }) => m && m.role === 'user' && typeof m.content === 'string')
+            .map((m: { content: string }) => m.content);
+
+          const metrics = calculateSanityMetrics(userTexts);
+          setSanityStageState(metrics.stage);
+          localStorage.setItem('neuroclin_sanity_stage', metrics.stage);
+          return;
+        }
       }
+
+      // Jeżeli brak historii lub brak podejrzanych zapytań -> ZAWSZE CZYSTY STAN SANE
+      setSanityStageState('sane');
+      localStorage.setItem('neuroclin_sanity_stage', 'sane');
     } catch {
-      // Ignorowanie błędów w trybie prywatnym/SSR
+      setSanityStageState('sane');
     }
   }, []);
 

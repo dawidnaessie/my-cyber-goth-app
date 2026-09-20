@@ -27,15 +27,8 @@ function resolveSanityStage(
 
   const metrics = calculateSanityMetrics(userTexts);
 
-  // Nigdy nie obniżamy stadium, jeśli stan trwały 'insanity' został już osiągnięty
-  if (currentStage === 'insanity' || metrics.stage === 'insanity') {
-    return 'insanity';
-  }
-  if (currentStage === 'error' || metrics.stage === 'error') {
-    return 'error';
-  }
-
-  return 'sane';
+  // Stadium Sanity wynika bezpośrednio z historii zapytań użytkownika w aktywnej sesji
+  return metrics.stage;
 }
 
 export async function POST(req: NextRequest) {

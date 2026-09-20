@@ -68,13 +68,23 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
             }));
           if (sanitized.length > 0) {
             setMessages(sanitized);
+
+            // Dynamiczna rekoncyliacja stanu Sanity z wczytaną historią wiadomości
+            const userTexts = sanitized
+              .filter((m: Message) => m.role === 'user')
+              .map((m: Message) => m.content);
+            const metrics = calculateSanityMetrics(userTexts);
+            setSanityStage(metrics.stage);
+            return;
           }
         }
       }
+      // Jeżeli brak zapisanych wiadomości – upewnij się, że stadium to czysty stan korporacyjny SANE
+      setSanityStage('sane');
     } catch {
       // Ignorowanie błędów w trybie prywatnym / SSR
     }
-  }, []);
+  }, [setSanityStage]);
 
   const saveMessagesToStorage = useCallback((msgs: Message[]) => {
     try {
@@ -108,6 +118,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     setSanityStage('sane');
     try {
       localStorage.removeItem(CHAT_STORAGE_KEY);
+      localStorage.setItem('neuroclin_sanity_stage', 'sane');
     } catch {
       // Ignorowanie błędów w trybie prywatnym
     }
@@ -130,7 +141,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
       setErrorMessage(null);
 
-      // PŁYNNA PROGRESJA SANITY
+      // PŁYNNA PROGRESJA SANITY NA PODSTAWIE HISTORII ZAPYTAŃ UŻYTKOWNIKA
       const currentMessages = messagesRef.current;
       const priorUserTexts = currentMessages
         .filter((m) => m.role === 'user')
@@ -138,27 +149,15 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       const updatedUserTexts = [...priorUserTexts, trimmed];
 
       const currentMetrics = calculateSanityMetrics(updatedUserTexts);
-      const calculatedStage = currentMetrics.stage;
-      const currentSanity = sanityStageRef.current;
+      const targetStage = currentMetrics.stage;
+      const previousStage = sanityStageRef.current;
 
-      // Przejście stanów Sanity
-      if (currentSanity === 'insanity' || calculatedStage === 'insanity') {
-        setSanityStage('insanity');
-      } else if (currentSanity === 'error' || calculatedStage === 'error') {
-        setSanityStage('error');
-        if (currentSanity !== 'error') {
-          triggerGlitch(2000);
-        }
-      } else {
-        setSanityStage('sane');
+      setSanityStage(targetStage);
+      if (targetStage === 'error' && previousStage !== 'error') {
+        triggerGlitch(2000);
       }
 
-      const effectiveStage: SanityStage =
-        currentSanity === 'insanity' || calculatedStage === 'insanity'
-          ? 'insanity'
-          : currentSanity === 'error' || calculatedStage === 'error'
-          ? 'error'
-          : 'sane';
+      const effectiveStage: SanityStage = targetStage;
 
       const getTimestamp = (): string => {
         const now = new Date();
