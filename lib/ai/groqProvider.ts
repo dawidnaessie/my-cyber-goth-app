@@ -40,7 +40,6 @@ function prepareGroqMessages(options: AIStreamOptions): GroqMessage[] {
     result.push({ role, content: text });
   }
 
-  // Wymóg obecności przynajmniej jednej wiadomości użytkownika
   const hasUserMessage = result.some((m) => m.role === 'user');
   if (!hasUserMessage) {
     throw new Error('Brak wiadomości użytkownika dla dostawcy Groq.');
@@ -50,10 +49,26 @@ function prepareGroqMessages(options: AIStreamOptions): GroqMessage[] {
 }
 
 /**
- * Wywołuje Groq API przez endpoint https://api.groq.com/openai/v1/chat/completions
- * ze strumieniowaniem odpowiedzi (Server-Sent Events / SSE) i natychmiastowym parsowaniem tokenów.
- * Obsługuje listę modeli zapasowych (fallback models), co zabezpiecza przed wycofaniem
- * lub zmianą dostępności modeli w chmurze Groq.
+ * Parsuje linie SSE i wyciąga delta.content.
+ */
+function extractDeltaText(rawLine: string): string | null {
+  const line = rawLine.trim();
+  if (!line || !line.startsWith('data:')) return null;
+
+  const dataContent = line.slice(5).trim();
+  if (dataContent === '[DONE]') return null;
+
+  try {
+    const chunkJson = JSON.parse(dataContent) as GroqStreamChunk;
+    return chunkJson.choices?.[0]?.delta?.content || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Wywołuje Groq API z weryfikacją pierwszego tokenu tekstu (Pre-flight First Chunk).
+ * Wyklucza puste modele i weryfikuje generowanie treści przed zwróceniem strumienia.
  */
 export async function generateGroqStream(options: AIStreamOptions): Promise<AIStreamResult> {
   const apiKey = process.env.GROQ_API_KEY?.trim();
@@ -62,17 +77,15 @@ export async function generateGroqStream(options: AIStreamOptions): Promise<AISt
   }
 
   const customModel = process.env.GROQ_MODEL?.trim();
+  // Sprawdzone modele generujące pełną treść tekstową na platformie Groq (wykluczono puste modele typu gpt-oss-20b)
   const candidateModels = [
     customModel,
-    'llama-3.1-8b-instant',
     'qwen/qwen3.8-27b',
-    'openai/gpt-oss-20b',
     'groq/compound-mini',
+    'llama-3.1-8b-instant',
   ].filter((m): m is string => Boolean(m));
 
-  // Usuwamy duplikaty zachowując kolejność priorytetów
   const uniqueModels = Array.from(new Set(candidateModels));
-
   const groqMessages = prepareGroqMessages(options);
 
   const temperature =
@@ -84,9 +97,13 @@ export async function generateGroqStream(options: AIStreamOptions): Promise<AISt
       ? 0.9
       : 0.7;
 
-  let activeResponse: Response | null = null;
-  let activeModel = uniqueModels[0];
+  let chosenModel = uniqueModels[0];
+  let firstChunk = '';
+  let activeReader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+  let remainingBuffer = '';
   let lastErrorDetail = '';
+
+  const decoder = new TextDecoder('utf-8');
 
   for (const modelCandidate of uniqueModels) {
     try {
@@ -104,96 +121,105 @@ export async function generateGroqStream(options: AIStreamOptions): Promise<AISt
         }),
       });
 
-      if (response.ok && response.body) {
-        activeResponse = response;
-        activeModel = modelCandidate;
-        break;
-      }
-
-      let errMessage = `HTTP ${response.status} ${response.statusText}`;
-      try {
-        const errorJson = await response.json();
-        if (errorJson?.error?.message) {
-          errMessage = errorJson.error.message;
+      if (!response.ok || !response.body) {
+        let errMessage = `HTTP ${response.status}`;
+        try {
+          const errJson = await response.json();
+          if (errJson?.error?.message) errMessage = errJson.error.message;
+        } catch {
+          // Ignorowanie
         }
-      } catch {
-        // Ignorowanie błędu JSON
+        lastErrorDetail = `[Model ${modelCandidate}]: ${errMessage}`;
+        if (response.status === 401) {
+          throw new Error(`Błąd autoryzacji Groq API (401): ${errMessage}`);
+        }
+        continue;
       }
 
-      lastErrorDetail = `[Model ${modelCandidate}]: ${errMessage}`;
-      // Jeśli błąd to 401 (błędny klucz API), nie ma sensu próbować innych modeli
-      if (response.status === 401) {
-        throw new Error(`Błąd autoryzacji Groq API (401): ${errMessage}`);
+      // Odczytujemy strumień do momentu uzyskania pierwszego niepustego tokenu
+      const reader = response.body.getReader();
+      let streamBuffer = '';
+      let detectedChunk = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        streamBuffer += decoder.decode(value, { stream: true });
+        const lines = streamBuffer.split('\n');
+        streamBuffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const delta = extractDeltaText(line);
+          if (delta) {
+            detectedChunk += delta;
+          }
+        }
+
+        if (detectedChunk.length > 0) {
+          break;
+        }
       }
-    } catch (fetchErr: unknown) {
-      if (fetchErr instanceof Error && fetchErr.message.includes('401')) {
-        throw fetchErr;
+
+      // Jeśli model zakończył odpowiedź bez ani jednego znaku tekstu, odrzucamy go
+      if (!detectedChunk) {
+        lastErrorDetail = `[Model ${modelCandidate}]: Model zwrócił pustą treść (0 bajtów).`;
+        continue;
       }
-      lastErrorDetail = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
+
+      // Zapisujemy stan zweryfikowanego providera
+      chosenModel = modelCandidate;
+      firstChunk = detectedChunk;
+      activeReader = reader;
+      remainingBuffer = streamBuffer;
+      break;
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.includes('401')) {
+        throw err;
+      }
+      lastErrorDetail = err instanceof Error ? err.message : String(err);
     }
   }
 
-  if (!activeResponse || !activeResponse.body) {
-    throw new Error(`Wszystkie modele Groq zawiodły. Ostatni błąd: ${lastErrorDetail}`);
+  if (!activeReader || !firstChunk) {
+    throw new Error(`Wszystkie modele Groq zawiodły lub zwróciły pusty tekst. Ostatni błąd: ${lastErrorDetail}`);
   }
 
-  const responseBody = activeResponse.body;
   const encoder = new TextEncoder();
-  const decoder = new TextDecoder('utf-8');
+  const validReader = activeReader;
+  let carryBuffer = remainingBuffer;
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
-      const reader = responseBody.getReader();
-      let buffer = '';
-
       try {
+        // Emitujemy zbuforowany pierwszy pakiet
+        controller.enqueue(encoder.encode(firstChunk));
+
         while (true) {
-          const { done, value } = await reader.read();
+          const { done, value } = await validReader.read();
           if (done) break;
 
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
+          carryBuffer += decoder.decode(value, { stream: true });
+          const lines = carryBuffer.split('\n');
+          carryBuffer = lines.pop() || '';
 
-          for (const rawLine of lines) {
-            const line = rawLine.trim();
-            if (!line || !line.startsWith('data:')) continue;
-
-            const dataContent = line.slice(5).trim();
-            if (dataContent === '[DONE]') {
-              continue;
-            }
-
-            try {
-              const chunkJson = JSON.parse(dataContent) as GroqStreamChunk;
-              const deltaText = chunkJson.choices?.[0]?.delta?.content;
-              if (deltaText) {
-                controller.enqueue(encoder.encode(deltaText));
-              }
-            } catch {
-              // Pomijamy uszkodzone pakiety pojedynczych linii SSE
+          for (const line of lines) {
+            const delta = extractDeltaText(line);
+            if (delta) {
+              controller.enqueue(encoder.encode(delta));
             }
           }
         }
 
-        if (buffer.trim().startsWith('data:')) {
-          const dataContent = buffer.trim().slice(5).trim();
-          if (dataContent !== '[DONE]') {
-            try {
-              const chunkJson = JSON.parse(dataContent) as GroqStreamChunk;
-              const deltaText = chunkJson.choices?.[0]?.delta?.content;
-              if (deltaText) {
-                controller.enqueue(encoder.encode(deltaText));
-              }
-            } catch {
-              // Ignorowanie
-            }
+        if (carryBuffer.trim()) {
+          const delta = extractDeltaText(carryBuffer);
+          if (delta) {
+            controller.enqueue(encoder.encode(delta));
           }
         }
       } catch (streamError: unknown) {
         const errorMsg = streamError instanceof Error ? streamError.message : 'Zakłócenie strumienia Groq';
         controller.enqueue(encoder.encode(`\n\n[ZAKŁÓCENIE TRANSMISJI GROQ]: ${errorMsg}\n`));
-        controller.error(streamError);
       } finally {
         controller.close();
       }
@@ -203,6 +229,6 @@ export async function generateGroqStream(options: AIStreamOptions): Promise<AISt
   return {
     stream,
     provider: 'groq',
-    model: activeModel,
+    model: chosenModel,
   };
 }

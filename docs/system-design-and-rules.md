@@ -69,16 +69,18 @@ Dla zapewnienia 100% dostępności terminala laboratoryjnego wprowadzono trójst
 ### Reguły Architektoniczne Inferencji AI:
 1. **Prymat Google Gemini API**:
    - Głównym dostawcą pozostaje SDK `@google/genai` z dynamicznym przełączaniem pomiędzy modelami `gemini-3.6-flash` a `gemini-3.5-flash`.
+   - **Mechanizm Pre-flight First Chunk**: Provider weryfikuje nadejście pierwszego niepustego pakietu tekstu przed wysłaniem nagłówków HTTP 200 do klienta. Jeśli Gemini zwróci błąd 429, 503 lub filtr bezpieczeństwa, serwer natychmiast przechwytuje błąd i przełącza zapytanie na Groq API, całkowicie zapobiegając powstawaniu pustych dymków.
 2. **Transparentny Zapasowy Dostawca Groq API**:
    - W razie jakiegokolwiek błędu Gemini (HTTP 429, 500, 503, przekroczenie limitu zapytań, błąd sieci), system w tle i bez wiedzy użytkownika wykonuje zapytanie do Groq API (`https://api.groq.com/openai/v1/chat/completions`).
    - Strumieniowanie Server-Sent Events (SSE) jest w locie transkodowane do formatu tekstowego zgodnego z klientem `ChatContext`.
 3. **Puryzm Spójności Sanity i Kontekstu**:
    - Model zapasowy (Groq) otrzymuje **dokładnie ten sam system prompt** (`SANE_PROMPT`, `ERROR_PROMPT` lub `INSANITY_PROMPT`), pełną historię konwersacji, identyczną temperaturę (0.7 / 0.9 / 0.95) oraz ten sam rygor naukowy Bio-Text Composera i formatowania LaTeX ($...$, $$...$$).
 4. **Odporność na Deprecację Modeli w Chmurze**:
-   - Klient Groq posiada zaimplementowaną kaskadę modeli (`qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, `groq/compound-mini`, `llama-3.1-8b-instant`), co gwarantuje działanie nawet w przypadku wycofania pojedynczego modelu przez dostawcę.
+   - Klient Groq posiada zaimplementowaną kaskadę zweryfikowanych modeli (`qwen/qwen3.8-27b`, `groq/compound-mini`, `llama-3.1-8b-instant`), co gwarantuje działanie nawet w przypadku wycofania pojedynczego modelu przez dostawcę.
 5. **Zasada Graceful Degradation w Lore**:
    - Całkowity zakaz wyrzucania surowych wyjątków HTTP 500 lub nieobsłużonych błędów sieciowych do UI.
    - W razie jednoczesnej awarii obu chmur (lub braku połączenia z internetem), system serwuje kontrolowaną, immersyjną odpowiedź bufora lokalnego Sektor-7, zachowując spójność uniwersum i ciągłość sesji.
+
 
 ---
 

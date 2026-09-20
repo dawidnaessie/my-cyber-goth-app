@@ -191,11 +191,13 @@ W celu zapewnienia nieprzerwanej dostępności terminala analitycznego BioResear
 1. **Główny Dostawca (Google Gemini API - `@google/genai`)**:
    - Domyślny węzeł inferencji zaimplementowany w `lib/ai/geminiProvider.ts`.
    - Korzysta z modeli `gemini-3.6-flash` oraz rezerwowego `gemini-3.5-flash`.
+   - **Mechanizm Pre-flight First Chunk**: Provider odczytuje pierwszy niepusty pakiet danych z iteratora `responseStream` PRZED wysłaniem nagłówków HTTP 200 do klienta. Jeśli Gemini zwróci 429, 503 lub filtr bezpieczeństwa, serwer natychmiast przechwytuje błąd i przełącza zapytanie na Groq API, całkowicie eliminując puste dymki.
    - Przetwarza wieloturowe wiadomości multi-turn z łączeniem kolejnych wypowiedzi o tej samej roli i pomijaniem początkowych logów startowych asystenta.
 
 2. **Transparentny Zapasowy Dostawca (Groq API)**:
    - Zaimplementowany w `lib/ai/groqProvider.ts` przy użyciu natywnego, ultralekkiego połączenia `fetch` na endpoint `https://api.groq.com/openai/v1/chat/completions` (zero dodatkowych zależności w bundle).
-   - **Kaskada Modeli Odporna na Deprecacje**: automatycznie rotuje pomiędzy modelami (`qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, `groq/compound-mini`, `llama-3.1-8b-instant`), gwarantując ciągłość pracy nawet w przypadku wycofania pojedynczego modelu przez dostawcę chmurowego.
+   - **Kaskada Zweryfikowanych Modeli**: rotuje wyłącznie pomiędzy modelami generującymi pełny tekst (`qwen/qwen3.8-27b`, `groq/compound-mini`, `llama-3.1-8b-instant`), wykluczając modele zwracające puste dymki (np. `gpt-oss-20b`).
+   - Weryfikuje nadejście pierwszego pakietu tekstu (Pre-flight First Chunk) przed zatwierdzeniem połączenia.
    - Odczytuje strumień Server-Sent Events (SSE) i transkoduje go w locie do jednolitego strumienia tekstowego `ReadableStream<Uint8Array>`.
 
 3. **100% Spójność Kontekstu i Systemu Sanity**:
@@ -207,7 +209,7 @@ W celu zapewnienia nieprzerwanej dostępności terminala analitycznego BioResear
    - Zaimplementowany w `lib/ai/emergencyBuffer.ts`.
    - Jeśli oba zewnętrzne dostawcy zawiodą jednocześnie lub urządzenie utraci dostęp do internetu, system nie generuje surowego błędu Next.js ani czerwonych alertów awarii serwera.
    - Zwraca kontrolowaną, immersyjną odpowiedź terminala laboratoryjnego dostosowaną do stadium Sanity (np. `[BŁĄD KLASTRA Sektor-7: Utraceno synchronizację węzłów obliczeniowych. Przełączono na bufor lokalny.]`), zachowując ciągłość narracji ARG i chroniąc historię w `localStorage`.
-   - Moduł `ChatContext.tsx` posiada symetryczną ochronę przed błędami sieciowymi przeglądarki (`Failed to fetch`).
+   - Moduł `ChatContext.tsx` posiada symetryczną ochronę przed błędami sieciowymi przeglądarki (`Failed to fetch`), a wiadomości o zerowej długości są automatycznie odrzucane z pamięci trwałej.
 
 5. **Nagłówki Telemetryczne i Transparentność Serwerowa**:
    - Każda odpowiedź HTTP 200 ze strumieniem z endpointu `/api/chat` zwraca nagłówki diagnostyczne:
@@ -215,5 +217,25 @@ W celu zapewnienia nieprzerwanej dostępności terminala analitycznego BioResear
      - `x-sanity-stage`: `sane` | `error` | `insanity`
      - `x-model-used`: identyfikator użytego modelu (np. `gemini-3.6-flash`, `qwen/qwen3.8-27b`, `local-cluster-buffer-st94`)
    - Zdarzenia przełączania awaryjnego są rejestrowane na serwerze w formacie JSON ze znacznikiem `[CLUSTER_TELEMETRY]`.
+
+---
+
+## 8. Architektura Wydajnościowa UI i Eliminacja Lagów (Zero-Lag Typing)
+
+W celu zapewnienia natychmiastowej responsywności interfejsu (0 ms input lag) oraz odciążenia wątku głównego przeglądarki, wdrożono rygorystyczną architekturę podziału stanu:
+
+1. **Izolacja Stanu Wpisywania (Form State Decoupling)**:
+   - Globalny `ChatContext` przechowuje **wyłącznie** zatwierdzoną historię wiadomości, status streamingu oraz stadium Sanity.
+   - Chwilowy stan tekstu (`inputValue`) został przeniesiony do dedykowanego, lokalnego komponentu `ChatInputForm`.
+   - Każde naciśnięcie klawisza powoduje re-render wyłącznie małego elementu formularza, całkowicie eliminując re-renderowanie historii czatu i nadrzędnego layoutu aplikacji.
+
+2. **Głęboka Memoizacja Komponentów (`React.memo`)**:
+   - `ChatMessageItem = React.memo(...)`: historyczne wiadomości w oknie czatu nie są ponownie renderowane, gdy asystent dopisuje nowe tokeny do bieżącej wiadomości lub gdy użytkownik pisze w formularzu.
+   - `MarkdownRenderer = React.memo(...)`: moduł renderowania formuł matematycznych KaTeX (`remark-math`, `rehype-katex`) nie przelicza ponownie drzewa AST dla niezmienionych wiadomości.
+   - `SystemHeader` oraz `CorporateFooter`: zmemoizowane komponenty layoutu, izolowane od zdarzeń czatu.
+
+3. **Odciążenie Magistrali Audialnej i Głównego Wątku**:
+   - Dźwięki klawiszy laboratoryjnych (`soundEngine.playKeystroke()`) są uruchamiane wyłącznie przy zatwierdzeniu zapytania (`Enter` / przycisk "WYŚLIJ") oraz kliknięciu gotowych presetów badawczych, co zapobiega kumulacji wywołań Web Audio API na zdarzeniach `keydown`.
+
 
 

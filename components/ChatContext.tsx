@@ -17,11 +17,9 @@ export interface Message {
 export interface ChatContextType {
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  input: string;
-  setInput: React.Dispatch<React.SetStateAction<string>>;
   isStreaming: boolean;
   errorMessage: string | null;
-  sendMessage: (textToSend?: string) => Promise<void>;
+  sendMessage: (textToSend: string) => Promise<void>;
   clearChat: () => void;
   abortStream: () => void;
 }
@@ -44,7 +42,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const { sanityStage, setSanityStage, triggerGlitch } = useSystemState();
 
   const [messages, setMessages] = useState<Message[]>(INITIAL_CORPORATE_LOGS);
-  const [input, setInput] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -62,11 +59,16 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          const sanitized = parsed.map((m: Message) => ({
-            ...m,
-            isStreaming: false,
-          }));
-          setMessages(sanitized);
+          // Filtrujemy jakiekolwiek historyczne puste dymki
+          const sanitized = parsed
+            .filter((m: Message) => typeof m.content === 'string' && m.content.trim().length > 0)
+            .map((m: Message) => ({
+              ...m,
+              isStreaming: false,
+            }));
+          if (sanitized.length > 0) {
+            setMessages(sanitized);
+          }
         }
       }
     } catch {
@@ -76,7 +78,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   const saveMessagesToStorage = useCallback((msgs: Message[]) => {
     try {
-      const toSave = msgs.map((m) => ({ ...m, isStreaming: false }));
+      // Zapisujemy wyłącznie wiadomości z rzeczywistą zawartością tekstową (zero pustych dymków w storage)
+      const toSave = msgs
+        .filter((m) => typeof m.content === 'string' && m.content.trim().length > 0)
+        .map((m) => ({ ...m, isStreaming: false }));
       localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(toSave));
     } catch {
       // Ignorowanie błędów zapisu do localStorage
@@ -100,7 +105,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     setMessages(INITIAL_CORPORATE_LOGS);
     setErrorMessage(null);
     setIsStreaming(false);
-    setInput('');
     setSanityStage('sane');
     try {
       localStorage.removeItem(CHAT_STORAGE_KEY);
@@ -110,12 +114,9 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   }, [setSanityStage]);
 
   const sendMessage = useCallback(
-    async (textToSend?: string) => {
-      const rawContent = textToSend ?? input;
-      const trimmed = rawContent.trim();
+    async (textToSend: string) => {
+      const trimmed = textToSend?.trim();
       if (!trimmed || isStreaming) return;
-
-      soundEngine.playKeystroke();
 
       if (
         trimmed.toLowerCase() === '/clear' ||
@@ -124,7 +125,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         trimmed.toLowerCase() === 'reset'
       ) {
         clearChat();
-        setInput('');
         return;
       }
 
@@ -182,7 +182,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
       const nextMessages = [...currentMessages, userMessage, assistantPlaceholder];
       setMessages(nextMessages);
-      setInput('');
       setIsStreaming(true);
 
       const controller = new AbortController();
@@ -245,11 +244,16 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         const finalMessages: Message[] = [...nextMessages];
         const lastIdx = finalMessages.length - 1;
         if (lastIdx >= 0 && finalMessages[lastIdx].role === 'assistant') {
-          finalMessages[lastIdx] = {
-            ...finalMessages[lastIdx],
-            content: accumulatedContent,
-            isStreaming: false,
-          };
+          if (!accumulatedContent.trim()) {
+            // Jeśli strumień zakończył się bez ani jednego znaku tekstu, usuwamy pusty dymek
+            finalMessages.splice(lastIdx, 1);
+          } else {
+            finalMessages[lastIdx] = {
+              ...finalMessages[lastIdx],
+              content: accumulatedContent,
+              isStreaming: false,
+            };
+          }
         }
         setMessages(finalMessages);
         saveMessagesToStorage(finalMessages);
@@ -265,7 +269,9 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
             if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
               copy[lastIdx] = {
                 ...copy[lastIdx],
-                content: copy[lastIdx].content + '\n\n[POŁĄCZENIE PRZERWANE PRZEZ KLIENTA]',
+                content: copy[lastIdx].content
+                  ? `${copy[lastIdx].content}\n\n[POŁĄCZENIE PRZERWANE PRZEZ KLIENTA]`
+                  : '[POŁĄCZENIE PRZERWANE PRZEZ KLIENTA]',
                 isStreaming: false,
               };
             }
@@ -308,7 +314,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         abortControllerRef.current = null;
       }
     },
-    [input, isStreaming, clearChat, saveMessagesToStorage, setSanityStage, triggerGlitch]
+    [isStreaming, clearChat, saveMessagesToStorage, setSanityStage, triggerGlitch]
   );
 
   return (
@@ -316,8 +322,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       value={{
         messages,
         setMessages,
-        input,
-        setInput,
         isStreaming,
         errorMessage,
         sendMessage,

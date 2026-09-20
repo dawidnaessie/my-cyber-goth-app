@@ -6,7 +6,7 @@ import { SystemStateProvider, useSystemState } from './SystemStateContext';
 import { ChatProvider } from './ChatContext';
 import { SystemHeader } from './SystemHeader';
 
-function CorporateFooter() {
+const CorporateFooter = React.memo(function CorporateFooter() {
   const { sanityStage, opticsOn } = useSystemState();
   const isDistorted = !opticsOn || sanityStage === 'insanity';
 
@@ -125,7 +125,8 @@ function CorporateFooter() {
       </div>
     </footer>
   );
-}
+});
+
 
 function ShellContent({ children }: { children: React.ReactNode }) {
   const { sanityStage, isGlitching, opticsOn, theme } = useSystemState();

@@ -28,9 +28,10 @@ function prepareGeminiContents(
     startIndex++;
   }
 
-  const filtered = startIndex < normalizedList.length
-    ? normalizedList.slice(startIndex)
-    : [normalizedList[normalizedList.length - 1]];
+  const filtered =
+    startIndex < normalizedList.length
+      ? normalizedList.slice(startIndex)
+      : [normalizedList[normalizedList.length - 1]];
 
   const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
   for (const item of filtered) {
@@ -49,7 +50,50 @@ function prepareGeminiContents(
 }
 
 /**
- * Wywołuje Google Gemini API ze strumieniowaniem odpowiedzi oraz obsługą modelu zapasowego Flash.
+ * Próbuje zainicjalizować i pobrać pierwszy niepusty pakiet danych z Gemini.
+ * Zapobiega sytuacjom, w których błąd 429/503 lub filtr bezpieczeństwa występuje dopiero
+ * po wysłaniu nagłówków HTTP 200 do klienta (główna przyczyna pustych dymków).
+ */
+async function tryInitiateGeminiStream(
+  modelName: string,
+  contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }>,
+  options: AIStreamOptions,
+  temperature: number
+): Promise<{ firstChunk: string; iterator: AsyncIterator<any> }> {
+  const responseStream = await ai.models.generateContentStream({
+    model: modelName,
+    contents,
+    config: {
+      systemInstruction: options.systemPrompt,
+      temperature,
+    },
+  });
+
+  const iterator = responseStream[Symbol.asyncIterator]();
+  let firstChunk = '';
+
+  // Odczytujemy pierwszy niepusty fragment tekstu z iteratora
+  while (true) {
+    const { value, done } = await iterator.next();
+    if (done) break;
+
+    const text = value?.text;
+    if (typeof text === 'string' && text.length > 0) {
+      firstChunk = text;
+      break;
+    }
+  }
+
+  if (!firstChunk) {
+    throw new Error(`Model ${modelName} zakończył strumień bez wygenerowania tekstu.`);
+  }
+
+  return { firstChunk, iterator };
+}
+
+/**
+ * Wywołuje Google Gemini API ze wstępną weryfikacją pierwszego tokenu (Pre-flight First Chunk)
+ * oraz automatycznym fallbackiem do modelu alternatywnego.
  */
 export async function generateGeminiStream(options: AIStreamOptions): Promise<AIStreamResult> {
   const contents = prepareGeminiContents(options.messages);
@@ -66,55 +110,50 @@ export async function generateGeminiStream(options: AIStreamOptions): Promise<AI
       ? 0.9
       : 0.7;
 
-  let responseStream;
   let activeModel = primaryModel;
+  let initiated: { firstChunk: string; iterator: AsyncIterator<any> } | null = null;
 
   try {
-    responseStream = await ai.models.generateContentStream({
-      model: primaryModel,
-      contents,
-      config: {
-        systemInstruction: options.systemPrompt,
-        temperature,
-      },
-    });
+    initiated = await tryInitiateGeminiStream(primaryModel, contents, options, temperature);
+    activeModel = primaryModel;
   } catch (primaryError: unknown) {
     if (primaryModel !== fallbackModel) {
       try {
+        initiated = await tryInitiateGeminiStream(fallbackModel, contents, options, temperature);
         activeModel = fallbackModel;
-        responseStream = await ai.models.generateContentStream({
-          model: fallbackModel,
-          contents,
-          config: {
-            systemInstruction: options.systemPrompt,
-            temperature,
-          },
-        });
       } catch (secondaryError: unknown) {
-        const message = primaryError instanceof Error ? primaryError.message : String(primaryError);
-        throw new Error(`Gemini primary (${primaryModel}) i secondary (${fallbackModel}) zawiodły: ${message}`);
+        const primMsg = primaryError instanceof Error ? primaryError.message : String(primaryError);
+        const secMsg = secondaryError instanceof Error ? secondaryError.message : String(secondaryError);
+        throw new Error(`Gemini primary (${primaryModel}: ${primMsg}) i secondary (${fallbackModel}: ${secMsg}) zawiodły.`);
       }
     } else {
-      const message = primaryError instanceof Error ? primaryError.message : String(primaryError);
-      throw new Error(`Gemini (${primaryModel}) zgłosił błąd: ${message}`);
+      const primMsg = primaryError instanceof Error ? primaryError.message : String(primaryError);
+      throw new Error(`Gemini (${primaryModel}) zgłosił błąd: ${primMsg}`);
     }
   }
 
+  const { firstChunk, iterator } = initiated;
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        for await (const chunk of responseStream) {
-          const chunkText = chunk.text;
+        // Natychmiast emitujemy zbuforowany pierwszy pakiet
+        controller.enqueue(encoder.encode(firstChunk));
+
+        // Następnie kontynuujemy odczyt kolejnych pakietów
+        while (true) {
+          const { value, done } = await iterator.next();
+          if (done) break;
+
+          const chunkText = value?.text;
           if (chunkText) {
             controller.enqueue(encoder.encode(chunkText));
           }
         }
       } catch (streamError: unknown) {
         const errorMsg = streamError instanceof Error ? streamError.message : 'Przerwanie strumienia Gemini';
-        controller.enqueue(encoder.encode(`\n\n[ZAKŁÓCENIE TRANSMIJI GEMINI]: ${errorMsg}\n`));
-        controller.error(streamError);
+        controller.enqueue(encoder.encode(`\n\n[ZAKŁÓCENIE TRANSMISJI GEMINI]: ${errorMsg}\n`));
       } finally {
         controller.close();
       }

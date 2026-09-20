@@ -10,7 +10,10 @@ interface MarkdownRendererProps {
   isDistorted?: boolean;
 }
 
-export function MarkdownRenderer({ content, isDistorted = false }: MarkdownRendererProps) {
+export const MarkdownRenderer = React.memo(function MarkdownRenderer({
+  content,
+  isDistorted = false,
+}: MarkdownRendererProps) {
   return (
     <div
       className={`prose prose-sm max-w-none break-words ${
@@ -69,4 +72,4 @@ export function MarkdownRenderer({ content, isDistorted = false }: MarkdownRende
       </ReactMarkdown>
     </div>
   );
-}
+});

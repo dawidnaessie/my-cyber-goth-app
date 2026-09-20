@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useSystemState } from './SystemStateContext';
 import { soundEngine } from '@/lib/soundEngine';
 
-export function SystemHeader() {
+export const SystemHeader = React.memo(function SystemHeader() {
   const pathname = usePathname();
   const { theme, toggleTheme, opticsOn, audioEnabled, toggleAudio, sanityStage, isGlitching } = useSystemState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -347,4 +347,5 @@ export function SystemHeader() {
       )}
     </header>
   );
-}
+});
+
