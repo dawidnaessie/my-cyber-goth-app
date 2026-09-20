@@ -273,19 +273,35 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
             return copy;
           });
         } else {
-          const messageText = err instanceof Error ? err.message : String(err);
-          setErrorMessage(messageText);
+          const rawMessage = err instanceof Error ? err.message : String(err);
+          const isNetworkError =
+            rawMessage.toLowerCase().includes('failed to fetch') ||
+            rawMessage.toLowerCase().includes('network') ||
+            rawMessage.toLowerCase().includes('load failed');
+
+          const fallbackText = isNetworkError
+            ? '[BŁĄD KLASTRA Sektor-7: Utraceno synchronizację węzłów obliczeniowych. Przełączono na bufor lokalny.]\n\n[TRANSMISJA PRZERWANA]: Brak odpowiedzi z interfejsu sieciowego klastra. Bufor lokalny zabezpieczył wprowadzone zapytanie badawcze. Sprawdź połączenie i ponów próbę.'
+            : rawMessage;
+
           setMessages((prev) => {
             const copy = [...prev];
             const lastIdx = copy.length - 1;
-            if (lastIdx >= 0 && copy[lastIdx].role === 'assistant' && !copy[lastIdx].content) {
-              const trimmedList = copy.slice(0, -1);
-              saveMessagesToStorage(trimmedList);
-              return trimmedList;
+            if (lastIdx >= 0 && copy[lastIdx].role === 'assistant') {
+              copy[lastIdx] = {
+                ...copy[lastIdx],
+                content: copy[lastIdx].content
+                  ? `${copy[lastIdx].content}\n\n${fallbackText}`
+                  : fallbackText,
+                isStreaming: false,
+              };
             }
             saveMessagesToStorage(copy);
             return copy;
           });
+
+          if (!isNetworkError) {
+            setErrorMessage(rawMessage);
+          }
         }
       } finally {
         setIsStreaming(false);

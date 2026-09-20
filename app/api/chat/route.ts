@@ -1,30 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ai } from '@/lib/ai';
 import { getSystemPromptByStage, SanityStage } from '@/lib/prompts';
 import { calculateSanityMetrics } from '@/lib/sanityEngine';
+import { executeWithFallbackChain } from '@/lib/ai/fallbackChain';
+import { ChatMessage } from '@/lib/ai/types';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-interface ChatMessage {
-  role: 'user' | 'assistant' | 'model';
-  content: string;
-}
-
 interface ChatRequestBody {
-  messages?: ChatMessage[];
+  messages?: Array<{
+    role: 'user' | 'assistant' | 'model';
+    content: string;
+  }>;
   prompt?: string;
   sanityStage?: SanityStage;
 }
 
 function resolveSanityStage(
   currentStage: SanityStage | undefined,
-  rawList: Array<{ role: 'user' | 'model'; text: string }>
+  rawList: ChatMessage[]
 ): SanityStage {
   // Analizujemy WYŁĄCZNIE wypowiedzi użytkownika – wykluczamy logi startowe i odpowiedzi asystenta
   const userTexts = rawList
     .filter((msg) => msg.role === 'user')
-    .map((msg) => msg.text);
+    .map((msg) => msg.content);
 
   const metrics = calculateSanityMetrics(userTexts);
 
@@ -44,17 +43,17 @@ export async function POST(req: NextRequest) {
     const body = (await req.json()) as ChatRequestBody;
     const { messages, prompt, sanityStage } = body;
 
-    const rawList: Array<{ role: 'user' | 'model'; text: string }> = [];
+    const rawList: ChatMessage[] = [];
 
     if (Array.isArray(messages) && messages.length > 0) {
       for (const msg of messages) {
         const text = msg.content?.trim();
         if (!text) continue;
-        const role = msg.role === 'assistant' || msg.role === 'model' ? 'model' : 'user';
-        rawList.push({ role, text });
+        const role = msg.role === 'assistant' || msg.role === 'model' ? 'assistant' : 'user';
+        rawList.push({ role, content: text });
       }
     } else if (typeof prompt === 'string' && prompt.trim().length > 0) {
-      rawList.push({ role: 'user', text: prompt.trim() });
+      rawList.push({ role: 'user', content: prompt.trim() });
     }
 
     if (rawList.length === 0) {
@@ -68,109 +67,32 @@ export async function POST(req: NextRequest) {
     const effectiveStage = resolveSanityStage(sanityStage, rawList);
     const selectedSystemPrompt = getSystemPromptByStage(effectiveStage);
 
-    // Pomijamy początkowe komunikaty 'model' (np. logi bootowania terminala UI),
-    // aby historia konwersacji w Gemini zawsze zaczynała się od roli 'user'
-    let startIndex = 0;
-    while (startIndex < rawList.length && rawList[startIndex].role === 'model') {
-      startIndex++;
-    }
-
-    const filtered = startIndex < rawList.length ? rawList.slice(startIndex) : [rawList[rawList.length - 1]];
-
-    // Łączenie kolejnych wiadomości o tej samej roli w jedną turę (wymóg multi-turn Gemini API)
-    const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
-    for (const item of filtered) {
-      const last = contents[contents.length - 1];
-      if (last && last.role === item.role) {
-        last.parts[0].text += `\n${item.text}`;
-      } else {
-        contents.push({
-          role: item.role,
-          parts: [{ text: item.text }],
-        });
-      }
-    }
-
-    // Wybór modelu: zdefiniowany w środowisku lub domyślny aktywny flash
-    const primaryModel = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
-    const fallbackModel = 'gemini-3.5-flash';
-
-    let responseStream;
-    try {
-      responseStream = await ai.models.generateContentStream({
-        model: primaryModel,
-        contents,
-        config: {
-          systemInstruction: selectedSystemPrompt,
-          temperature: effectiveStage === 'insanity' ? 0.95 : effectiveStage === 'error' ? 0.9 : 0.7,
-        },
-      });
-    } catch (primaryError: unknown) {
-      // Jeśli wybrany model jest niedostępny lub przeciążony, fallback do alternatywnego flasha
-      if (primaryModel !== fallbackModel) {
-        try {
-          responseStream = await ai.models.generateContentStream({
-            model: fallbackModel,
-            contents,
-            config: {
-              systemInstruction: selectedSystemPrompt,
-              temperature: effectiveStage === 'insanity' ? 0.95 : effectiveStage === 'error' ? 0.9 : 0.7,
-            },
-          });
-        } catch {
-          throw primaryError;
-        }
-      } else {
-        throw primaryError;
-      }
-    }
-
-    const encoder = new TextEncoder();
-
-    const readableStream = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of responseStream) {
-            const chunkText = chunk.text;
-            if (chunkText) {
-              controller.enqueue(encoder.encode(chunkText));
-            }
-          }
-        } catch (streamError: unknown) {
-          const errorMessage =
-            streamError instanceof Error
-              ? streamError.message
-              : 'Nieznane zakłócenie rurociągu obliczeniowego';
-          controller.enqueue(
-            encoder.encode(`\n\n[PRZERWANIE_RUROCIĄGU]: ${errorMessage}\n`)
-          );
-          controller.error(streamError);
-        } finally {
-          controller.close();
-        }
-      },
+    // Wykonanie zapytania przez łańcuch odporny na awarie (Gemini -> Groq -> Bufor Awaryjny)
+    const result = await executeWithFallbackChain({
+      messages: rawList,
+      systemPrompt: selectedSystemPrompt,
+      stage: effectiveStage,
     });
 
-    return new NextResponse(readableStream, {
+    return new NextResponse(result.stream, {
       status: 200,
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache, no-transform',
         'Connection': 'keep-alive',
         'x-sanity-stage': effectiveStage,
+        'x-provider-used': result.provider,
+        'x-model-used': result.model,
       },
     });
   } catch (error: unknown) {
     const errorDetails = error instanceof Error ? error.message : String(error);
-    const isApiKeyError = errorDetails.includes('GEMINI_API_KEY');
 
     return NextResponse.json(
       {
-        error: isApiKeyError
-          ? '[BRAK_KLUCZA_API]: Skonfiguruj GEMINI_API_KEY w pliku .env'
-          : `[AWARIA_INFERENCJI]: ${errorDetails}`,
+        error: `[AWARIA_INFERENCJI]: ${errorDetails}`,
       },
-      { status: isApiKeyError ? 401 : 500 }
+      { status: 500 }
     );
   }
 }

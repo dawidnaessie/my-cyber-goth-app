@@ -25,7 +25,22 @@ app/
 │   └── page.tsx            # Aktualności korporacyjne: ISO 17025, aparatura, kongresy naukowe
 └── api/
     └── chat/
-        └── route.ts        # Endpoint strumieniowy POST ze wsparciem SDK @google/genai
+        └── route.ts        # Endpoint strumieniowy POST z łańcuchem Fail-Safe (Gemini -> Groq -> Emergency Buffer)
+
+lib/
+├── ai/
+│   ├── types.ts            # Typowanie TypeScript dla sesji AI, opcji strumieniowania i providerów
+│   ├── geminiProvider.ts   # Główny dostawca Google Gemini API (@google/genai) z fallbackiem modeli flash
+│   ├── groqProvider.ts     # Zapasowy dostawca Groq API (SSE fetch + kaskada modeli odporna na deprecacje)
+│   ├── emergencyBuffer.ts  # Bufor awaryjny Graceful Degradation w stylu Sektor-7 (Sane / Error / Insanity)
+│   └── fallbackChain.ts    # Koordynator łańcucha odpornego na awarie z ustrukturyzowaną telemetrią
+├── ai.ts                   # Fabryka klienta GoogleGenAI z leniwą inicjalizacją (Proxy)
+├── prompts.ts              # Selekcja promptów systemowych wg SanityStage (Sane / Error / Insanity)
+├── prompts_sane.ts         # Instrukcje dla stadium SANE (Bio-Text Composer, donepezil, memantyna, KaTeX)
+├── prompts_error.ts        # Instrukcje dla stadium ERROR (Dekoherencja klastra, błędy odczytu ST-94)
+├── prompts_insanity.ts     # Instrukcje dla stadium INSANITY (Aris Thorne, CAPS LOCK, Analog Horror)
+├── sanityEngine.ts         # Silnik wyliczania metryk degradacji psychiki probanda
+└── soundEngine.ts          # Silnik audialny Web Audio API (Dźwięki laboratoryjne / CRT glitch / rezonans)
 ```
 
 ### Globalny Stan i Warstwa Shell (`components/ClientShell.tsx`)
@@ -134,3 +149,71 @@ app/
   - Stan historii czatu i stadium degradacji Sanity trwają w tle przy nawigacji po portalu (`/mail`, `/archive`, `/services`, `/blog`).
   - Czyszczenie następuje wyłącznie po świadomym kliknięciu `[PURGE BUFFER]`.
   - Auto-scroll przewija płynnie wyłącznie przy wysłaniu zapytania lub nowej linii strumienia, gdy użytkownik jest przy dolnej krawędzi.
+
+---
+
+## 7. Architektura Odporna na Awarie (Fail-Safe / Fallback Provider Chain z Groq API)
+
+W celu zapewnienia nieprzerwanej dostępności terminala analitycznego BioResearcher AI™, wdrożono wielopoziomowy łańcuch odporny na awarie (Failover Chain):
+
+```
+                               ┌────────────────────────────────┐
+                               │   ŻĄDANIE KLIENTA (/api/chat)  │
+                               └───────────────┬────────────────┘
+                                               │
+                                               ▼
+                              ┌──────────────────────────────────┐
+                              │ 1. GOOGLE GEMINI API (GŁÓWNY)    │
+                              │ Model: gemini-3.6 / gemini-3.5   │
+                              └───────┬──────────────────┬───────┘
+                                      │                  │
+                             [SUKCES] │                  │ [KRYTYCZNY BŁĄD / RATE-LIMIT / 500 / 503]
+                                      ▼                  ▼
+                           ┌─────────────────┐ ┌──────────────────────────────────┐
+                           │ STRUMIEŃ TEKSTU │ │ 2. GROQ API (ZAPASOWY FAILOVER)  │
+                           │   (x-provider)  │ │ Model: llama-3.1-8b-instant      │
+                           └─────────────────┘ └───────┬──────────────────┬───────┘
+                                                       │                  │
+                                              [SUKCES] │                  │ [AWARIA GROQ / BRAK KLUCZA / OFFLINE]
+                                                       ▼                  ▼
+                                            ┌─────────────────┐ ┌──────────────────────────────────┐
+                                            │ STRUMIEŃ TEKSTU │ │ 3. BUFOR AWARYJNY SEKTOREK-7     │
+                                            │  (Groq SSE/Text)│ │ (Graceful Degradation w lore)    │
+                                            └─────────────────┘ └─────────────────┬────────────────┘
+                                                                                  │
+                                                                                  ▼
+                                                                        ┌─────────────────┐
+                                                                        │ STRUMIEŃ TEKSTU │
+                                                                        │  (Lokalny bufor)│
+                                                                        └─────────────────┘
+```
+
+1. **Główny Dostawca (Google Gemini API - `@google/genai`)**:
+   - Domyślny węzeł inferencji zaimplementowany w `lib/ai/geminiProvider.ts`.
+   - Korzysta z modeli `gemini-3.6-flash` oraz rezerwowego `gemini-3.5-flash`.
+   - Przetwarza wieloturowe wiadomości multi-turn z łączeniem kolejnych wypowiedzi o tej samej roli i pomijaniem początkowych logów startowych asystenta.
+
+2. **Transparentny Zapasowy Dostawca (Groq API)**:
+   - Zaimplementowany w `lib/ai/groqProvider.ts` przy użyciu natywnego, ultralekkiego połączenia `fetch` na endpoint `https://api.groq.com/openai/v1/chat/completions` (zero dodatkowych zależności w bundle).
+   - **Kaskada Modeli Odporna na Deprecacje**: automatycznie rotuje pomiędzy modelami (`qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, `groq/compound-mini`, `llama-3.1-8b-instant`), gwarantując ciągłość pracy nawet w przypadku wycofania pojedynczego modelu przez dostawcę chmurowego.
+   - Odczytuje strumień Server-Sent Events (SSE) i transkoduje go w locie do jednolitego strumienia tekstowego `ReadableStream<Uint8Array>`.
+
+3. **100% Spójność Kontekstu i Systemu Sanity**:
+   - Model zapasowy (Groq) otrzymuje **dokładnie te same instrukcje systemowe** (`SANE_PROMPT`, `ERROR_PROMPT` lub `INSANITY_PROMPT` wyznaczane przez `resolveSanityStage`).
+   - Pełna tożsamość Bio-Text Composera, generowanie akapitów o chorobach neurodegeneracyjnych oraz renderowanie formuł matematycznych w LaTeX ($...$, $$...$$) działają identycznie na obu modelach.
+   - Identyczne skalowanie temperatury w zależności od etapu psychozy: 0.7 (`sane`), 0.9 (`error`), 0.95 (`insanity`).
+
+4. **Graceful Degradation (Bufor Awaryjny Sektor-7)**:
+   - Zaimplementowany w `lib/ai/emergencyBuffer.ts`.
+   - Jeśli oba zewnętrzne dostawcy zawiodą jednocześnie lub urządzenie utraci dostęp do internetu, system nie generuje surowego błędu Next.js ani czerwonych alertów awarii serwera.
+   - Zwraca kontrolowaną, immersyjną odpowiedź terminala laboratoryjnego dostosowaną do stadium Sanity (np. `[BŁĄD KLASTRA Sektor-7: Utraceno synchronizację węzłów obliczeniowych. Przełączono na bufor lokalny.]`), zachowując ciągłość narracji ARG i chroniąc historię w `localStorage`.
+   - Moduł `ChatContext.tsx` posiada symetryczną ochronę przed błędami sieciowymi przeglądarki (`Failed to fetch`).
+
+5. **Nagłówki Telemetryczne i Transparentność Serwerowa**:
+   - Każda odpowiedź HTTP 200 ze strumieniem z endpointu `/api/chat` zwraca nagłówki diagnostyczne:
+     - `x-provider-used`: `gemini` | `groq` | `emergency-buffer`
+     - `x-sanity-stage`: `sane` | `error` | `insanity`
+     - `x-model-used`: identyfikator użytego modelu (np. `gemini-3.6-flash`, `qwen/qwen3.8-27b`, `local-cluster-buffer-st94`)
+   - Zdarzenia przełączania awaryjnego są rejestrowane na serwerze w formacie JSON ze znacznikiem `[CLUSTER_TELEMETRY]`.
+
+

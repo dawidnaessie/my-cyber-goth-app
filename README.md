@@ -61,14 +61,43 @@ System stanowi dojrzałą platformę korporacji bioanalitycznej podzieloną na w
 
 ---
 
-## 🛠️ 4. Uruchomienie Lokalne
+## ⚡ 4. Architektura Odporna na Awarie (Fail-Safe Provider Chain)
+
+Aplikacja posiada zaimplementowany wielopoziomowy mechanizm przełączania awaryjnego (Failover Chain) w inferencji AI:
+
+1. **Primary Provider (Google Gemini API - `@google/genai`)**:
+   - Domyślny model analityczny `gemini-3.6-flash` (oraz automatyczny fallback do `gemini-3.5-flash`).
+2. **Fail-Safe Backup Provider (Groq API)**:
+   - W przypadku błędu Gemini (HTTP 429, 500, 503, przeciążenie serwera, błąd klucza), system **automatycznie i transparentnie** wysyła to samo zapytanie do ultraszybkiego endpointu Groq (`https://api.groq.com/openai/v1/chat/completions`).
+   - **Kaskada Modeli Odporna na Deprecacje**: automatyczna rotacja modeli (`qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, `groq/compound-mini`, `llama-3.1-8b-instant`).
+   - Pełna spójność tożsamości asystenta, promptów Sanity (`SANE`, `ERROR`, `INSANITY`) oraz formuł matematycznych LaTeX ($...$, $$...$$).
+3. **Graceful Degradation (Bufor Awaryjny Sektor-7)**:
+   - W razie jednoczesnej niedostępności obu dostawców lub utraty łącza internetowego, terminal zwraca immersyjną odpowiedź w lore gry (`[BŁĄD KLASTRA Sektor-7...]`), chroniąc interfejs przed surowymi błędami HTTP 500.
+
+---
+
+## 🛠️ 5. Uruchomienie Lokalne i Konfiguracja
 
 ```bash
-# Instalacja zależności
+# 1. Klonowanie i instalacja zależności
 npm install
 
-# Uruchomienie serwera deweloperskiego
+# 2. Konfiguracja zmiennych środowiskowych
+cp .env.example .env
+# Uzupełnij GEMINI_API_KEY oraz GROQ_API_KEY w pliku .env
+
+# 3. Uruchomienie serwera deweloperskiego
 npm run dev
 ```
 
 Aplikacja dostępna jest pod adresem: `http://localhost:3000`.
+
+---
+
+## 📚 6. Dokumentacja Techniczna i Architektoniczna
+
+Szczegółowa dokumentacja systemu znajduje się w katalogu `docs/`:
+- 🏛️ [`docs/architecture.md`](docs/architecture.md): Pełna specyfikacja architektury Next.js 15 App Router, globalnego stanu, persystencji Sanity, rurociągu publikacji oraz łańcucha Fail-Safe Provider Chain z telemetrią.
+- 📜 [`docs/system-design-and-rules.md`](docs/system-design-and-rules.md): Manifest fabularny i reguły inżynieryjne (twarda neurobiologia, zdigitalizowany konektom Thorne'a, rygor TypeScript i zasady bezpieczeństwa poświadczeń).
+
+
